@@ -1,0 +1,4684 @@
+openapi: 3.1.1
+info:
+  title: Títulos do Contas a Pagar
+  version: 1.24.0
+  description: API de títulos do contas a pagar.
+paths:
+  /bills:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Títulos a pagar
+      x-audience:
+        - public
+      tags:
+        - Títulos a pagar
+      summary: Busca os títulos no Sienge
+      operationId: getBills
+      parameters:
+        - $ref: '#/components/parameters/StartDateQueryRequired'
+          description: Data inicial de emissão para consulta de títulos
+        - $ref: '#/components/parameters/EndDateQueryRequired'
+          description: Data final de emissão para consulta de títulos
+        - $ref: '#/components/parameters/DebtorIdQuery'
+        - $ref: '#/components/parameters/CreditorIdQuery'
+        - $ref: '#/components/parameters/CostCenterIdQuery'
+        - $ref: '#/components/parameters/DocumentsIdentificationIdQuery'
+        - $ref: '#/components/parameters/DocumentNumberQuery'
+        - $ref: '#/components/parameters/StatusQuery'
+        - $ref: '#/components/parameters/OriginIdQuery'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Resultado da pesquisa retornado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillsResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Obtém lista de títulos com filtros aplicados (REST)
+    post:
+      tags:
+        - Títulos a pagar
+      summary: Inserção do título no Sienge
+      operationId: insertBill
+      x-section: Títulos a pagar
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      requestBody:
+        description: Objeto para criação do título
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillInsert'
+            example:
+              debtorId: 123
+              creditorId: 100
+              documentIdentificationId: NF
+              documentNumber: AX123
+              baseDate: '2024-01-01'
+              billDate: '2024-01-01'
+              dueDate: '2024-01-31'
+              issueDate: '2024-01-01'
+              indexId: 1
+              installmentsNumber: 1
+              totalInvoiceAmount: 1000
+              discount: 0
+              notes: Título de exemplo
+              budgetCategories:
+                - costCenterId: 1
+                  paymentCategoriesId: '2010101'
+                  percentage: 100
+              taxes:
+                - taxId: 1
+                  ibgeCityId: '4205407'
+                  rate: 5.45
+                  amount: 95.57
+                  taxableBaseAmount: 1035
+                  taxRateMarker: 100
+                  usesIncomeTaxTable: false
+              departmentsCost:
+                - departmentId: 1
+                  percentage: 100
+              buildingsCost:
+                - buildingId: 1
+                  buildingUnitId: 1
+                  costEstimationSheetId: 1.001.001
+                  percentage: 100
+              units:
+                - unitId: '001'
+                  costCenterId: 1
+                  percentage: 100
+                  principal: S
+        required: true
+      responses:
+        '201':
+          description: Título criado com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Cria um novo título no sistema (REST)
+  /bills/by-change-date:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Títulos a pagar
+      x-audience:
+        - public
+      tags:
+        - Títulos a pagar
+      summary: Busca títulos por data de alteração
+      operationId: loadBillsFromChangeDate
+      parameters:
+        - $ref: '#/components/parameters/StartDateQueryRequired'
+          description: Data inicial de alteração para consulta de títulos
+        - $ref: '#/components/parameters/EndDateQueryRequired'
+          description: Data final de alteração para consulta de títulos
+        - $ref: '#/components/parameters/DebtorIdQuery'
+        - $ref: '#/components/parameters/CreditorIdQuery'
+        - $ref: '#/components/parameters/CostCenterIdQuery'
+        - $ref: '#/components/parameters/DocumentsIdentificationIdQuery'
+        - $ref: '#/components/parameters/DocumentNumberQuery'
+        - $ref: '#/components/parameters/StatusQuery'
+        - $ref: '#/components/parameters/OriginIdQuery'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Lista de títulos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bill'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca títulos por data de alteração no sistema (REST)
+  /bills/{billId}:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Títulos a pagar
+      x-audience:
+        - public
+      tags:
+        - Títulos a pagar
+      summary: Obtém detalhes de um título específico
+      operationId: getBill
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+      responses:
+        '200':
+          description: Título encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bill'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca o título no Sienge (REST)
+    patch:
+      tags:
+        - Títulos a pagar
+      summary: Modifica dados de um título existente
+      operationId: updateBill
+      x-section: Títulos a pagar
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+      requestBody:
+        description: Objeto para atualização do título
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillUpdate'
+        required: true
+      responses:
+        '204':
+          description: Título atualizado
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Atualiza o título no Sienge (REST)
+  /eletronic-invoice-bills:
+    post:
+      tags:
+        - Títulos a pagar
+      summary: Insere título baseado em nota fiscal eletrônica
+      operationId: insertElectronicInvoiceBill
+      x-section: Títulos a pagar
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      requestBody:
+        description: Dados da nota fiscal eletrônica para geração do título
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ElectronicInvoiceBillInsert'
+            example:
+              debtorId: 123
+              accessKeyNumber: '12345678901234567890123456789012345678901234'
+              documentIdentificationId: NFE
+              baseDate: '2024-01-01'
+              billDate: '2024-01-01'
+              dueDate: '2024-01-31'
+              indexId: 1
+              installmentsNumber: 1
+              budgetCategories:
+                - costCenterId: 1
+                  paymentCategoriesId: '2010101'
+                  percentage: 100
+        required: true
+      responses:
+        '201':
+          description: Título criado a partir da NFe com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Cria título automaticamente a partir de dados de NFe (REST)
+  /bills/{billId}/installments:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Parcelas do título a pagar
+      x-audience:
+        - public
+      tags:
+        - Parcelas do título a pagar
+      summary: Lista parcelas de um título específico
+      operationId: getBillInstallments
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Parcelas encontradas
+          content:
+            application/json:
+              example:
+                resultSetMetadata:
+                  count: 1
+                  offset: 0
+                  limit: 10
+                results:
+                  - indexId: 1
+                    baseDate: '2024-01-01'
+                    dueDate: '2024-01-31'
+                    billDate: '2024-01-01'
+                    amount: 1000
+                    installmentNumber: 1
+                    paymentTypeId: 1
+                    paymentType: PIX
+                    situation: Totalmente paga
+                    sentToBank: true
+                    batchNumber: 10
+              schema:
+                $ref: '#/components/schemas/GetResponseBillInstallments'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca as parcelas do título (REST)
+    patch:
+      tags:
+        - Parcelas do título a pagar
+      summary: Atualiza parcelas do título em massa
+      description: >-
+        Atualiza as parcelas do título. Se uma das parcelas não forem
+        atualizadas por alguma falha, o processo não é confirmado. (REST)
+      operationId: updateInstallments
+      x-section: Parcelas do título a pagar
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+          description: Número do título que as parcelas serão atualizadas
+      requestBody:
+        description: Objeto com campos para atualização da parcela
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillInstallmentBatchUpdate'
+        required: true
+      responses:
+        '204':
+          description: As Parcelas do Título foram atualizadas
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /bills/{billId}/installments/{installmentId}:
+    patch:
+      tags:
+        - Parcelas do título a pagar
+      summary: Atualiza parcela do título
+      operationId: updateInstallment
+      x-section: Parcelas do título a pagar
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+          description: Número da parcela que será atualizada
+      requestBody:
+        description: Objeto com os campos para atualização da parcela
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillInstallmentUpdate'
+        required: true
+      responses:
+        '204':
+          description: Parcela atualizada
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Modifica dados específicos de uma parcela do título (REST)
+  /bills/{billId}/installments/{installmentId}/payment-information/bank-transfer:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Informações de pagamento da parcela
+      x-audience:
+        - public
+      tags:
+        - Informações de pagamento da parcela
+      summary: Busca pagamento por transferência bancária
+      operationId: getBankTransfer
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      responses:
+        '200':
+          description: Informações de transferência bancária encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankTransfer'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Busca informação de pagamento da parcela do tipo transferência bancária
+        (REST)
+    patch:
+      tags:
+        - Informações de pagamento da parcela
+      summary: Atualiza dados de transferência bancária
+      operationId: insertBankTransfer
+      x-section: Informações de pagamento da parcela
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      requestBody:
+        description: >-
+          Inserção de informação de pagamento da parcela do tipo transferência
+          bancária.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankTransfer'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/PaymentInformationInserted'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Insere pagamento por transferência bancária (REST)
+  /bills/{billId}/installments/{installmentId}/payment-information/boleto-bancario:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Informações de pagamento da parcela
+      x-audience:
+        - public
+      tags:
+        - Informações de pagamento da parcela
+      summary: Busca pagamento por boleto bancário
+      operationId: getBoletoBancario
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      responses:
+        '200':
+          description: Informações de boleto bancário encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoletoBancario'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca informação de pagamento da parcela do tipo boleto bancário (REST)
+    patch:
+      tags:
+        - Informações de pagamento da parcela
+      summary: Atualiza dados de boleto bancário
+      operationId: insertBoletoBancario
+      x-section: Informações de pagamento da parcela
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      requestBody:
+        description: >-
+          Inserção de informação de pagamento da parcela do tipo boleto
+          concessionária.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoletoBancario'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/PaymentInformationInserted'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Insere pagamento por boleto bancário (REST)
+  /bills/{billId}/installments/{installmentId}/payment-information/boleto-concessionaria:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Informações de pagamento da parcela
+      x-audience:
+        - public
+      tags:
+        - Informações de pagamento da parcela
+      summary: Busca pagamento por boleto concessionária
+      operationId: getBoletoConcessionaria
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      responses:
+        '200':
+          description: Informações de boleto concessionária encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoletoConcessionaria'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Busca informação de pagamento da parcela do tipo boleto concessionária
+        (REST)
+    patch:
+      tags:
+        - Informações de pagamento da parcela
+      summary: Insere pagamento por boleto concessionária
+      operationId: insertBoletoConcessionaria
+      x-section: Informações de pagamento da parcela
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      requestBody:
+        description: >-
+          Inserção de informação de pagamento da parcela do tipo boleto
+          concessionária.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoletoConcessionaria'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/PaymentInformationInserted'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Inserção de informação de pagamento da parcela do tipo boleto
+        concessionária (REST)
+  /bills/{billId}/installments/{installmentId}/payment-information/boleto-tax:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Informações de pagamento da parcela
+      x-audience:
+        - public
+      tags:
+        - Informações de pagamento da parcela
+      summary: Busca pagamento de tributos com código de barras
+      operationId: getBoletoTax
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      responses:
+        '200':
+          description: Informações de tributos com código de barras encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoletoTax'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Busca informação de pagamento da parcela do tipo tributos com código de
+        barras (REST)
+    patch:
+      tags:
+        - Informações de pagamento da parcela
+      summary: Insere pagamento de tributos com código de barras
+      operationId: insertBoletoTax
+      x-section: Informações de pagamento da parcela
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      requestBody:
+        description: >-
+          Inserção de informação de pagamento da parcela do tipo tributos com
+          código de barras.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BoletoTax'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/PaymentInformationInserted'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Inserção de informação de pagamento da parcela do tipo tributos com
+        código de barras (REST)
+  /bills/{billId}/installments/{installmentId}/payment-information/dda:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Informações de pagamento da parcela
+      x-audience:
+        - public
+      tags:
+        - Informações de pagamento da parcela
+      summary: Busca pagamento DDA
+      operationId: getDda
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      responses:
+        '200':
+          description: Informações de pagamento DDA encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DDA'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Busca informação de pagamento da parcela do tipo débito direto
+        autorizado (REST)
+    patch:
+      tags:
+        - Informações de pagamento da parcela
+      summary: Insere pagamento DDA
+      operationId: insertDda
+      x-section: Informações de pagamento da parcela
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      requestBody:
+        description: Dados para configuração de débito direto autorizado
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DDA'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/PaymentInformationInserted'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Inserção de informação de pagamento da parcela do tipo débito direto
+        autorizado (REST)
+  /bills/{billId}/installments/{installmentId}/payment-information/darf-tax:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Informações de pagamento da parcela
+      x-audience:
+        - public
+      tags:
+        - Informações de pagamento da parcela
+      summary: Busca pagamento DARF
+      operationId: getDarfTax
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      responses:
+        '200':
+          description: Informações de tributo DARF encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DarfTax'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca informação de pagamento da parcela do tipo tributos DARF (REST)
+    patch:
+      tags:
+        - Informações de pagamento da parcela
+      summary: Insere pagamento DARF
+      operationId: insertDarfTax
+      x-section: Informações de pagamento da parcela
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      requestBody:
+        description: Objeto para adicionar as informações na parcela do tipo tributos DARF.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DarfTax'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/PaymentInformationInserted'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Inserção de informação de pagamento da parcela do tipo tributos DARF
+        (REST)
+  /bills/{billId}/installments/{installmentId}/payment-information/darj-tax:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Informações de pagamento da parcela
+      x-audience:
+        - public
+      tags:
+        - Informações de pagamento da parcela
+      summary: Busca pagamento DARJ
+      operationId: getDarjTax
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      responses:
+        '200':
+          description: Informações de tributo DARJ encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DarjTax'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca informação de pagamento da parcela do tipo tributos DARJ (REST)
+    patch:
+      tags:
+        - Informações de pagamento da parcela
+      summary: Insere pagamento DARJ
+      operationId: insertDarjTax
+      x-section: Informações de pagamento da parcela
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      requestBody:
+        description: Objeto para adicionar as informações na parcela do tipo tributos DARJ.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DarjTax'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/PaymentInformationInserted'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Inserção de informação de pagamento da parcela do tipo tributos DARJ
+        (REST)
+  /bills/{billId}/installments/{installmentId}/payment-information/fgts-tax:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Informações de pagamento da parcela
+      x-audience:
+        - public
+      tags:
+        - Informações de pagamento da parcela
+      summary: Busca pagamento FGTS
+      operationId: getFgtsTax
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      responses:
+        '200':
+          description: Informações de tributo FGTS encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FGTSTax'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca informação de pagamento da parcela do tipo tributos FGTS (REST)
+    patch:
+      tags:
+        - Informações de pagamento da parcela
+      summary: Insere pagamento FGTS
+      operationId: insertFgtsTax
+      x-section: Informações de pagamento da parcela
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      requestBody:
+        description: Objeto para adicionar as informações na parcela do tipo tributos FGTS.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FGTSTax'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/PaymentInformationInserted'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Inserção de informação de pagamento da parcela do tipo tributos FGTS
+        (REST)
+  /bills/{billId}/installments/{installmentId}/payment-information/gare-tax:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Informações de pagamento da parcela
+      x-audience:
+        - public
+      tags:
+        - Informações de pagamento da parcela
+      summary: Busca pagamento GARE
+      operationId: getGareTax
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      responses:
+        '200':
+          description: Informações de tributo GARE encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GARETax'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca informação de pagamento da parcela do tipo tributos GARE (REST)
+    patch:
+      tags:
+        - Informações de pagamento da parcela
+      summary: Insere pagamento GARE
+      operationId: insertGareTax
+      x-section: Informações de pagamento da parcela
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      requestBody:
+        description: Objeto para adicionar as informações na parcela do tipo tributos GARE.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GARETax'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/PaymentInformationInserted'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Inserção de informação de pagamento da parcela do tipo tributos GARE
+        (REST)
+  /bills/{billId}/installments/{installmentId}/payment-information/inss-tax:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Informações de pagamento da parcela
+      x-audience:
+        - public
+      tags:
+        - Informações de pagamento da parcela
+      summary: Busca pagamento INSS
+      operationId: getInssTax
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      responses:
+        '200':
+          description: Informações de tributo INSS encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/INSSTax'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca informação de pagamento da parcela do tipo tributos INSS (REST)
+    patch:
+      tags:
+        - Informações de pagamento da parcela
+      summary: Insere pagamento INSS
+      operationId: insertInssTax
+      x-section: Informações de pagamento da parcela
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      requestBody:
+        description: Objeto para adicionar as informações na parcela do tipo tributos INSS.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/INSSTax'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/PaymentInformationInserted'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Inserção de informação de pagamento da parcela do tipo tributos INSS
+        (REST)
+  /bills/{billId}/installments/{installmentId}/payment-information/pix:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Informações de pagamento da parcela
+      x-audience:
+        - public
+      tags:
+        - Informações de pagamento da parcela
+      summary: Busca pagamento Pix
+      operationId: getPix
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      responses:
+        '200':
+          description: Informações de pagamento Pix encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pix'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca informação de pagamento da parcela do tipo Pix (REST)
+    patch:
+      tags:
+        - Informações de pagamento da parcela
+      summary: Insere pagamento Pix
+      operationId: insertPix
+      x-section: Informações de pagamento da parcela
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/InstallmentIdPath'
+      requestBody:
+        description: >-
+          Objeto para adicionar as informações na parcela. Deve enviar
+          isUsingCreditorData = "S" e/ou informações da chave pix (keyPix e
+          keyPixType). Caso o parâmetro 1254 esteja inativo, obrigatoriamente
+          deve enviar informações referente a chave pix.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pix'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/PaymentInformationInserted'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Inserção de informação de pagamento da parcela do tipo Pix (REST)
+  /bills/{billId}/taxes:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Impostos do título
+      x-audience:
+        - public
+      tags:
+        - Impostos do título
+      summary: Busca impostos
+      operationId: getBillTaxes
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+          description: Número do título em que os impostos estão vinculados
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Impostos encontrados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseTaxesBill'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Recupera a lista completa de impostos associados ao título especificado,
+        incluindo detalhes de cada imposto configurado (REST)
+  /bills/{billId}/budget-categories:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Apropriação financeira do título
+      x-audience:
+        - public
+      tags:
+        - Apropriação financeira do título
+      summary: Busca apropriações financeiras
+      operationId: getBillsIdBudgetCategories
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+          description: Número do título em que as apropriações financeiras estão vinculados
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Apropriações financeiras encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseBudgetCategoriesBill'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Recupera todas as apropriações financeiras vinculadas ao título,
+        incluindo centros de custo e categorias de pagamento com seus
+        respectivos percentuais (REST)
+    put:
+      tags:
+        - Apropriação financeira do título
+      summary: Atualiza apropriações financeiras
+      operationId: updateBillBudgetCategories
+      x-section: Apropriação financeira do título
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+      requestBody:
+        description: Objeto para alterar as apropriações financeiras do título
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/BillBudgetCategoriesProperty'
+              minItems: 1
+              example:
+                - costCenterId: 1
+                  paymentCategoriesId: '2010101'
+                  percentage: 100
+        required: true
+      responses:
+        '204':
+          description: Apropriações financeiras do título alteradas com sucesso.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Atualiza apropriações financeiras vinculadas ao título, mostrando a
+        distribuição de custos por centro de custos e plano financeiro com
+        percentuais de rateio (REST)
+  /bills/{billId}/departments-cost:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Apropriação departamento do título
+      x-audience:
+        - public
+      tags:
+        - Apropriação departamento do título
+      summary: Busca apropriações de departamento
+      operationId: getBillDepartmentsCost
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+          description: >-
+            Número do título em que as apropriações de departamento estão
+            vinculados
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Apropriações departamento encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseDepartmentsCostBill'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Recupera todas as apropriações de departamento vinculadas ao título,
+        mostrando a distribuição de custos por departamento com percentuais de
+        rateio (REST)
+    put:
+      tags:
+        - Apropriação departamento do título
+      summary: Atualiza apropriações de departamento
+      operationId: updateBillDepartmentsCost
+      x-section: Apropriação departamento do título
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+      requestBody:
+        description: Objeto para alterar as apropriações de departamento do título
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/BillDepartmentsCostProperty'
+              minItems: 1
+              example:
+                - departmentId: 1
+                  percentage: 100
+        required: true
+      responses:
+        '204':
+          description: Apropriações de departamento do título alteradas com sucesso.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Atualiza apropriações de departamento vinculadas ao título, mostrando a
+        distribuição de custos por departamento com percentuais de rateio (REST)
+  /bills/{billId}/buildings-cost:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Apropriação obra do título
+      x-audience:
+        - public
+      tags:
+        - Apropriação obra do título
+      summary: Busca apropriações de obra
+      operationId: getBillBuildingsCost
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+          description: Número do título em que as apropriações de obra estão vinculados
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Apropriações obra encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseBuildingsCostBill'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Recupera todas as apropriações de obra vinculadas ao título, incluindo
+        detalhes de obras, unidades e planilhas orçamentárias com percentuais de
+        distribuição (REST)
+    put:
+      tags:
+        - Apropriação obra do título
+      summary: Atualiza apropriações de obra
+      operationId: updateBillBuildingsCost
+      x-section: Apropriação obra do título
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+      requestBody:
+        description: Objeto para alterar as apropriações de obra do título
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillBuildingsCostInsert'
+        required: true
+      responses:
+        '204':
+          description: Apropriações de obra do título alteradas com sucesso.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Atualiza as apropriações de obra vinculadas ao título, permitindo
+        modificar obras, unidades, planilhas orçamentárias e percentuais de
+        distribuição de custos (REST)
+  /bills/{billId}/attachments:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Anexo do título
+      x-audience:
+        - public
+      tags:
+        - Anexo do título
+      summary: Busca anexos
+      operationId: getBillAttachments
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Foi encontrado anexos para o título
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseBillAttachments'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Recupera todas as informações dos anexos vinculados ao título, incluindo
+        metadados dos arquivos, tipos de documento e status de upload (REST)
+    post:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Anexo do título
+      x-audience:
+        - public
+      tags:
+        - Anexo do título
+      summary: Insere anexo
+      operationId: insertBillAttachments
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/AttachmentDescriptionQuery'
+      requestBody:
+        description: Arquivo para anexar ao título
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: >-
+                    Arquivo para inserção | Tipo: multipart/form-data | Tamanho
+                    máximo: 70 MB | Tamanho máximo do nome do arquivo: 100
+                    caracteres
+                  format: binary
+                  example: documento.pdf
+            example:
+              file: documento.pdf
+        required: true
+      responses:
+        '201':
+          description: Anexo inserido
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Realiza upload e anexação de arquivo ao título, suportando diversos
+        formatos de documento com validação de tamanho e nome do arquivo (REST)
+  /bills/{billId}/attachments/{attachmentId}:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Anexo do título
+      x-audience:
+        - public
+      tags:
+        - Anexo do título
+      summary: Download de anexo
+      operationId: downloadBillAttachment
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/AttachmentIdPath'
+      responses:
+        '200':
+          description: Anexo encontrado
+          content:
+            application/json:
+              schema:
+                type: string
+                format: binary
+            file:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Realiza o download do arquivo anexo específico vinculado ao título,
+        retornando o conteúdo binário do arquivo com headers apropriados para
+        download (REST)
+  /bills/{billId}/units:
+    get:
+      x-original-file: bill-debt-v1.yaml
+      x-section: Unidades do título
+      x-audience:
+        - public
+      tags:
+        - Unidades do título
+      summary: Busca unidades
+      operationId: getUnits
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Unidades do título encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseUnits'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Recupera todas as unidades vinculadas ao título no sistema Sienge,
+        incluindo informações de identificação, centros de custo e percentuais
+        de apropriação (REST)
+    put:
+      tags:
+        - Unidades do título
+      summary: Atualiza unidades
+      operationId: updateUnits
+      x-section: Unidades do título
+      x-original-file: bill-debt-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BillIdPath'
+      requestBody:
+        description: Objeto para alterar as unidades do título
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillUnitsInsert'
+        required: true
+      responses:
+        '204':
+          description: Unidades do alteradas com sucesso.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Atualiza as configurações de unidades vinculadas ao título no sistema
+        Sienge, permitindo modificar centros de custo, percentuais de
+        apropriação e configurações de unidade principal (REST)
+components:
+  schemas:
+    BillsResponse:
+      description: Resposta da consulta de títulos do contas a pagar
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      example:
+        resultSetMetadata:
+          limit: 10
+          offset: 0
+          total: 1
+          count: 1
+        results:
+          - id: 1000
+            debtorId: 1
+            creditorId: 100
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          allOf:
+            - $ref: '#/components/schemas/ListOfTitlesSearchResultDescription'
+          items:
+            $ref: '#/components/schemas/Bill'
+          example:
+            - id: 1000
+              debtorId: 1
+              creditorId: 100
+              documentIdentificationId: NF
+              documentNumber: '123456'
+              issueDate: '2024-01-01'
+              installmentsNumber: 1
+              totalInvoiceAmount: 1000
+    BillInsert:
+      description: Objeto para inserção de título do contas a pagar
+      required:
+        - baseDate
+        - billDate
+        - budgetCategories
+        - creditorId
+        - debtorId
+        - discount
+        - documentIdentificationId
+        - documentNumber
+        - dueDate
+        - indexId
+        - installmentsNumber
+        - issueDate
+        - notes
+        - totalInvoiceAmount
+      type: object
+      properties:
+        debtorId:
+          description: Código da empresa
+          example: 123
+          format: int32
+          type: integer
+        creditorId:
+          description: Código do credor
+          example: 123
+          format: int32
+          type: integer
+        documentIdentificationId:
+          description: Código do documento
+          example: NF | AV
+          type: string
+        documentNumber:
+          description: Número do documento
+          example: NF-001
+          type: string
+        issueDate:
+          description: Data de emissão. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        installmentsNumber:
+          type: integer
+          description: Quantidade de parcelas
+          format: int32
+          minimum: 1
+          example: 1
+        indexId:
+          description: Código do indexador.
+          example: 5
+          type: integer
+        baseDate:
+          description: Data base. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        dueDate:
+          description: Data de vencimento. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        billDate:
+          description: Data de competência. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        totalInvoiceAmount:
+          maximum: 9999999999.99
+          minimum: 0.01
+          type: number
+          description: >-
+            Valor do título bruto, somando impostos e desconto | Máximo de casas
+            decimais: 2 | Exemplo: 108.75
+          format: double
+          example: 1000
+        notes:
+          maxLength: 500
+          type: string
+          description: 'Observação do título | Exemplo: Observação título Dez2017'
+          example: Título de exemplo
+        discount:
+          maximum: 9999999999.99
+          minimum: 0
+          type: number
+          description: 'Valor desconto | Máximo de casas decimais: 2 | Exemplo: 10.00'
+          format: double
+          example: 0
+        budgetCategories:
+          $ref: '#/components/schemas/BillBudgetCategoriesProperty'
+        taxes:
+          type: array
+          description: Impostos do título
+          items:
+            $ref: '#/components/schemas/BillTaxInsert'
+          example:
+            - taxId: 1
+              ibgeCityId: '4205407'
+              rate: 5.45
+              amount: 95.57
+              taxableBaseAmount: 1035
+              taxRateMarker: 100
+              usesIncomeTaxTable: false
+        departmentsCost:
+          $ref: '#/components/schemas/BillDepartmentsCostProperty'
+        buildingsCost:
+          $ref: '#/components/schemas/BillBuildingsCostProperty'
+        units:
+          $ref: '#/components/schemas/BillUnitsProperty'
+    Bill:
+      description: Título do contas a pagar
+      type: object
+      example:
+        id: 1000
+        debtorId: 1
+        creditorId: 100
+        documentIdentificationId: NF
+        documentNumber: '123456'
+        issueDate: '2018-12-22'
+        installmentsNumber: 1
+        totalInvoiceAmount: 1000
+        tenantUrl: https://api.sienge.com.br/suporte/sienge/public/api
+        notes: Observação título Dez2017
+        discount: 10
+        status: S
+        originId: AC
+        registeredUserId: USER
+        registeredBy: User
+        registeredDate: '2022-06-10 10:00:00'
+        changedUserId: USER
+        changedBy: User
+        changedDate: '2022-06-10 10:00:00'
+        accessKeyNumber: '12312312312312312312312312312312312312312312'
+        links:
+          - rel: debtor
+            href: https://../v1/debtor/1
+      properties:
+        id:
+          type: integer
+          description: Identificador único do título
+          format: int32
+        debtorId:
+          description: Código da empresa
+          example: 123
+          format: int32
+          type: integer
+        creditorId:
+          description: Código do credor
+          example: 123
+          format: int32
+          type: integer
+        documentIdentificationId:
+          description: Código do documento
+          example: NF | AV
+          type: string
+        documentNumber:
+          description: Número do documento
+          example: NF-001
+          type: string
+        issueDate:
+          description: Data de emissão. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        installmentsNumber:
+          type: integer
+          description: Quantidade de parcelas
+          format: int32
+          minimum: 1
+          example: 1
+        totalInvoiceAmount:
+          type: number
+          description: 'Valor do título bruto, somando impostos e desconto | Exemplo: 100.00'
+          format: double
+          example: 1000
+        tenantUrl:
+          type: string
+          description: URL Base das API's
+          example: https://api.sienge.com.br/suporte/sienge/public/api
+        notes:
+          maxLength: 500
+          type: string
+          description: Observação do título
+          example: Observação título Dez2017
+        discount:
+          type: number
+          description: 'Valor de desconto | Exemplo: 10.00'
+          format: double
+        status:
+          maxLength: 1
+          type: string
+          description: >-
+            Tipo de consistência: 'S' - Completo | 'N' - Incompleto | 'I' - Em
+            inclusão
+          example: S
+          enum:
+            - S
+            - 'N'
+            - I
+        originId:
+          maxLength: 2
+          type: string
+          description: >-
+            Código de origem: 'AC' - Administração de Compras | 'RA' -
+            Administração de Obras | 'AI' - Apuração de Impostos | 'CO' -
+            Comercial | 'CF' - Conhecimento de Frete | 'CP' - Contas a Pagar |
+            'ME' - Contratos e Medições | 'MO' - Controle de Mão de Obra | 'DV'
+            - Devolução de Nota Fiscal | 'RF' - Financiamento Bancário | 'FP' -
+            Folha de Pagamento | 'FE' - Frota de Equipamentos | 'GI' - Guia de
+            Impostos | 'LO' - Locação de Imóveis | 'SE' - Sistemas Externos'
+          example: AC
+          enum:
+            - AC
+            - RA
+            - AI
+            - CO
+            - CF
+            - CP
+            - ME
+            - MO
+            - DV
+            - RF
+            - FP
+            - FE
+            - GI
+            - LO
+            - SE
+        registeredUserId:
+          type: string
+          description: ID do Usuário que cadastrou o título
+          example: USER
+        registeredBy:
+          type: string
+          description: Usuário que cadastrou o título
+          example: User
+        registeredDate:
+          type: string
+          description: >-
+            Data de cadastro do título | Formato ISO 8601 yyyy-MM-dd HH:mm:ss |
+            Exemplo: 2022-06-10 10:00:00
+          format: date-time
+          example: {}
+        changedUserId:
+          type: string
+          description: ID do Usuário que realizou a última alteração do título
+          example: USER
+        changedBy:
+          type: string
+          description: Usuário que realizou a última alteração do título
+          example: User
+        changedDate:
+          type: string
+          description: >-
+            Data da última alteração do título | Formato ISO 8601 yyyy-MM-dd
+            HH:mm:ss | Exemplo: 2022-06-10 10:00:00
+          format: date-time
+          example: {}
+        accessKeyNumber:
+          type: string
+          description: >-
+            Chave de acesso da nota fiscal eletrônica (NF-e) ou do Conhecimento
+            de Transporte Eletrônico (CT-e), deve possuir 44 caracteres
+          maxLength: 44
+          minLength: 44
+          example: '35200114200166000187550010000000046842327618'
+        purchaseOrderId:
+          type: integer
+          description: 'Identificador do pedido de compra vinculado ao título | Exemplo: 1'
+          format: int32
+          nullable: true
+          example: 1
+        formattedPurchaseOrderId:
+          type: string
+          description: >-
+            Número formatado do pedido de compra vinculado ao título | Exemplo:
+            1
+          nullable: true
+          example: '1'
+        contractNumber:
+          type: string
+          description: 'Número do contrato vinculado ao título | Exemplo: 123A'
+          nullable: true
+          example: 123A
+        measurementNumber:
+          type: integer
+          description: 'Número da medição vinculada ao título | Exemplo: 1'
+          format: int32
+          nullable: true
+          example: 1
+        links:
+          $ref: '#/components/schemas/Links'
+    BillUpdate:
+      description: Objeto para atualização de título do contas a pagar
+      type: object
+      example:
+        documentIdentificationId: NF
+        documentNumber: AX123
+      properties:
+        documentIdentificationId:
+          type: string
+          description: Identificador do documento
+          example: NF
+        documentNumber:
+          allOf:
+            - description: Número do documento
+              example: NF-001
+              type: string
+            - example: AX123
+    ElectronicInvoiceBillInsert:
+      description: Objeto para inserção de título baseado em nota fiscal eletrônica
+      required:
+        - accessKeyNumber
+        - baseDate
+        - billDate
+        - budgetCategories
+        - documentIdentificationId
+        - dueDate
+        - indexId
+        - installmentsNumber
+      type: object
+      properties:
+        debtorId:
+          type: integer
+          description: >-
+            Código da empresa (não é obrigatório, mas servirá de critério de
+            desempate caso exista mais uma empresa com o CNPJ do destinário da
+            NFE)
+          format: int32
+          example: 123
+        creditorId:
+          type: integer
+          description: >-
+            Código do credor (não é obrigatório, mas servirá de critério de
+            desempate caso exista mais um credor com CPF ou CNPJ do emitente da
+            NFE)
+          format: int32
+          example: 100
+        documentIdentificationId:
+          type: string
+          description: >-
+            Código do documento, documento deve ser fiscal e possuir modelo 55
+            no Sienge | Exemplo: NFE
+          example: NFE
+        accessKeyNumber:
+          type: string
+          description: >-
+            Chave de acesso da nota fiscal eletrônica (NF-e) ou do Conhecimento
+            de Transporte Eletrônico (CT-e), deve possuir 44 caracteres
+          maxLength: 44
+          minLength: 44
+          example: '35200114200166000187550010000000046842327618'
+        installmentsNumber:
+          type: integer
+          description: Quantidade de parcelas
+          format: int32
+          minimum: 1
+          example: 1
+        indexId:
+          description: Código do indexador.
+          example: 5
+          type: integer
+        baseDate:
+          description: Data base. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        dueDate:
+          description: Data de vencimento. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        billDate:
+          description: Data de competência. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        notes:
+          maxLength: 500
+          type: string
+          description: 'Observação do título | Exemplo: Observação título Dez2017'
+          example: Título de exemplo
+        budgetCategories:
+          $ref: '#/components/schemas/BillBudgetCategoriesProperty'
+        departmentsCost:
+          $ref: '#/components/schemas/BillDepartmentsCostProperty'
+        buildingsCost:
+          $ref: '#/components/schemas/BillBuildingsCostProperty'
+        units:
+          $ref: '#/components/schemas/BillUnitsProperty'
+    GetResponseBillInstallments:
+      description: Resposta da consulta de parcelas do título
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      example:
+        resultSetMetadata:
+          limit: 10
+          offset: 0
+          total: 1
+          count: 1
+        results:
+          - indexId: 1
+            amount: 1000
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          allOf:
+            - $ref: '#/components/schemas/InstallmentsListDescription'
+            - type: array
+              items:
+                $ref: '#/components/schemas/BillInstallment'
+    BillInstallmentBatchUpdate:
+      description: Alteração Parcela do título do contas a pagar em massa
+      type: array
+      minItems: 1
+      example:
+        - dueDate: '2018-12-22'
+          interestAmount: 999.99
+          fineAmount: 999.99
+          monetaryCorrectionAmount: 999.99
+          amount: 999.99
+          discountAmount: 999.99
+          installmentId: 1
+      items:
+        $ref: '#/components/schemas/BillInstallmentBatch'
+    BillInstallmentUpdate:
+      description: Objeto para atualização de parcela do título
+      type: object
+      example:
+        dueDate: '2018-12-22'
+        interestAmount: 9999999999.99
+        fineAmount: 9999999999.99
+        monetaryCorrectionAmount: 9999999999.99
+        amount: 9999999999.99
+        discountAmount: 9999999999.99
+      properties:
+        dueDate:
+          description: Data de vencimento. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        interestAmount:
+          maximum: 9999999999.99
+          minimum: 0
+          type: number
+          description: 'Valor de juros | Máximo de casas decimais: 2 | Exemplo: 10.00'
+          format: double
+        fineAmount:
+          maximum: 9999999999.99
+          minimum: 0
+          type: number
+          description: 'Valor de multa | Máximo de casas decimais: 2 | Exemplo: 10.00'
+          format: double
+        monetaryCorrectionAmount:
+          maximum: 9999999999.99
+          minimum: 0
+          type: number
+          description: >-
+            Valor de correção monetária | Máximo de casas decimais: 2 | Exemplo:
+            10.00
+          format: double
+        amount:
+          type: number
+          description: >-
+            Valor da parcela. | Máximo de casas decimais: 2 | Exemplo: 10.00 |
+            Ao informar este campo, o valor total do título poderá ser
+            recalculado.
+          format: double
+          minimum: 0
+          maximum: 9999999999.99
+        discountAmount:
+          maximum: 9999999999.99
+          minimum: 0
+          type: number
+          description: 'Valor de desconto | Máximo de casas decimais: 2 | Exemplo: 10.00'
+          format: double
+    BankTransfer:
+      description: Informação de pagamento por transferência bancária
+      required:
+        - beneficiaryAccountType
+        - notes
+        - paymentTypeId
+      type: object
+      example:
+        paymentTypeId: 1
+        notes: Transferência para fornecedor
+        beneficiaryBankCode: '001'
+        beneficiaryBankBranchNumber: '123456'
+        beneficiaryBankBranchDigit: '0'
+        beneficiaryAccountNumber: '123456789'
+        beneficiaryAccountDigit: '0'
+        beneficiaryAccountDAC: '1'
+        beneficiaryAccountType: C
+        beneficiaryName: Jose da Silva
+        beneficiaryCPFNumber: 123.456.789-01
+        beneficiaryCNPJNumber: 12.345.678/0001-90
+        tedFinalityCode: '00001'
+        docFinalityCode: '01'
+      properties:
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        notes:
+          maxLength: 500
+          type: string
+          description: Observação da informação de pagamento
+        beneficiaryBankCode:
+          maxLength: 3
+          type: string
+          description: Código do banco destino
+        beneficiaryBankBranchNumber:
+          maxLength: 6
+          type: string
+          description: Código da agência destino
+        beneficiaryBankBranchDigit:
+          maxLength: 1
+          type: string
+          description: Digito da agência destino
+        beneficiaryAccountNumber:
+          maxLength: 14
+          type: string
+          description: Código da conta destino
+        beneficiaryAccountDigit:
+          maxLength: 1
+          type: string
+          description: Digito da conta destino
+        beneficiaryAccountDAC:
+          maxLength: 1
+          type: string
+          description: Dígito de Auto Conferência
+        beneficiaryAccountType:
+          maxLength: 1
+          type: string
+          description: 'Tipo da conta: <br /> "C" - Corrente <br />"P" - Poupança'
+        beneficiaryName:
+          description: Nome do favorecido
+          example: John Doe
+          type: string
+        beneficiaryCPFNumber:
+          maxLength: 14
+          type: string
+          description: 'CPF do beneficiário | Obs.: Com máscara'
+        beneficiaryCNPJNumber:
+          maxLength: 18
+          type: string
+          description: 'CPNJ do beneficiário | Obs.: Com máscara'
+        tedFinalityCode:
+          maxLength: 5
+          type: string
+          description: >-
+            Código de finalidade TED | De acordo com padrão do Banco Central do
+            Brasil
+        docFinalityCode:
+          maxLength: 2
+          type: string
+          description: >-
+            Código de finalidade DOC | De acordo com padrão do Banco Central do
+            Brasil
+    BoletoBancario:
+      description: Informação de pagamento por boleto bancário
+      required:
+        - notes
+        - paymentTypeId
+      type: object
+      example:
+        paymentTypeId: 1
+        notes: Pagamento via boleto bancário
+        boletoBancarioBarCodeNumber: '00193373700000001000500940144816060680935031'
+        boletoBancarioManualBarCodeNumber: '00190500954014481606083935031373700000001000'
+        documentNumber: AX123
+        boletoBancarioBeneficiaryId: 100
+        boletoBancarioSacadorId: 200
+        discountDueDate: '2018-12-22'
+        links:
+          - rel: debtor
+            href: https://../v1/debtor/1
+      properties:
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        notes:
+          maxLength: 500
+          type: string
+          description: Observação da informação de pagamento
+        boletoBancarioBarCodeNumber:
+          maxLength: 44
+          type: string
+          description: Código de barras
+        boletoBancarioManualBarCodeNumber:
+          maxLength: 47
+          type: string
+          description: Linha digitável
+        documentNumber:
+          description: Número do documento
+          example: NF-001
+          type: string
+        boletoBancarioBeneficiaryId:
+          type: integer
+          description: Código ID do beneficiário
+          format: int32
+        boletoBancarioSacadorId:
+          type: integer
+          description: Código ID do sacador
+          format: int32
+        discountDueDate:
+          type: string
+          description: >-
+            Data limite para desconto | Formato ISO 8601 yyyy-MM-dd | Exemplo:
+            2018-12-22
+          format: date
+          example: {}
+        links:
+          $ref: '#/components/schemas/Links'
+    BoletoConcessionaria:
+      description: Informação de pagamento por boleto de concessionária
+      required:
+        - notes
+        - paymentTypeId
+      type: object
+      example:
+        paymentTypeId: 1
+        notes: Pagamento de conta de luz
+        boletoConcessionariaBarCodeNumber: '85800000000850500334101097516472700212292148'
+        boletoConcessionariaManualBarCodeNumber: 858000008-2 505003301-4 097564270-1 021221485-0
+        boletoConcessionariaPaymentType: B
+        documentNumber: AX123
+        taxPayerType: C
+        creditorTaxPayerId: 100
+        costCenterTaxPayerId: 200
+        taxPayerCPFCNPJNumber: 12.345.678/0001-90
+        links:
+          - rel: debtor
+            href: https://../v1/debtor/1
+      properties:
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        notes:
+          maxLength: 500
+          type: string
+          description: Observação da informação de pagamento
+        boletoConcessionariaBarCodeNumber:
+          maxLength: 44
+          type: string
+          description: Código de barras
+        boletoConcessionariaManualBarCodeNumber:
+          maxLength: 47
+          type: string
+          description: Linha digitável
+        boletoConcessionariaPaymentType:
+          maxLength: 1
+          type: string
+          description: >-
+            Tipo do pagamento | Descrição dos possíveis retornos:<br/> "F" - 
+            FGTS;<br/> "B" -  Contas de consumo;<br/> "D" -  DARF com código de
+            barras;<br/> "I" -  IPTU/ISS;<br/> "O" -  Outros;<br/> "H" - 
+            GNRE;<br/> "G" -  GPS/INSS;<br/>
+        documentNumber:
+          description: Número do documento
+          example: NF-001
+          type: string
+        taxPayerType:
+          maxLength: 1
+          type: string
+          description: >-
+            Tipo de contribuinte: <br /> "C" - Credor <br /> "O" -
+            Empreendimento
+        creditorTaxPayerId:
+          type: integer
+          description: Código do contribuinte quando credor
+          format: int32
+        costCenterTaxPayerId:
+          type: integer
+          description: Código do contribuinte quando empreendimento
+          format: int32
+        taxPayerCPFCNPJNumber:
+          maxLength: 18
+          type: string
+          description: 'CPF/CPNJ do contribuinte | Obs.: Com máscara'
+        links:
+          $ref: '#/components/schemas/Links'
+    BoletoTax:
+      description: Informação de pagamento por tributos com código de barras
+      required:
+        - notes
+        - paymentTypeId
+      type: object
+      example:
+        paymentTypeId: 1
+        notes: Pagamento de tributo
+        taxBarCodeNumber: '85800000000850500334101097516472700212292148'
+        taxManualBarCodeNumber: 858000008-2 505003301-4 097564270-1 021221485-0
+        links:
+          - rel: debtor
+            href: https://../v1/debtor/1
+      properties:
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        notes:
+          maxLength: 500
+          type: string
+          description: Observação da informação de pagamento
+        taxBarCodeNumber:
+          maxLength: 44
+          type: string
+          description: Código de barras
+        taxManualBarCodeNumber:
+          maxLength: 47
+          type: string
+          description: Linha digitável
+        links:
+          $ref: '#/components/schemas/Links'
+    DDA:
+      description: Informação de pagamento por débito direto autorizado
+      required:
+        - notes
+        - paymentTypeId
+      type: object
+      example:
+        paymentTypeId: 1
+        notes: Débito direto autorizado
+        beneficiaryBankCode: '001'
+        beneficiaryAccountNumber: '123456789'
+        beneficiaryAccountDigit: '0'
+        links:
+          - rel: debtor
+            href: https://../v1/debtor/1
+      properties:
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        notes:
+          maxLength: 500
+          type: string
+          description: Observação da informação de pagamento
+        beneficiaryBankCode:
+          maxLength: 3
+          type: string
+          description: Código do banco destino
+        beneficiaryAccountNumber:
+          maxLength: 14
+          type: string
+          description: Código da conta destino
+        beneficiaryAccountDigit:
+          maxLength: 1
+          type: string
+          description: Digito da conta destino
+        links:
+          $ref: '#/components/schemas/Links'
+    DarfTax:
+      description: Informação de pagamento por tributos DARF
+      required:
+        - darfBaseDate
+        - darfTaxReceitaId
+        - notes
+        - paymentTypeId
+        - taxPayerType
+      type: object
+      example:
+        paymentTypeId: 1
+        notes: Pagamento DARF
+        darfTaxReceitaId: '2172'
+        darfReferenceNumber: 2111100127617
+        darfBaseDate: '2018-12-22'
+        taxPayerType: C
+        creditorTaxPayerId: 100
+        costCenterTaxPayerId: 200
+        taxPayerCPFCNPJNumber: 12.345.678/0001-90
+        links:
+          - rel: debtor
+            href: https://../v1/debtor/1
+      properties:
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        notes:
+          maxLength: 500
+          type: string
+          description: Observação da informação de pagamento
+        darfTaxReceitaId:
+          maxLength: 4
+          type: string
+          description: 'Código da receita | Exemplo: 2172'
+        darfReferenceNumber:
+          type: number
+          description: 'Número de Referência | Exemplo: 2111100127617'
+          format: long
+        darfBaseDate:
+          type: string
+          description: >-
+            Período de apuração | Formato ISO 8601 yyyy-MM-dd | Exemplo:
+            2018-12-22
+          format: date
+          example: {}
+        taxPayerType:
+          maxLength: 1
+          type: string
+          description: >-
+            Tipo de contribuinte: <br /> "C" - Credor <br /> "O" -
+            Empreendimento
+        creditorTaxPayerId:
+          type: integer
+          description: Código do contribuinte quando credor
+          format: int32
+        costCenterTaxPayerId:
+          type: integer
+          description: Código do contribuinte quando empreendimento
+          format: int32
+        taxPayerCPFCNPJNumber:
+          maxLength: 18
+          type: string
+          description: 'CPF/CPNJ do contribuinte | Obs.: Com máscara'
+        links:
+          $ref: '#/components/schemas/Links'
+    DarjTax:
+      description: Informação de pagamento por tributos DARJ
+      required:
+        - darjReferencePeriod
+        - inscricaoEstadualNumber
+        - notes
+        - paymentTypeId
+        - taxPayerType
+      type: object
+      example:
+        paymentTypeId: 1
+        notes: Pagamento DARJ
+        darjReferencePeriod: '201812'
+        inscricaoEstadualNumber: '566013657780'
+        darjDocumentNumber: '4392184389210438'
+        taxPayerType: C
+        creditorTaxPayerId: 100
+        costCenterTaxPayerId: 200
+        taxPayerCPFCNPJNumber: 12.345.678/0001-90
+        links:
+          - rel: debtor
+            href: https://../v1/debtor/1
+      properties:
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        notes:
+          maxLength: 500
+          type: string
+          description: Observação da informação de pagamento
+        darjReferencePeriod:
+          type: string
+          description: 'Período de referência | Formato yyyyMM | Exemplo: 201812'
+          format: date
+          example: '201812'
+        inscricaoEstadualNumber:
+          maxLength: 12
+          type: string
+          description: 'Inscrição estadual | Exemplo: 566013657780'
+        darjDocumentNumber:
+          maxLength: 16
+          type: string
+          description: 'Número do documento DARJ| Exemplo: 4392184389210438'
+        taxPayerType:
+          maxLength: 1
+          type: string
+          description: >-
+            Tipo de contribuinte: <br /> "C" - Credor <br /> "O" -
+            Empreendimento
+        creditorTaxPayerId:
+          type: integer
+          description: Código do contribuinte quando credor
+          format: int32
+        costCenterTaxPayerId:
+          type: integer
+          description: Código do contribuinte quando empreendimento
+          format: int32
+        taxPayerCPFCNPJNumber:
+          maxLength: 18
+          type: string
+          description: 'CPF/CPNJ do contribuinte | Obs.: Com máscara'
+        links:
+          $ref: '#/components/schemas/Links'
+    FGTSTax:
+      description: Informação de pagamento por tributos FGTS
+      required:
+        - fgtsTaxReceitaId
+        - notes
+        - paymentTypeId
+      type: object
+      example:
+        paymentTypeId: 1
+        notes: Pagamento FGTS
+        fgtsTaxReceitaId: '2172'
+        fgtsIdNumber: 8932189540748465
+        conectividadeSocialLacreNumber: 892143982
+        conectividadeSocialLacreDigit: 12
+        taxPayerType: C
+        creditorTaxPayerId: 100
+        costCenterTaxPayerId: 200
+        taxPayerCPFCNPJNumber: 12.345.678/0001-90
+        taxBarCodeNumber: '85800000000850500334101097516472700212292148'
+        taxManualBarCodeNumber: 858000008-2 505003301-4 097564270-1 021221485-0
+        links:
+          - rel: debtor
+            href: https://../v1/debtor/1
+      properties:
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        notes:
+          maxLength: 500
+          type: string
+          description: Observação da informação de pagamento
+        fgtsTaxReceitaId:
+          maxLength: 4
+          type: string
+          description: 'Código da receita | Exemplo: 2172'
+        fgtsIdNumber:
+          type: number
+          description: 'Identificador do FGTS | Exemplo: 8932189540748465'
+          format: long
+        conectividadeSocialLacreNumber:
+          type: integer
+          description: 'Lacre de conectividade social | Exemplo: 892143982'
+          format: int32
+        conectividadeSocialLacreDigit:
+          type: integer
+          description: 'Digito lacre de conectividade social | Exemplo: 12'
+          format: int32
+        taxPayerType:
+          maxLength: 1
+          type: string
+          description: >-
+            Tipo de contribuinte: <br /> "C" - Credor <br /> "O" -
+            Empreendimento
+        creditorTaxPayerId:
+          type: integer
+          description: Código do contribuinte quando credor
+          format: int32
+        costCenterTaxPayerId:
+          type: integer
+          description: Código do contribuinte quando empreendimento
+          format: int32
+        taxPayerCPFCNPJNumber:
+          maxLength: 18
+          type: string
+          description: 'CPF/CPNJ do contribuinte | Obs.: Com máscara'
+        taxBarCodeNumber:
+          maxLength: 44
+          type: string
+          description: Código de barras
+        taxManualBarCodeNumber:
+          maxLength: 47
+          type: string
+          description: Linha digitável
+        links:
+          $ref: '#/components/schemas/Links'
+    GARETax:
+      description: Informação de pagamento por tributos GARE
+      required:
+        - gareInstallmentNumber
+        - gareLabelNumber
+        - gareReferencePeriod
+        - gareTaxReceitaId
+        - inscricaoEstadualNumber
+        - notes
+        - paymentTypeId
+        - taxPayerType
+      type: object
+      example:
+        paymentTypeId: 1
+        notes: Pagamento GARE
+        gareTaxReceitaId: '2172'
+        gareReferencePeriod: '201812'
+        inscricaoEstadualNumber: '566013657780'
+        gareLabelNumber: '123456'
+        gareInstallmentNumber: '001'
+        taxPayerType: C
+        creditorTaxPayerId: 100
+        costCenterTaxPayerId: 200
+        taxPayerCPFCNPJNumber: 12.345.678/0001-90
+        links:
+          - rel: debtor
+            href: https://../v1/debtor/1
+      properties:
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        notes:
+          maxLength: 500
+          type: string
+          description: Observação da informação de pagamento
+        gareTaxReceitaId:
+          maxLength: 4
+          type: string
+          description: 'Código da receita | Exemplo: 2172'
+        gareReferencePeriod:
+          type: string
+          description: 'Período de referência para GARE | Formato yyyyMM | Exemplo: 201812'
+          format: date
+          example: '201812'
+        inscricaoEstadualNumber:
+          maxLength: 12
+          type: string
+          description: 'Inscrição estadual para GARE | Exemplo: 566013657780'
+        gareLabelNumber:
+          maxLength: 13
+          type: string
+          description: Número de Inscrição do débito na Dívida Ativa ou Número da Etiqueta
+        gareInstallmentNumber:
+          maxLength: 13
+          type: string
+          description: Parcela/notificação
+        taxPayerType:
+          maxLength: 1
+          type: string
+          description: >-
+            Tipo de contribuinte: <br /> "C" - Credor <br /> "O" -
+            Empreendimento
+        creditorTaxPayerId:
+          type: integer
+          description: Código do contribuinte quando credor
+          format: int32
+        costCenterTaxPayerId:
+          type: integer
+          description: Código do contribuinte quando empreendimento
+          format: int32
+        taxPayerCPFCNPJNumber:
+          maxLength: 18
+          type: string
+          description: 'CPF/CPNJ do contribuinte | Obs.: Com máscara'
+        links:
+          $ref: '#/components/schemas/Links'
+    INSSTax:
+      description: Informação de pagamento por tributos INSS
+      required:
+        - inssBaseDate
+        - inssPaymentCode
+        - notes
+        - paymentTypeId
+        - taxPayerIdentificationNumber
+        - taxPayerIdentificationType
+      type: object
+      example:
+        paymentTypeId: 1
+        notes: Pagamento INSS
+        taxPayerIdentificationType: 8
+        taxPayerIdentificationNumber: '12345678901'
+        inssPaymentCode: '6658'
+        inssBaseDate: '122015'
+        inssOtherEntitiesValue: 3.75
+        taxPayerType: C
+        creditorTaxPayerId: 100
+        costCenterTaxPayerId: 200
+        taxPayerCPFCNPJNumber: 123.456.789-01
+        links:
+          - rel: debtor
+            href: https://../v1/debtor/1
+      properties:
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        notes:
+          maxLength: 500
+          type: string
+          description: Observação da informação de pagamento
+        taxPayerIdentificationType:
+          type: integer
+          description: >-
+            Tipo do identificador | Possíveis retornos:  <br /> 1 - CNPJ<br /> 2
+            - CEI<br /> 3 - DEBCAD<br /> 4 - NIT/PIS/PASEP<br /> 5 - Nº do
+            Título<br /> 6 - Referência<br /> 7 - NB<br /> 8 - CPF<br />
+          format: int32
+        taxPayerIdentificationNumber:
+          maxLength: 14
+          type: string
+          description: Número identificador
+        inssPaymentCode:
+          maxLength: 4
+          type: string
+          description: 'Código do pagamento | Exemplo: 6658'
+        inssBaseDate:
+          type: string
+          description: 'Competência | Formato MMyyyy | Exemplo: 122015'
+          format: date
+          example: '122015'
+        inssOtherEntitiesValue:
+          type: number
+          description: >-
+            Valor outras entidades  <br /> Máximo de casas decimais: 2 |
+            Exemplo: 3.75
+          format: double
+        taxPayerType:
+          maxLength: 1
+          type: string
+          description: >-
+            Tipo de contribuinte: <br /> "C" - Credor <br /> "O" -
+            Empreendimento
+        creditorTaxPayerId:
+          type: integer
+          description: Código do contribuinte quando credor
+          format: int32
+        costCenterTaxPayerId:
+          type: integer
+          description: Código do contribuinte quando empreendimento
+          format: int32
+        taxPayerCPFCNPJNumber:
+          maxLength: 18
+          type: string
+          description: 'CPF/CPNJ do contribuinte | Obs.: Com máscara'
+        links:
+          $ref: '#/components/schemas/Links'
+    Pix:
+      description: Informação de pagamento por PIX
+      required:
+        - isUsingCreditorData
+        - keyPix
+        - keyPixType
+        - paymentTypeId
+      type: object
+      example:
+        paymentTypeId: 1
+        notes: Pagamento via PIX
+        beneficiaryName: Jose da Silva
+        beneficiaryCPFNumber: 123.456.789-01
+        keyPix: 123.456.789-01
+        keyPixType: C
+        isUsingCreditorData: 'N'
+        links:
+          - rel: debtor
+            href: https://../v1/debtor/1
+      properties:
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        notes:
+          maxLength: 500
+          type: string
+          description: Observação da informação de pagamento
+        beneficiaryName:
+          description: Nome do favorecido
+          example: John Doe
+          type: string
+        beneficiaryCPFNumber:
+          maxLength: 14
+          type: string
+          description: 'CPF do beneficiário | Obs.: Com máscara'
+        beneficiaryCNPJNumber:
+          maxLength: 18
+          type: string
+          description: 'CPNJ do beneficiário | Obs.: Com máscara'
+        isUsingCreditorData:
+          type: string
+          description: '"S" - Sim <br /> "N" - Não'
+          example: S
+        keyPixType:
+          maxLength: 1
+          type: string
+          description: >-
+            Tipo da chave pix: <br /> "C" - CPF/CNPJ <br /> "E" - E-mail <br />
+            "T" - Telefone <br /> "A" - Aleatória
+          example: C
+        keyPix:
+          maxLength: 77
+          type: string
+          description: 'Chave pix | Obs.: Com máscara'
+        links:
+          $ref: '#/components/schemas/Links'
+    GetResponseTaxesBill:
+      description: Resposta da consulta de impostos do título
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      example:
+        resultSetMetadata:
+          limit: 10
+          offset: 0
+          count: 1
+        results:
+          - taxId: 1
+            ibgeCityId: '4205407'
+            rate: 5.45
+            amount: 95.57
+            taxableBaseAmount: 1035
+            taxRateMarker: 100
+            usesIncomeTaxTable: false
+            taxGuideBill: 1001
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de impostos do título
+          items:
+            $ref: '#/components/schemas/BillTax'
+    GetResponseBudgetCategoriesBill:
+      description: Resposta da consulta de apropriações financeiras do título
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      example:
+        resultSetMetadata:
+          limit: 10
+          offset: 0
+          total: 1
+          count: 1
+        results:
+          - costCenterId: 1
+            paymentCategoriesId: '2010101'
+            percentage: 100
+            links:
+              - rel: debtor
+                href: https://../v1/debtor/1
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          allOf:
+            - $ref: '#/components/schemas/FinancialAppropriationsListDescription'
+            - type: array
+              items:
+                $ref: '#/components/schemas/BillBudgetCategories'
+    BillBudgetCategoriesProperty:
+      type: array
+      minItems: 1
+      description: Apropriações financeiras do título
+      items:
+        $ref: '#/components/schemas/BillBudgetCategoriesInsert'
+      example:
+        - costCenterId: 1
+          paymentCategoriesId: '2010101'
+          percentage: 100
+    GetResponseDepartmentsCostBill:
+      description: Resposta da consulta de apropriações de departamento do título
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      example:
+        resultSetMetadata:
+          limit: 10
+          offset: 0
+          count: 1
+        results:
+          - departmentId: 1
+            departmentName: Financeiro
+            percentage: 100
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de apropriações de departamento  do título
+          items:
+            $ref: '#/components/schemas/BillDepartmentCost'
+    BillDepartmentsCostProperty:
+      type: array
+      description: Apropriações de departamento
+      items:
+        $ref: '#/components/schemas/BillDepartmentCostInsert'
+      example:
+        - departmentId: 1
+          percentage: 100
+    GetResponseBuildingsCostBill:
+      description: Resposta da consulta de apropriações de obra do título
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      example:
+        resultSetMetadata:
+          limit: 10
+          offset: 0
+          count: 1
+        results:
+          - buildingId: 1
+            buildingName: VILA GARDEN
+            buildingUnitId: 1
+            buildingUnitName: Torre A
+            costEstimationSheetId: 1001001
+            costEstimationSheetName: Alvenaria
+            percentage: 100
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de apropriações de obra do título
+          items:
+            $ref: '#/components/schemas/BillBuildingCost'
+    BillBuildingsCostInsert:
+      description: Objeto para inserção de apropriação de obra do título
+      required:
+        - buildingId
+        - buildingUnitId
+        - costEstimationSheetId
+        - percentage
+      type: object
+      example:
+        buildingId: 1
+        buildingUnitId: 1
+        costEstimationSheetId: 1.001.001
+        percentage: 100
+      properties:
+        buildingId:
+          description: Código da obra
+          example: 100
+          format: int32
+          minimum: 0
+          type: integer
+        buildingUnitId:
+          description: Código da unidade construtiva
+          example: 123
+          format: int32
+          type: integer
+        costEstimationSheetId:
+          type: string
+          description: 'Código do item de orçamento (cem máscara) | Exemplo: 1.001.001'
+        percentage:
+          maximum: 100
+          type: number
+          description: >-
+            Percentual apropriado a obra | Máximo de casas decimais: 12 |
+            Exemplo: 100.00
+          format: double
+    GetResponseBillAttachments:
+      description: Resposta da consulta de anexos do título
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      example:
+        resultSetMetadata:
+          limit: 10
+          offset: 0
+          count: 1
+        results:
+          - attachmentid: 1
+            name: nota_fiscal.pdf
+            description: Nota Fiscal Eltrônica
+            size: 320123
+            contentType: application/pdf
+            links:
+              - rel: debtor
+                href: https://../v1/debtor/1
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de anexos do título
+          items:
+            $ref: '#/components/schemas/BillAttachment'
+    GetResponseUnits:
+      description: Resposta da consulta de unidades do título
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      example:
+        resultSetMetadata:
+          limit: 10
+          offset: 0
+          total: 1
+          count: 1
+        results:
+          - billId: 1
+            unitId: '001'
+            costCenterId: 1
+            name: VILA GARDEN
+            propertyType: Apartamento
+            percentage: 100
+            principal: S
+            links:
+              - rel: debtor
+                href: https://../v1/debtor-..
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de unidades do título
+          items:
+            $ref: '#/components/schemas/BillUnit'
+    BillUnitsInsert:
+      description: Objeto para inserção de unidade do título
+      required:
+        - costCenterId
+        - percentage
+        - principal
+        - unitId
+      type: object
+      example:
+        unitId: '001'
+        costCenterId: 1
+        percentage: 100
+        principal: S
+      properties:
+        unitId:
+          type: string
+          description: Código da unidade
+        costCenterId:
+          description: Código do centro de custo
+          example: 123
+          format: int32
+          type: integer
+        percentage:
+          maximum: 100
+          type: number
+          description: >-
+            Percentual da unidade | Máximo de casas decimais: 12 | Exemplo:
+            100.00
+          format: double
+        principal:
+          type: string
+          description: |
+            Indica se é Unidade principal
+              * S - Sim
+              * N - Não
+          enum:
+            - S
+            - 'N'
+    PaymentBillWebhookPayload:
+      description: Payload do webhook de título alterado no contas a pagar
+      type: object
+      required:
+        - billId
+      properties:
+        billId:
+          description: Identificador do título no Sienge
+          example: 5000
+          format: int32
+          type: integer
+      example:
+        billId: 123
+    PaymentInstallmentWebhookPayload:
+      description: Payload do webhook de parcela do contas a pagar
+      type: object
+      required:
+        - billId
+        - installmentId
+        - billOrigin
+        - documentType
+      properties:
+        billId:
+          description: Identificador do título no Sienge
+          example: 5000
+          format: int32
+          type: integer
+        installmentId:
+          description: Identificador da parcela do título
+          example: 1
+          format: int32
+          type: integer
+        billOrigin:
+          type: string
+          description: Origem do título
+          example: CP
+        documentType:
+          type: string
+          description: Tipo do documento
+          example: NF
+      example:
+        billId: 123
+        installmentId: 1
+        billOrigin: CP
+        documentType: NF
+    PaymentAuthorizationWebhookPayload:
+      description: Payload do webhook de autorização disponível no contas a pagar
+      type: object
+      required:
+        - billId
+        - installmentId
+        - authorized
+      properties:
+        billId:
+          description: Identificador do título no Sienge
+          example: 5000
+          format: int32
+          type: integer
+        installmentId:
+          description: Identificador da parcela do título
+          example: 1
+          format: int32
+          type: integer
+        authorized:
+          type: boolean
+          description: Indica se está autorizado
+          example: true
+      example:
+        billId: 123
+        installmentId: 1
+        authorized: true
+    PaymentAuthorizationUpdateWebhookPayload:
+      description: Payload do webhook de autorização atualizada no contas a pagar
+      type: object
+      required:
+        - billId
+        - installmentId
+        - billOrigin
+        - documentType
+        - authorized
+      properties:
+        billId:
+          description: Identificador do título no Sienge
+          example: 5000
+          format: int32
+          type: integer
+        installmentId:
+          description: Identificador da parcela do título
+          example: 1
+          format: int32
+          type: integer
+        billOrigin:
+          type: string
+          description: Origem do título
+          example: CP
+        documentType:
+          type: string
+          description: Tipo do documento
+          example: NF
+        authorized:
+          allOf:
+            - type: boolean
+              description: Indica se está autorizado
+              example: true
+            - description: Indica se foi autorizado
+      example:
+        billId: 123
+        installmentId: 1
+        billOrigin: CP
+        documentType: NF
+        authorized: true
+    PaymentAcknowledgmentPendingWebhookPayload:
+      description: Payload do webhook de título a pagar com a ciência pendente
+      type: object
+      required:
+        - billId
+      properties:
+        billId:
+          description: Identificador do título no Sienge
+          example: 5000
+          format: int32
+          type: integer
+      example:
+        billId: 123
+    PaymentAcknowledgmentProcessedWebhookPayload:
+      description: Payload do webhook de título a pagar quando a ciência for realizada
+      type: object
+      required:
+        - billId
+      properties:
+        billId:
+          description: Identificador do título no Sienge
+          example: 5000
+          format: int32
+          type: integer
+      example:
+        billId: 123
+    PaymentReceiptWebhookPayload:
+      description: Payload do webhook de baixa do contas a pagar
+      type: object
+      required:
+        - billId
+        - installmentId
+        - billOrigin
+        - documentType
+      properties:
+        billId:
+          description: Identificador do título no Sienge
+          example: 5000
+          format: int32
+          type: integer
+        installmentId:
+          description: Identificador da parcela do título
+          example: 1
+          format: int32
+          type: integer
+        billOrigin:
+          type: string
+          description: Origem do título
+          example: CP
+        documentType:
+          type: string
+          description: Tipo do documento
+          example: NF
+      example:
+        billId: 123
+        installmentId: 1
+        billOrigin: CP
+        documentType: NF
+    PaymentReceiptChargebackWebhookPayload:
+      description: Payload do webhook de estorno da baixa do contas a pagar
+      type: object
+      required:
+        - billId
+        - installmentId
+      properties:
+        billId:
+          description: Identificador do título no Sienge
+          example: 5000
+          format: int32
+          type: integer
+        installmentId:
+          description: Identificador da parcela do título
+          example: 1
+          format: int32
+          type: integer
+      example:
+        billId: 123
+        installmentId: 1
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    ListOfTitlesSearchResultDescription:
+      description: Lista de títulos retornados como resultado da pesquisa.
+    BillTaxInsert:
+      description: Objeto para inserção de imposto do título
+      required:
+        - amount
+        - ibgeCityId
+        - rate
+        - taxId
+        - taxRateMarker
+        - taxableBaseAmount
+        - usesIncomeTaxTable
+      type: object
+      properties:
+        taxId:
+          type: integer
+          description: 'Código do imposto | Exemplo: IR'
+          format: int32
+          example: 1
+        ibgeCityId:
+          type: string
+          description: 'Código IBGE da cidade | Exemplo: 4205407'
+          maxLength: 7
+          example: '4205407'
+        rate:
+          type: number
+          description: 'Alíquota do imposto | Máximo de casas decimais: 4 | Exemplo: 10.5000'
+          format: double
+          minimum: 0
+          maximum: 100
+          example: 10.5
+        amount:
+          type: number
+          description: 'Valor do imposto | Máximo de casas decimais: 2 | Exemplo: 108.75'
+          format: double
+          minimum: 0
+          example: 108.75
+        taxableBaseAmount:
+          type: number
+          description: >-
+            Base de cálculo do imposto | Máximo de casas decimais: 2 | Exemplo:
+            1035.00
+          format: double
+          minimum: 0
+          example: 1035
+        taxRateMarker:
+          type: number
+          description: >-
+            Percentual de incidência | Máximo de casas decimais: 2 | Exemplo:
+            100.00
+          format: double
+          minimum: 0
+          example: 100
+        usesIncomeTaxTable:
+          type: boolean
+          description: 'Indica se utiliza tabela de imposto de renda | Exemplo: false'
+          example: false
+    BillBuildingsCostProperty:
+      type: array
+      description: Apropriações de obra
+      items:
+        $ref: '#/components/schemas/BillBuildingsCostInsert'
+      example:
+        - buildingId: 1
+          buildingUnitId: 1
+          costEstimationSheetId: 1.001.001
+          percentage: 100
+    BillUnitsProperty:
+      type: array
+      description: Unidades do título
+      items:
+        $ref: '#/components/schemas/BillUnitsInsert'
+      example:
+        - unitId: '001'
+          costCenterId: 1
+          percentage: 100
+          principal: S
+    Links:
+      description: Links para acessar outros recursos
+      example:
+        - href: https://../v1/purchase-..
+          rel: Recurso
+      items:
+        $ref: '#/components/schemas/Link'
+      type: array
+    InstallmentsListDescription:
+      description: Lista de parcelas
+    BillInstallment:
+      description: Parcela do título do contas a pagar
+      type: object
+      example:
+        indexId: 1
+        baseDate: '2024-01-01'
+        dueDate: '2024-01-01'
+        amount: 1000
+        installmentNumber: 1
+      properties:
+        indexId:
+          description: Código do indexador.
+          example: 5
+          type: integer
+        baseDate:
+          description: Data base. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        dueDate:
+          description: Data de vencimento. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        billDate:
+          description: Data de competência. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        amount:
+          type: number
+          description: 'Valor da parcela | Máximo de casas decimais: 2 | Exemplo: 100.00'
+          format: double
+        installmentNumber:
+          description: Número da parcela
+          example: 1
+          format: int32
+          type: integer
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        paymentType:
+          description: Descrição da forma de pagamento
+          example: PIX
+          type: string
+        situation:
+          type: string
+          description: >-
+            Situação da parcela ('Não paga', 'Parcialmente paga', 'Totalmente
+            paga')
+          example: Totalmente paga
+        sentToBank:
+          type: boolean
+          description: >-
+            Indica se a parcela está vinculada no pagamento escritural e lote
+            gerado
+          example: true
+        batchNumber:
+          type: integer
+          description: Número do lote, se não houver lote virá nulo
+          format: int32
+    BillInstallmentBatch:
+      description: Parcela do título do contas a pagar em massa
+      required:
+        - installmentId
+      minProperties: 2
+      allOf:
+        - $ref: '#/components/schemas/BillInstallmentUpdate'
+        - type: object
+          properties:
+            installmentId:
+              description: Identificador da parcela do título
+              example: 1
+              format: int32
+              type: integer
+    BillTax:
+      description: Imposto do título do contas a pagar
+      type: object
+      example:
+        taxId: 1
+        ibgeCityId: '4205407'
+        rate: 5
+        amount: 50
+      properties:
+        taxId:
+          type: integer
+          description: 'Código do imposto | Exemplo: IR'
+          format: int32
+          example: 1
+        ibgeCityId:
+          type: string
+          description: 'Código IBGE da cidade | Exemplo: 4205407'
+          maxLength: 7
+          example: '4205407'
+        rate:
+          type: number
+          description: 'Alíquota do imposto | Máximo de casas decimais: 4 | Exemplo: 10.5000'
+          format: double
+          minimum: 0
+          maximum: 100
+          example: 10.5
+        amount:
+          type: number
+          description: 'Valor do imposto | Máximo de casas decimais: 2 | Exemplo: 108.75'
+          format: double
+          minimum: 0
+          example: 108.75
+        taxableBaseAmount:
+          type: number
+          description: >-
+            Base de cálculo do imposto | Máximo de casas decimais: 2 | Exemplo:
+            1035.00
+          format: double
+          minimum: 0
+          example: 1035
+        taxRateMarker:
+          type: number
+          description: >-
+            Percentual de incidência | Máximo de casas decimais: 2 | Exemplo:
+            100.00
+          format: double
+          minimum: 0
+          example: 100
+        usesIncomeTaxTable:
+          type: boolean
+          description: 'Indica se utiliza tabela de imposto de renda | Exemplo: false'
+          example: false
+        taxGuideBill:
+          type: integer
+          description: Indica o número do título de guia gerado
+          format: int32
+    FinancialAppropriationsListDescription:
+      description: Lista de apropriações financeiras do título
+    BillBudgetCategories:
+      description: Apropriação financeira do título do contas a pagar
+      type: object
+      example:
+        costCenterId: 1
+        paymentCategoriesId: '2010101'
+        percentage: 100
+      properties:
+        costCenterId:
+          description: Código do centro de custo
+          example: 123
+          format: int32
+          type: integer
+        paymentCategoriesId:
+          type: string
+          description: 'Código do plano financeiro (sem máscara) | Exemplo: 2010101'
+          example: '2010101'
+        percentage:
+          allOf:
+            - description: Percentual de apropriação
+              example: 100
+              format: double
+              type: number
+            - maximum: 100
+        links:
+          $ref: '#/components/schemas/Links'
+    BillBudgetCategoriesInsert:
+      description: Objeto para inserção de apropriação financeira do título
+      required:
+        - costCenterId
+        - paymentCategoriesId
+        - percentage
+      type: object
+      example:
+        costCenterId: 1
+        paymentCategoriesId: '2010101'
+        percentage: 100
+      properties:
+        costCenterId:
+          description: Código do centro de custo
+          example: 123
+          format: int32
+          type: integer
+        paymentCategoriesId:
+          type: string
+          description: 'Código do plano financeiro (sem máscara) | Exemplo: 2010101'
+          example: '2010101'
+        percentage:
+          maximum: 100
+          type: number
+          description: >-
+            Percentual apropriado do centro de custo | Máximo de casas decimais:
+            12 | Exemplo: 100.00
+          format: double
+    BillDepartmentCost:
+      description: Apropriação de departamento do título do contas a pagar
+      type: object
+      example:
+        departmentId: 1
+        percentage: 100
+      properties:
+        departmentId:
+          description: Código do departamento
+          example: 123
+          format: int32
+          type: integer
+        departmentName:
+          allOf:
+            - description: Nome do departamento
+              example: Departamento Exemplo
+              type: string
+            - maxLength: 80
+        percentage:
+          maximum: 100
+          type: number
+          description: >-
+            Percentual apropriado no departamento |  Máximo de casas decimais:
+            12 | Exemplo: 100.00
+          format: double
+    BillDepartmentCostInsert:
+      description: Objeto para inserção de apropriação de departamento do título
+      required:
+        - departmentId
+        - percentage
+      type: object
+      example:
+        departmentId: 1
+        percentage: 100
+      properties:
+        departmentId:
+          description: Código do departamento
+          example: 123
+          format: int32
+          type: integer
+        percentage:
+          maximum: 100
+          type: number
+          description: >-
+            Percentual apropriado no departamento | Máximo de casas decimais: 12
+            | Exemplo: 100.00
+          format: double
+    BillBuildingCost:
+      description: Apropriação de obra do título do contas a pagar
+      type: object
+      example:
+        buildingId: 1
+        buildingUnitId: 1
+        costEstimationSheetId: 1001001
+        percentage: 100
+      properties:
+        buildingId:
+          description: Código da obra
+          example: 100
+          format: int32
+          minimum: 0
+          type: integer
+        buildingName:
+          allOf:
+            - description: Nome da obra
+              example: Obra Exemplo
+              type: string
+            - maxLength: 80
+        buildingUnitId:
+          description: Código da unidade construtiva
+          example: 123
+          format: int32
+          type: integer
+        buildingUnitName:
+          maxLength: 80
+          type: string
+          description: Nome da unidade construtiva
+        costEstimationSheetId:
+          type: integer
+          description: Código do item do orçamento
+          format: int32
+        costEstimationSheetName:
+          maxLength: 80
+          type: string
+          description: Nome do item do orçamento
+        percentage:
+          maximum: 100
+          type: number
+          description: >-
+            Percentual apropriado na obra |  Máximo de casas decimais: 12 |
+            Exemplo: 100.00
+          format: double
+    BillAttachment:
+      description: Anexo do título do contas a pagar
+      type: object
+      example:
+        attachmentid: 1
+        name: nota_fiscal.pdf
+        description: Nota Fiscal Eltrônica
+        size: 320123
+        contentType: application/pdf
+        links:
+          - rel: debtor
+            href: https://../v1/debtor/1
+      properties:
+        attachmentid:
+          type: integer
+          description: 'ID do anexo | Exemplo: 1'
+          format: int32
+          example: 1
+        name:
+          maxLength: 100
+          type: string
+          description: 'Nome do arquivo | Exemplo: nota_fiscal.pdf'
+          example: nota_fiscal.pdf
+        description:
+          maxLength: 500
+          type: string
+          description: 'Descrição do anexo | Exemplo: Nota Fiscal Eltrônica'
+          example: Nota Fiscal Eltrônica
+        size:
+          type: integer
+          description: 'Tamanho do arquivo em bytes | Exemplo: 320123'
+          format: int32
+        contentType:
+          type: string
+          description: 'Tipo do arquivo (MimeType) | Exemplo: application/pdf'
+          example: application/pdf
+        links:
+          $ref: '#/components/schemas/Links'
+    BillUnit:
+      description: Unidade do título do contas a pagar
+      type: object
+      example:
+        billId: 1
+        unitId: '001'
+        costCenterId: 1
+        name: VILA GARDEN
+        propertyType: Apartamento
+        percentage: 100
+        principal: S
+        links:
+          - rel: debtor
+            href: https://../v1/debtor-..
+      properties:
+        billId:
+          description: Identificador do título no Sienge
+          example: 5000
+          format: int32
+          type: integer
+        unitId:
+          type: string
+          description: 'numero da unidade | Exemplo: 1'
+          example: '1'
+        costCenterId:
+          type: integer
+          description: 'ID do centro de custo | Exemplo: 1'
+          format: int32
+          example: 1
+        name:
+          type: string
+          description: Nome do empreendimento
+          example: VILA GARDEN
+        propertyType:
+          type: string
+          description: Tipo do imóvel
+          example: Apartamento
+        percentage:
+          maximum: 100
+          type: number
+          description: >-
+            Percentual apropriado na unidade |  Máximo de casas decimais: 12 |
+            Exemplo: 100.00
+          format: double
+        principal:
+          type: string
+          description: Unidade principal ('S' or 'N')
+        links:
+          $ref: '#/components/schemas/Links'
+    Link:
+      description: Representa um link para outro recurso.
+      properties:
+        href:
+          description: URL do recurso associado
+          example: https://../v1/purchase-..
+          type: string
+        rel:
+          description: Nome da recurso associado
+          example: Recurso
+          type: string
+      type: object
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+    PaymentInformationInserted:
+      description: Informação de pagamento inserida com sucesso
+  parameters:
+    StartDateQueryRequired:
+      description: Data inicial para filtro de período
+      in: query
+      name: startDate
+      required: true
+      schema:
+        example: '2023-01-01'
+        format: date
+        type: string
+    EndDateQueryRequired:
+      description: Data final para filtro de período
+      in: query
+      name: endDate
+      required: true
+      schema:
+        example: '2023-01-31'
+        format: date
+        type: string
+    DebtorIdQuery:
+      name: debtorId
+      in: query
+      description: Código da empresa cadastrada no Sienge
+      schema:
+        type: integer
+    CreditorIdQuery:
+      name: creditorId
+      in: query
+      description: Código do credor cadastrado no Sienge
+      schema:
+        type: integer
+    CostCenterIdQuery:
+      name: costCenterId
+      in: query
+      description: Código do centro de custo cadastrado no Sienge
+      schema:
+        type: integer
+    DocumentsIdentificationIdQuery:
+      name: documentsIdentificationId
+      in: query
+      description: Códigos do documento cadastrado no Sienge
+      style: form
+      explode: false
+      example:
+        - NF
+        - REC
+      schema:
+        type: array
+        items:
+          type: string
+        example:
+          - NF
+          - REC
+    DocumentNumberQuery:
+      name: documentNumber
+      in: query
+      description: Número do documento vinculado ao título cadastrado no Sienge
+      schema:
+        type: string
+        format: Max size 20
+    StatusQuery:
+      name: status
+      in: query
+      description: |
+        Tipo de consistência do título cadastrado no Sienge: 
+         * `S` - Completo
+         * `N` - Incompleto
+         * `I` - Em inclusão
+      schema:
+        type: string
+        enum:
+          - S
+          - 'N'
+          - I
+    OriginIdQuery:
+      name: originId
+      in: query
+      description: |
+        Código de origem do título cadastrado no Sienge
+         * `AC` - Administração de Compras
+         * `RA` - Administração de Obras 
+         * `AI` - Apuração de Impostos
+         * `CO` - Comercial
+         * `CF` - Conhecimento de Frete
+         * `CP` - Contas a Pagar
+         * `ME` - Contratos e Medições
+         * `MO` - Controle de Mão de Obra
+         * `DV` - Devolução de Nota Fiscal
+         * `RF` - Financiamento Bancário
+         * `FP` - Folha de Pagamento
+         * `FE` - Frota de Equipamentos
+         * `GI` - Guia de Impostos
+         * `LO` - Locação de Imóveis
+         * `SE` - Sistemas Externos
+      schema:
+        type: string
+        format: Max size 2
+        enum:
+          - AC
+          - RA
+          - AI
+          - CO
+          - CF
+          - CP
+          - ME
+          - MO
+          - DV
+          - RF
+          - FP
+          - FE
+          - GI
+          - LO
+          - SE
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    BillIdPath:
+      name: billId
+      in: path
+      description: Número do título
+      required: true
+      schema:
+        type: integer
+        format: int32
+    InstallmentIdPath:
+      name: installmentId
+      in: path
+      description: Número da parcela do título
+      required: true
+      schema:
+        type: integer
+        format: int32
+    AttachmentDescriptionQuery:
+      name: description
+      in: query
+      description: 'Descrição do anexo | Máximo: 500 caracteres '
+      required: true
+      schema:
+        maxLength: 500
+        type: string
+    AttachmentIdPath:
+      name: attachmentId
+      in: path
+      description: Código do anexo
+      required: true
+      schema:
+        type: integer
+        format: int32
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1
+webhooks:
+  PAYMENT_BILL_UPDATED:
+    post:
+      tags:
+        - Webhooks - Títulos do Contas a Pagar
+      operationId: webhookPaymentBillUpdated
+      summary: Webhook de título alterado no contas a pagar
+      description: Webhook disparado sempre que um título é alterado no contas a pagar
+      requestBody:
+        description: JSON com o ID do título alterado
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentBillWebhookPayload'
+      responses:
+        2XX:
+          description: O evento PAYMENT_BILL_UPDATED foi recebido com sucesso
+      x-audience:
+        - public
+  PAYMENT_INSTALLMENT_CREATED:
+    post:
+      tags:
+        - Webhooks - Títulos do Contas a Pagar
+      operationId: webhookPaymentInstallmentCreated
+      summary: Webhook de parcela criada no contas a pagar
+      description: Webhook disparado sempre que uma parcela é criada no contas a pagar
+      requestBody:
+        description: JSON com os dados da parcela criada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentInstallmentWebhookPayload'
+      responses:
+        2XX:
+          description: O evento PAYMENT_INSTALLMENT_CREATED foi recebido com sucesso
+      x-audience:
+        - public
+  PAYMENT_INSTALLMENT_UPDATED:
+    post:
+      tags:
+        - Webhooks - Títulos do Contas a Pagar
+      operationId: webhookPaymentInstallmentUpdated
+      summary: Webhook de parcela alterada no contas a pagar
+      description: Webhook disparado sempre que uma parcela é alterada no contas a pagar
+      requestBody:
+        description: JSON com os dados da parcela alterada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentInstallmentWebhookPayload'
+      responses:
+        2XX:
+          description: O evento PAYMENT_INSTALLMENT_UPDATED foi recebido com sucesso
+      x-audience:
+        - public
+  PAYMENT_INSTALLMENT_REMOVED:
+    post:
+      tags:
+        - Webhooks - Títulos do Contas a Pagar
+      operationId: webhookPaymentInstallmentRemoved
+      summary: Webhook de parcela removida no contas a pagar
+      description: Webhook disparado sempre que uma parcela é removida no contas a pagar
+      requestBody:
+        description: JSON com os dados da parcela removida
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentInstallmentWebhookPayload'
+      responses:
+        2XX:
+          description: O evento PAYMENT_INSTALLMENT_REMOVED foi recebido com sucesso
+      x-audience:
+        - public
+  PAYMENT_AUTHORIZATION_AVAILABLE:
+    post:
+      tags:
+        - Webhooks - Títulos do Contas a Pagar
+      operationId: webhookPaymentAuthorizationAvailable
+      summary: Webhook de autorização disponível no contas a pagar
+      description: >-
+        Webhook disparado sempre que uma parcela do contas a pagar fica
+        disponível para autorização
+      requestBody:
+        description: JSON com os dados da autorização disponível
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorizationWebhookPayload'
+      responses:
+        2XX:
+          description: O evento PAYMENT_AUTHORIZATION_AVAILABLE foi recebido com sucesso
+      x-audience:
+        - public
+  PAYMENT_AUTHORIZATION_UPDATE:
+    post:
+      tags:
+        - Webhooks - Títulos do Contas a Pagar
+      operationId: webhookPaymentAuthorizationUpdate
+      summary: Webhook de autorização atualizada no contas a pagar
+      description: >-
+        Webhook disparado sempre que é aprovado ou reprovado a autorização de
+        pagamento de uma parcela no contas a pagar
+      requestBody:
+        description: JSON com os dados da autorização atualizada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAuthorizationUpdateWebhookPayload'
+      responses:
+        2XX:
+          description: O evento PAYMENT_AUTHORIZATION_UPDATE foi recebido com sucesso
+      x-audience:
+        - public
+  PAYMENT_ACKNOWLEDGMENT_PENDING:
+    post:
+      tags:
+        - Webhooks - Títulos do Contas a Pagar
+      operationId: webhookPaymentAcknowledgmentPending
+      summary: Webhook de título a pagar com a ciência pendente
+      description: >-
+        Webhook disparado sempre que um título a pagar ficar com a ciência
+        pendente.
+      requestBody:
+        description: JSON com o ID do título a pagar com a ciência pendente
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentAcknowledgmentPendingWebhookPayload'
+      responses:
+        2XX:
+          description: O evento PAYMENT_ACKNOWLEDGMENT_PENDING foi recebido com sucesso
+      x-audience:
+        - public
+  PAYMENT_ACKNOWLEDGMENT_PROCESSED:
+    post:
+      tags:
+        - Webhooks - Títulos do Contas a Pagar
+      operationId: webhookPaymentAcknowledgmentProcessed
+      summary: Webhook de título a pagar quando a ciência for realizada
+      description: >-
+        Webhook disparado sempre que a ciência de um título a pagar for
+        realizada.
+      requestBody:
+        description: JSON com o ID do título a pagar que a ciência foi realizada
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/PaymentAcknowledgmentProcessedWebhookPayload
+      responses:
+        2XX:
+          description: O evento PAYMENT_ACKNOWLEDGMENT_PROCESSED foi recebido com sucesso
+      x-audience:
+        - public
+  PAYMENT_RECEIPT_PROCESSED:
+    post:
+      tags:
+        - Webhooks - Títulos do Contas a Pagar
+      operationId: webhookPaymentReceiptProcessed
+      summary: Webhook de baixa processada no contas a pagar
+      description: Webhook disparado sempre que uma baixa é realizada
+      requestBody:
+        description: JSON com os dados da baixa processada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentReceiptWebhookPayload'
+      responses:
+        2XX:
+          description: O evento PAYMENT_RECEIPT_PROCESSED foi recebido com sucesso
+      x-audience:
+        - public
+  PAYMENT_RECEIPT_UPDATED:
+    post:
+      tags:
+        - Webhooks - Títulos do Contas a Pagar
+      operationId: webhookPaymentReceiptUpdated
+      summary: Webhook de baixa alterada no contas a pagar
+      description: Webhook disparado sempre que uma baixa é alterada
+      requestBody:
+        description: JSON com os dados da baixa alterada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentReceiptWebhookPayload'
+      responses:
+        2XX:
+          description: O evento PAYMENT_RECEIPT_UPDATED foi recebido com sucesso
+      x-audience:
+        - public
+  PAYMENT_RECEIPT_REMOVED:
+    post:
+      tags:
+        - Webhooks - Títulos do Contas a Pagar
+      operationId: webhookPaymentReceiptRemoved
+      summary: Webhook de baixa cancelada no contas a pagar
+      description: Webhook disparado sempre que uma baixa é cancelada
+      requestBody:
+        description: JSON com os dados da baixa cancelada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentReceiptWebhookPayload'
+      responses:
+        2XX:
+          description: O evento PAYMENT_RECEIPT_REMOVED foi recebido com sucesso
+      x-audience:
+        - public
+  PAYMENT_RECEIPT_CHARGEBACK_PROCESSED:
+    post:
+      tags:
+        - Webhooks - Títulos do Contas a Pagar
+      operationId: webhookPaymentReceiptChargebackProcessed
+      summary: Webhook de estorno da baixa processado no contas a pagar
+      description: Webhook disparado sempre que um estorno da baixa é realizado
+      requestBody:
+        description: JSON com os dados do estorno processado
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentReceiptChargebackWebhookPayload'
+      responses:
+        2XX:
+          description: >-
+            O evento PAYMENT_RECEIPT_CHARGEBACK_PROCESSED foi recebido com
+            sucesso
+      x-audience:
+        - public
+  PAYMENT_RECEIPT_CHARGEBACK_REMOVED:
+    post:
+      tags:
+        - Webhooks - Títulos do Contas a Pagar
+      operationId: webhookPaymentReceiptChargebackRemoved
+      summary: Webhook de estorno da baixa cancelado no contas a pagar
+      description: Webhook disparado sempre que um estorno da baixa é cancelado
+      requestBody:
+        description: JSON com os dados do estorno cancelado
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentReceiptChargebackWebhookPayload'
+      responses:
+        2XX:
+          description: O evento PAYMENT_RECEIPT_CHARGEBACK_REMOVED foi recebido com sucesso
+      x-audience:
+        - public

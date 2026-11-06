@@ -1,0 +1,2842 @@
+openapi: 3.1.1
+info:
+  title: Comissões
+  version: 1.24.0
+  description: Consulta e inclusão de comissões.
+paths:
+  /commissions:
+    get:
+      x-original-file: commissions-v1.yaml
+      x-section: Parcelas das Comissões
+      x-audience:
+        - public
+      tags:
+        - Parcelas das Comissões
+      summary: Busca as parcelas das comissões.
+      operationId: getComissions
+      parameters:
+        - name: unitId
+          in: query
+          description: O código do id da unidade.
+          schema:
+            type: integer
+            example: 101
+        - name: contractId
+          in: query
+          description: O número do contrato a ser filtrado
+          schema:
+            type: integer
+            example: 12345
+        - name: brokerId
+          in: query
+          description: O número do corretor a ser filtrado
+          schema:
+            type: integer
+            example: 456
+        - name: companyId
+          in: query
+          description: O número da empresa a ser filtrada
+          schema:
+            type: integer
+            example: 1
+        - name: enterpriseId
+          in: query
+          description: O número do empreendimento a ser filtrado
+          schema:
+            type: integer
+            example: 789
+        - name: startingDueDate
+          in: query
+          description: >
+            Data inicial de vencimento para filtrar comissões de acordo com a
+            parcela vigente. Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2025-01-01'
+        - name: endingDueDate
+          in: query
+          description: >
+            Data final de vencimento para filtrar comissões de acordo com a
+            parcela vigente. Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2025-12-31'
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
+        - name: commissionFilterType
+          in: query
+          description: |-
+            Enums:
+              `ALL` - Filtra por todas as comissões.
+              `PAID` - Filtra pelas comissões pagas.
+              `UNPAID` - Filtra pelas comissões não pagas.
+              `AWAITING_RELEASE` - Filtra pelas comissões que estão aguardando liberação.
+              `RELEASED` - Filtra pelas comissões liberadas.
+          schema:
+            type: string
+            enum:
+              - ALL
+              - PAID
+              - UNPAID
+              - AWAITING_RELEASE
+              - RELEASED
+            example: ALL
+      responses:
+        '200':
+          description: Parcelas encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommissionGetDocument'
+              examples:
+                resultadoBuscaComissoes:
+                  summary: Exemplo de resposta de busca de comissões
+                  value:
+                    count: 1
+                    offset: 0
+                    limit: 10
+                    results:
+                      - id: 123
+                        salesContractId: 123456
+                        firstPayment: '2025-01-01'
+                        indexerId: 0
+                        installmentsNumber: 5
+                        percentage: 50
+                        value: 80000
+                        baseValue: 80000
+                        released: false
+                        brokers: []
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca as parcelas das comissões por filtro. (REST)
+    post:
+      tags:
+        - Comissão
+      summary: Persiste a comissão.
+      operationId: insertCommission
+      x-section: Comissão
+      x-original-file: commissions-v1.yaml
+      x-audience:
+        - public
+      requestBody:
+        description: Objeto para criação da comissão
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommissionInsertDocument'
+            example:
+              salesContractId: 456
+              firstPayment: '2025-01-01'
+              id: 123
+              indexerId: 0
+              installmentsNumber: 5
+              percentage: 50
+              value: 80000
+              baseValue: 80000
+              released: false
+              brokers:
+                - baseDate: '2025-01-01'
+                  firstPayment: '2025-01-01'
+                  id: 123
+                  indexerId: 0
+                  installmentsNumber: 5
+                  percentage: 50
+                  value: 80000
+                  documentNumber: '123'
+                  documentId: DOC-123
+                  departmentId: 1
+                  buildingId: 1
+                  constructUnitId: 1
+                  resourceItem: 1
+        required: true
+      responses:
+        '201':
+          description: Comissão criada
+          content:
+            application/json:
+              schema:
+                type: integer
+                description: Código da comissão gerada.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Persiste uma comissão. (REST)
+  /commissions/{commissionId}:
+    get:
+      x-original-file: commissions-v1.yaml
+      x-section: Comissão
+      x-audience:
+        - public
+      tags:
+        - Comissão
+      summary: Busca uma comissão pelo ID.
+      operationId: loadCommission
+      parameters:
+        - $ref: '#/components/parameters/CommissionId'
+      responses:
+        '200':
+          description: Comissão encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommissionGetOneDocument'
+              example:
+                id: 123
+                customerId: 456
+                enterpriseId: 789
+                salesContractId: 101
+                salesContractNumber: '123456'
+                customerName: João da Silva
+                enterpriseName: Residencial Vista Park
+                blockEditReason: ''
+                blockEdit: false
+                baseValue: 180000
+                createdDate: '2025-01-01'
+                released: true
+                brokers:
+                  - id: 123
+                    billingBrokerId: 456
+                    billingBrokerName: Maria Oliveira
+                    billWasPaid: false
+                    billId: 789
+                    name: Maria Oliveira
+                    percentage: 35
+                    value: 28000
+                    firstPayment: '2025-01-01'
+                    installmentNumbers: 12
+                    indexerId: 789
+                    baseDate: '2025-01-01'
+                    documentNumber: '12345678901'
+                    documentId: '12345678901'
+                    nuDaysForReleaseCommission: 1
+                    departmentId: 123
+                    departmentName: Departamento Comercial
+                    buildingId: 123
+                    buildingIdKey: 123
+                    buildingAppropriationLevel: 4
+                    buildingName: Obra Torre A
+                    constructUnitId: 456
+                    constructUnitName: Unidade Construtiva A
+                    resourceItem: 123
+                    resourceItemReference: 01.001.001.001
+                    resourceItemName: Serviços de Corretagem
+                    installments:
+                      - number: 1
+                        value: 1000
+                        dueDate: '2025-01-01'
+                      - number: 2
+                        value: 1000
+                        dueDate: '2025-02-01'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca uma comissão por ID. (REST)
+    delete:
+      x-original-file: commissions-v1.yaml
+      x-section: Comissão
+      x-audience:
+        - public
+      tags:
+        - Comissão
+      summary: Deleta uma comissão pelo ID.
+      operationId: deleteCommission
+      parameters:
+        - $ref: '#/components/parameters/CommissionId'
+      responses:
+        '204':
+          description: Comissão deletada
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Deleta uma comissão por ID. (REST)
+    patch:
+      tags:
+        - Comissão
+      summary: Altera uma comissão pelo ID.
+      operationId: patchCommission
+      x-section: Comissão
+      x-original-file: commissions-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/CommissionId'
+      requestBody:
+        description: Informações para alteração da comissão
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommissionBrokersPatchDocument'
+            example:
+              brokers:
+                - brokerId: 789
+                  percentage: 50
+                  baseDate: '2025-01-01'
+                  installments:
+                    - dueDate: '2025-01-01'
+                      number: 1
+                      value: 1000
+        required: true
+      responses:
+        '204':
+          description: Comissão editada
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Altera uma comissão por ID. (REST)
+  /commissions/authorize:
+    patch:
+      tags:
+        - Parcelas das Comissões
+      summary: Autoriza, ou desautoriza as parcelas de comissão.
+      operationId: authorizationCommissionInstallments
+      x-section: Parcelas das Comissões
+      x-original-file: commissions-v1.yaml
+      x-audience:
+        - public
+      requestBody:
+        description: >-
+          Objeto de atualização da situação das parcelas (de "Aguardando
+          Autorização" para "Aguardando Liberação", e vice-versa).
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommissionInstallmentsAuthorizeDocument'
+        required: true
+      responses:
+        '204':
+          description: Operação realizada (autorização/desautorização).
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Realiza autorização, ou desfaz autorização das parcelas. (REST)
+  /commissions/cancel:
+    patch:
+      tags:
+        - Parcelas das Comissões
+      summary: Cancela ou desfaz cancelamento das parcelas de comissão.
+      operationId: cancelCommissionInstallments
+      x-section: Parcelas das Comissões
+      x-original-file: commissions-v1.yaml
+      x-audience:
+        - public
+      requestBody:
+        description: >-
+          Objeto de atualização da situação das parcelas (de "Aguardando
+          Autorização" para "Cancelada", e vice-versa).
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommissionInstallmentsCancelDocument'
+        required: true
+      responses:
+        '204':
+          description: Operação realizada (cancelamento/ativação).
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Realiza cancelamento, ativação das parcelas. (REST)
+  /commissions/release:
+    post:
+      tags:
+        - Parcelas das Comissões
+      summary: Libera parcelas de comissão para pagamento.
+      operationId: releaseCommissionInstallments
+      x-section: Parcelas das Comissões
+      x-original-file: commissions-v1.yaml
+      x-audience:
+        - public
+      requestBody:
+        description: Objeto para liberação das parcelas de comissão.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommissionInstallmentsReleaseDocument'
+            example:
+              brokerId: 789
+              documentId: DOC-123
+              documentNumber: '123'
+              baseDate: '2025-01-01'
+              emissionDate: '2025-01-01'
+              firstPayment: '2025-01-01'
+              installments: 12
+              value: 1000
+              releases:
+                - brokerId: 789
+                  commissionId: 123
+                  installments:
+                    - 1
+                    - 2
+                    - 3
+        required: true
+      responses:
+        '201':
+          description: Parcelas liberadas com sucesso.
+          content:
+            application/json:
+              schema:
+                type: integer
+                description: Número do título de nota fiscal gerado.
+              example: 456
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Realiza liberação das parcelas. (REST)
+  /commissions/{commissionId}/brokers/{brokerId}:
+    delete:
+      x-original-file: commissions-v1.yaml
+      x-section: Corretor da Comissão
+      x-audience:
+        - public
+      tags:
+        - Corretor da Comissão
+      summary: Remove corretor de uma comissão por ID.
+      operationId: deleteCommissionBroker
+      parameters:
+        - $ref: '#/components/parameters/CommissionId'
+        - $ref: '#/components/parameters/BrokerId'
+      responses:
+        '204':
+          description: >-
+            Corretor é deletado. Caso seja o único corretor da comissão, ela
+            também será deletada.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Deleta corretor de uma comissão por ID. (REST)
+  /commissions/{commissionId}/brokers:
+    post:
+      tags:
+        - Corretor da Comissão
+      summary: Inclui corretores adicionais em uma comissão existente.
+      operationId: addCommissionBrokers
+      x-section: Corretor da Comissão
+      x-original-file: commissions-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/CommissionId'
+      requestBody:
+        description: Lista de corretores a ser adicionado na comissão.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommissionBrokersPostPatchDocument'
+            example:
+              brokers:
+                - baseDate: '2025-01-01'
+                  documentId: DOC-123
+                  documentNumber: '123'
+                  firstPayment: '2025-01-01'
+                  id: 123
+                  indexerId: 1
+                  installmentsNumber: 2
+                  percentage: 10
+                  value: 100
+                  departmentId: 1
+                  buildingId: 1
+                  constructUnitId: 1
+                  resourceItem: 1
+        required: true
+      responses:
+        '201':
+          description: Corretores adicionados à comissão com sucesso.
+          content:
+            application/json:
+              schema:
+                type: integer
+                description: Código da comissão que os corretores foram adicionados.
+              example: 123
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Adiciona um ou mais corretores na comissão por ID. (REST)
+  /commissions/countFilters:
+    get:
+      x-original-file: commissions-v1.yaml
+      x-section: Parcelas das Comissões
+      x-audience:
+        - public
+      tags:
+        - Parcelas das Comissões
+      summary: Consulta totalizadores agrupados por status das parcelas.
+      operationId: getComissionsCountFilters
+      parameters:
+        - name: unitId
+          in: query
+          description: Id da unidade.
+          schema:
+            type: integer
+            example: 101
+        - name: contractId
+          in: query
+          description: Id do contrato a ser filtrado
+          schema:
+            type: integer
+            example: 12345
+        - name: brokerId
+          in: query
+          description: Id do corretor a ser filtrado
+          schema:
+            type: integer
+            example: 456
+        - name: enterpriseId
+          in: query
+          description: Id do empreendimento a ser filtrado
+          schema:
+            type: integer
+            example: 789
+        - name: startingDueDate
+          in: query
+          description: >-
+            Data inicial de vencimento para filtrar comissões de acordo com a
+            parcela. Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2025-01-01'
+        - name: endingDueDate
+          in: query
+          description: >-
+            Data final de vencimento para filtrar comissões de acordo com a
+            parcela. Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2025-12-31'
+      responses:
+        '200':
+          description: Sucesso no retorno do totalizador.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommissionCountFilterDocument'
+              example:
+                total: 25
+                released: 10
+                pending: 12
+                canceled: 3
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Retorna um totalizador agrupado por situação das parcelas. (REST)
+  /commissions/configurations/brokers:
+    get:
+      x-original-file: commissions-v1.yaml
+      x-section: Configurações de Corretores
+      x-audience:
+        - public
+      tags:
+        - Configurações de Corretores
+      summary: Busca a lista de configurações de corretores.
+      operationId: findBrokerConfiguration
+      parameters:
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
+        - name: filter
+          in: query
+          description: Nome ou código do corretor para filtragem.
+          schema:
+            type: string
+            example: João Silva
+      responses:
+        '200':
+          description: Configurações encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BrokerConfigurationGetDocument'
+              examples:
+                exemploConfiguracaoCorretor:
+                  summary: Exemplo de configuração padrão de corretor
+                  value:
+                    installments: 5
+                    percentage: 10
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Consulta uma lista de configurações de corretores. (REST)
+    post:
+      tags:
+        - Configurações de Corretores
+      summary: Persiste a configuração de um corretor.
+      operationId: insertBrokerConfiguration
+      x-section: Configurações de Corretores
+      x-original-file: commissions-v1.yaml
+      x-audience:
+        - public
+      requestBody:
+        description: >
+          Objeto para persistência da configuração.
+
+          Configurar um corretor pode ser útil para <b>carregamento automático
+          das informações</b> do corretor em específico, no momento de criação
+          de uma comissão.
+
+          A configuração é uma <b>sugestão de preenchimento</b>. O usuário ainda
+          pode alterar as informações na tela.
+        content:
+          application/json:
+            schema:
+              required:
+                - brokerId
+              properties:
+                brokerId:
+                  type: integer
+                  description: ID do corretor da comissão.
+                  format: int32
+                  example: 123
+              allOf:
+                - $ref: '#/components/schemas/BrokerConfigurationPatchDocument'
+        required: true
+      responses:
+        '201':
+          description: Configuração criada
+          content:
+            application/json:
+              schema:
+                type: integer
+                description: Código da configuração gerada.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Persiste uma configuração de corretor. (REST)
+  /commissions/configurations/brokers/{brokerId}:
+    delete:
+      x-original-file: commissions-v1.yaml
+      x-section: Configurações de Corretores
+      x-audience:
+        - public
+      tags:
+        - Configurações de Corretores
+      summary: Deleta a configuração do corretor por ID.
+      operationId: deleteBrokerConfiguration
+      parameters:
+        - $ref: '#/components/parameters/BrokerId'
+      responses:
+        '204':
+          description: Configuração corretor deletada com sucesso.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Deleta um registro de configuração do corretor por ID. (REST)
+    patch:
+      tags:
+        - Configurações de Corretores
+      summary: Atualiza a configuração de um corretor.
+      operationId: patchBrokerConfiguration
+      x-section: Configurações de Corretores
+      x-original-file: commissions-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BrokerId'
+      requestBody:
+        description: Objeto para atualização da configuração do corretor.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BrokerConfigurationPatchDocument'
+            example:
+              percentage: 100
+              installments: 2
+        required: true
+      responses:
+        '204':
+          description: Atualização realizada com sucesso.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Atualiza um registro de configuração do corretor. (REST)
+  /commissions/configurations/enterprises:
+    post:
+      tags:
+        - Configurações de Empreendimento
+      summary: Persiste uma configuração para um empreendimento.
+      operationId: insertEnterpriseConfiguration
+      x-section: Configurações de Empreendimento
+      x-original-file: commissions-v1.yaml
+      x-audience:
+        - public
+      requestBody:
+        description: >
+          Objeto para persistência da configuração.
+
+          Configurar um empreendimento pode ser útil para <b>carregamento
+          automático das informações</b> do empreendimento em específico, no
+          momento de criação de uma comissão.
+        content:
+          application/json:
+            schema:
+              required:
+                - enterpriseId
+              properties:
+                enterpriseId:
+                  type: integer
+                  description: Código do empreendimento vinculado ao contrato.
+                  format: int32
+                  example: 101
+              allOf:
+                - $ref: '#/components/schemas/EnterpriseConfigurationPutDocument'
+            example:
+              enterpriseId: 101
+              indexerId: 7
+              limitPercentage: 100
+              releasePercentageAdjustment: 100
+              cancelCommissionsOnContractCancelation: true
+              allowReleaseCommissionWithPendings: true
+              considerForPayment:
+                considerOn: RELEASE
+                percentagePaidContract: 100
+                embeddedInterest: true
+              departmentId: 123
+              nuDaysForReleaseCommission: 1
+              buildAppropriation:
+                buildingId: 123
+                constructUnitId: 456
+                resourceItem: 123
+        required: true
+      responses:
+        '201':
+          description: Configuração do empreendimento criada.
+          content:
+            application/json:
+              schema:
+                type: integer
+                description: Código da configuração do empreendimento criada.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Persiste uma configuração de empreendimento. (REST)
+  /commissions/configurations/enterprises/{enterpriseId}:
+    get:
+      x-original-file: commissions-v1.yaml
+      x-section: Configurações de Empreendimento
+      x-audience:
+        - public
+      tags:
+        - Configurações de Empreendimento
+      summary: Consulta configurações de comissão de um empreendimento.
+      operationId: findEnterpriseConfiguration
+      parameters:
+        - $ref: '#/components/parameters/EnterpriseId'
+      responses:
+        '200':
+          description: Configurações do empreendimento encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnterpriseConfigurationGetDocument'
+              examples:
+                exemploConfiguracaoEmpreendimento:
+                  summary: Exemplo de configuração de comissão por empreendimento
+                  value:
+                    indexerId: 7
+                    limitPercentage: 100
+                    releasePercentageAdjustment: 100
+                    cancelCommissionsOnContractCancelation: true
+                    allowReleaseCommissionWithPendings: true
+                    considerForPayment:
+                      considerOn: RELEASE
+                      percentagePaidContract: 100
+                      embeddedInterest: true
+                    nuDaysForReleaseCommission: 1
+                    departmentId: 123
+                    departmentName: Departamento Exemplo
+                    buildingId: 123
+                    buildingIdKey: 123
+                    buildingAppropriationLevel: 4
+                    buildingName: Obra Exemplo
+                    constructUnitId: 456
+                    constructUnitName: Unidade Construtiva Exemplo
+                    resourceItem: 123
+                    resourceItemReference: 01.001.001.001
+                    resourceItemName: Item Exemplo
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Consulta as configurações de um empreendimento. (REST)
+    put:
+      tags:
+        - Configurações de Empreendimento
+      summary: Atualiza uma configuração do empreendimento.
+      operationId: putEnterpriseConfiguration
+      x-section: Configurações de Empreendimento
+      x-original-file: commissions-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/EnterpriseId'
+      requestBody:
+        description: Objeto para atualização da configuração do empreendimento.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnterpriseConfigurationPutDocument'
+            example:
+              enterpriseId: 101
+              indexerId: 7
+              limitPercentage: 100
+              releasePercentageAdjustment: 100
+              cancelCommissionsOnContractCancelation: true
+              allowReleaseCommissionWithPendings: true
+              considerForPayment:
+                considerOn: RELEASE
+                percentagePaidContract: 100
+                embeddedInterest: true
+              departmentId: 123
+              nuDaysForReleaseCommission: 1
+              buildAppropriation:
+                buildingId: 123
+                constructUnitId: 456
+                resourceItem: 123
+        required: true
+      responses:
+        '204':
+          description: Configuracao do empreendimento atualizada com sucesso.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Atualiza um registro de configuração do empreendimento. (REST)
+components:
+  schemas:
+    CommissionGetDocument:
+      description: >-
+        Estrutura para retorno de consulta de múltiplas comissões, com metadados
+        de paginação e lista de resultados detalhados.
+      type: object
+      properties:
+        resultSetMetadata:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Total de parcelas das comissões
+              format: int32
+              example: 10
+            offset:
+              type: integer
+              description: Paginação
+              example: 0
+            limit:
+              type: integer
+              description: Limite retornado
+              example: 150
+        results:
+          type: array
+          description: Parcelas das comissões.
+          items:
+            type: object
+            properties:
+              commissionID:
+                type: integer
+                description: Código da comissão.
+                format: int32
+                example: 123
+              brokerID:
+                type: integer
+                description: Código do corretor vinculado.
+                format: int32
+                example: 456
+              brokerName:
+                type: string
+                description: Nome do corretor vinculado.
+                example: João Silva
+              billingBrokerId:
+                type: integer
+                description: Código do corretor de faturamento vinculado à comissão.
+                format: int32
+                example: 789
+              billingBrokerName:
+                type: string
+                description: Nome do corretor de faturamento vinculado à comissão.
+                example: Maria Santos
+              enterpriseID:
+                type: integer
+                description: Código do empreendimento vinculado ao contrato da comissão.
+                format: int32
+                example: 101
+              enterpriseName:
+                type: string
+                description: Nome do empreendimento vinculado ao contrato da comissão.
+                example: Residencial Jardim das Flores
+              billNumber:
+                type: integer
+                description: Número do título a pagar gerado para o corretor.
+                format: int32
+                example: 401
+              contractBillNumber:
+                type: integer
+                description: Número do título vinculado ao contrato da comissão.
+                format: int32
+                example: 501
+              customerID:
+                type: integer
+                description: Código do cliente vinculado ao contrato da comissão.
+                format: int32
+                example: 601
+              customerName:
+                type: string
+                description: Nome do cliente vinculado ao contrato da comissão.
+                example: Carlos Oliveira
+              unitName:
+                type: string
+                description: Nome da unidade principal vinculada ao contrato da comissão.
+                example: Apartamento 101
+              salesContractNumber:
+                type: string
+                description: Número do contrato vinculado a comissão.
+                example: CONT-2025-001
+              customerSituationType:
+                type: string
+                description: >-
+                  Utilizado para resposta visual da situação do cliente do
+                  contrato. Enums:
+
+
+
+
+                    `noDebts` - Contrato está em dia.
+                    `inDebts` - Contrato possui pendências.
+                    `cancelled` - Contrato foi distratado.
+                enum:
+                  - noDebts
+                  - inDebts
+                  - cancelled
+                example: noDebts
+              blockEdit:
+                type: boolean
+                description: >-
+                  Deve ou não bloquear edição de comissões no front-end (caso
+                  possua baixas).
+                example: false
+              commissionReleasedAutomatically:
+                type: boolean
+                description: >-
+                  Indica se é uma comissão que foi criada com liberação
+                  automática.
+                example: false
+              value:
+                type: number
+                description: Valor da parcela. Formato -> 80000.00.
+                example: 80000
+              contractPercentagePaid:
+                type: number
+                description: >-
+                  Valor do percentual do contrato pago vinculado à comissão.
+                  Formato -> 0.02.
+                example: 0.02
+              considerEmbeddedInterest:
+                type: boolean
+                description: >-
+                  Informa se o cálculo do percentual do contrato vinculado à
+                  comissão é com ou sem juros embutido.
+                example: true
+              commissionReleasedToBePaid:
+                type: boolean
+                description: >-
+                  Informa se a parcela da comissão está liberada ou não para
+                  pagamento.
+                example: true
+              dueDate:
+                type: string
+                description: >-
+                  Data de vencimento da parcela de comissão (Formato ISO 8601
+                  yyyy-MM-dd | Exemplo: 2020-11-24).
+                format: date
+                example: '2025-02-15'
+              installmentNumber:
+                type: integer
+                description: Número da parcela da comissão.
+                format: int32
+                example: 1
+              totalInstallmentsNumber:
+                type: integer
+                description: Quantidade total de parcelas.
+                format: int32
+                example: 12
+              installmentPercentage:
+                type: number
+                description: Percentual de comissão por parcela. Formato -> 2.0.
+                example: 2
+              installmentStatus:
+                type: string
+                description: |-
+                  Utilizado para resposta visual da situação da comissão. Enums:
+                    `CANCELLED` - Parcela está cancelada.
+                    `RELEASED` -  Parcela está liberada.
+                    `AWAITING_AUTHORIZATION` - Parcela que está aguardando autorização.
+                    `AWAITING_RELEASED` - Parcela que está aguardando liberação.
+                    `PAID` - Parcela está paga.
+                enum:
+                  - CANCELLED
+                  - RELEASED
+                  - AWAITING_AUTHORIZATION
+                  - AWAITING_RELEASE
+                  - PAID
+                example: RELEASED
+              paymentOperationType:
+                type: integer
+                description: Tipo de operação de pagametento.
+                format: int32
+                example: 1
+          example:
+            - commissionID: 1
+              brokerID: 101
+              brokerName: João Corretor
+              billingBrokerId: 201
+              billingBrokerName: Corretora XPTO
+              enterpriseID: 301
+              enterpriseName: Residencial Flores
+              billNumber: 401
+              contractBillNumber: 501
+              customerID: 601
+              customerName: Maria Cliente
+              unitName: Apto 202
+              salesContractNumber: SC1234
+              customerSituationType: noDebts
+              blockEdit: false
+              commissionReleasedAutomatically: true
+              value: 80000
+              contractPercentagePaid: 0.02
+              considerEmbeddedInterest: false
+    CommissionInsertDocument:
+      description: >-
+        Estrutura para criação de uma nova comissão, informando contrato, valor
+        base, status de liberação e lista de corretores.
+      required:
+        - baseValue
+        - brokers
+        - salesContractId
+      type: object
+      properties:
+        salesContractId:
+          type: integer
+          description: Código do contrato ao qual a comissão será vinculada.
+          format: int32
+          example: 123
+        baseValue:
+          type: number
+          description: Valor base da comissão (valor do contrato). Formato -> 80000.00
+          format: double
+          example: 80000
+        brokers:
+          type: array
+          description: Corretores para inclusão na comissão.
+          items:
+            $ref: '#/components/schemas/CommissionBrokerInsertDocument'
+          example:
+            - baseDate: '2025-01-01'
+              firstPayment: '2025-01-01'
+              id: 123
+              indexerId: 0
+              installmentsNumber: 5
+              percentage: 50
+              value: 80000
+              documentNumber: '123'
+              documentId: DOC-123
+              installments:
+                - number: 1
+                  value: 1000
+                  dueDate: '2025-01-01'
+        released:
+          type: boolean
+          description: >
+            Caso "true", as comissões serão geradas com o número e código de
+            documento informado em cada uma das comissões. Além disso, as
+            parcelas do título serão automaticamente autorizadas para realização
+            de baixa.
+
+            Caso "false", as comissões serão geradas como "Previsão de
+            Comissão". Além disso, os títulos serão gerados com o código de
+            documento informado no parâmetro 753, e número de documento igual ao
+            número do contrato de vendas.
+          example: true
+    CommissionGetOneDocument:
+      description: >-
+        Estrutura detalhada de uma comissão específica, incluindo informações do
+        cliente, empreendimento, contrato, status de liberação, corretores e
+        composição de parcelas.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Id da comissão
+          format: int32
+          example: 123
+        customerId:
+          description: Código do cliente
+          example: 123
+          format: int32
+          type: integer
+        enterpriseId:
+          type: integer
+          description: Código do empreendimento do contrato da comissão.
+          format: int32
+          example: 789
+        salesContractId:
+          type: integer
+          description: Id do contrato em que a comissão está vinculada.
+          format: int32
+          example: 101
+        salesContractNumber:
+          type: string
+          description: Número do contrato que a comissão está vinculada.
+          example: '123456'
+        customerName:
+          type: string
+          description: Nome do cliente principal vinculado ao contrato.
+          example: John Doe
+        enterpriseName:
+          type: string
+          description: Nome do empreendimento vinculado ao contrato.
+          example: Softplan
+        blockEditReason:
+          type: string
+          description: Mensagem de razão para bloqueio da edição.
+          example: Comissão bloqueada
+        blockEdit:
+          type: boolean
+          description: Flag que indica se a edição desta comissão está bloqueada.
+          example: false
+        baseValue:
+          type: number
+          description: Valor base da comissão (valor do contrato). Formato -> 180000.00
+          format: double
+          example: 180000
+        createdDate:
+          type: string
+          description: >-
+            Data de criação da comissão (Formato ISO 8601 yyyy-MM-dd | Exemplo:
+            2020-11-24)
+          format: date
+          example: '2025-01-01'
+        released:
+          type: boolean
+          description: Flag que indica se a comissão está liberada.
+          example: true
+        brokers:
+          type: array
+          description: Corretores da comissão.
+          items:
+            $ref: '#/components/schemas/CommissionBrokerGetOneDocument'
+          example:
+            - id: 123
+              billingBrokerId: 456
+              billingBrokerName: Maria Oliveira
+              billWasPaid: false
+              billId: 789
+              name: Maria Oliveira
+              percentage: 35
+              value: 28000
+              firstPayment: '2025-01-01'
+              installmentNumbers: 12
+              indexerId: 789
+              baseDate: '2025-01-01'
+              documentNumber: '12345678901'
+              documentId: '12345678901'
+              nuDaysForReleaseCommission: 1
+              departmentId: 123
+              departmentName: Departamento Comercial
+              buildingId: 123
+              buildingIdKey: 123
+              buildingAppropriationLevel: 4
+              buildingName: Obra Torre A
+              constructUnitId: 456
+              constructUnitName: Unidade Construtiva A
+              resourceItem: 123
+              resourceItemReference: 01.001.001.001
+              resourceItemName: Serviços de Corretagem
+              installments:
+                - number: 1
+                  value: 1000
+                  dueDate: '2025-01-01'
+                - number: 2
+                  value: 1000
+                  dueDate: '2025-02-01'
+        commissionReleaseComposition:
+          type: array
+          description: >-
+            Lista de parcelas de previsão de uma comissão que compoem uma
+            comissao liberada.
+          items:
+            $ref: '#/components/schemas/CommissionReleaseCompositionDocument'
+          example:
+            - salesContractNumber: '123456'
+              billId: 123
+              installmentNumber: 1
+              value: 1000
+              dueDate: '2025-01-01'
+              billingBrokerId: 789
+              customerId: 101
+    CommissionBrokersPatchDocument:
+      description: >-
+        Estrutura para atualização em lote dos dados de corretores vinculados a
+        uma comissão.
+      required:
+        - brokers
+      type: object
+      properties:
+        brokers:
+          type: array
+          description: Lista de corretores a ser adicionados na comissão.
+          items:
+            type: object
+            properties:
+              installments:
+                type: array
+                description: >-
+                  Parcelas para criação da comissão, utilizado na criação
+                  personalizada de parcelas. Não obrigatório.
+                items:
+                  required:
+                    - dueDate
+                    - number
+                    - value
+                  type: object
+                  properties:
+                    number:
+                      type: number
+                      description: Número da parcela a ser criada.
+                      format: int32
+                    value:
+                      type: number
+                      description: Valor em R$ da parcela a ser criada.
+                      format: double
+                    dueDate:
+                      type: string
+                      description: >-
+                        Data de vencimento da parcela a ser criada. Formato
+                        YYYY-MM-DD. Exemplo -> 1990-12-31.
+      example:
+        brokers:
+          - installments:
+              - number: 1
+                value: 1000
+                dueDate: '2025-01-01'
+    CommissionInstallmentsAuthorizeDocument:
+      type: object
+      required:
+        - authorize
+        - commissions
+      description: >-
+        Estrutura para autorização ou desfazimento de autorização de parcelas de
+        comissão, informando operação e lista de comissões/parcelas.
+      properties:
+        authorize:
+          type: boolean
+          description: |
+            Operação que será realizada.
+            `true` - Autoriza as parcelas.
+            `false` - Desfaz autorização das parcelas.
+          example: true
+        commissions:
+          type: array
+          description: Lista das comissões e parcelas a serem autorizadas.
+          items:
+            $ref: '#/components/schemas/CommissionAuthorizeCancelInstallmentsDocument'
+      example:
+        authorize: true
+        commissions: []
+    CommissionInstallmentsCancelDocument:
+      type: object
+      description: >-
+        Estrutura para cancelamento ou desfazimento de cancelamento de parcelas
+        de comissão, informando operação e lista de comissões/parcelas.
+      required:
+        - cancel
+        - commissions
+      properties:
+        cancel:
+          type: boolean
+          description: |
+            Operação que será realizada.
+            `true` - Cancela as parcelas.
+            `false` - Desfaz cancelamento das parcelas.
+          example: true
+        commissions:
+          type: array
+          description: Lista das comissões e parcelas a serem canceladas.
+          items:
+            $ref: '#/components/schemas/CommissionAuthorizeCancelInstallmentsDocument'
+        example: {}
+      example:
+        cancel: true
+        commissions: []
+    CommissionInstallmentsReleaseDocument:
+      type: object
+      description: >-
+        Estrutura para liberação de parcelas de comissão, incluindo dados do
+        corretor, documentos, datas, valor e lista de parcelas a liberar.
+      required:
+        - brokerId
+        - documentId
+        - documentNumber
+        - emissionDate
+        - firstPayment
+        - installments
+        - releases
+        - value
+      properties:
+        documentId:
+          type: string
+          description: Código do documento da liberação.
+          example: DOC-123
+        documentNumber:
+          type: string
+          description: Número do documento da liberação.
+          example: 123A
+        installments:
+          type: integer
+          description: Número de parcelas da liberação.
+          format: int32
+          example: 12
+        value:
+          type: number
+          description: Valor da liberação.
+          format: double
+          example: 1234.56
+        firstPayment:
+          type: string
+          description: >-
+            Data do primeiro vencimento. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-31.
+          example: {}
+        emissionDate:
+          type: string
+          description: Data de emissão. Formato YYYY-MM-DD. Exemplo -> 1990-12-31.
+          example: {}
+        brokerId:
+          type: integer
+          description: Código do corretor da liberação.
+          format: int32
+          example: 123
+        billingBrokerId:
+          type: integer
+          description: Código do corretor para faturamento.
+          format: int32
+          example: 123
+        releases:
+          type: array
+          description: Lista das comissões e parcelas que serão liberadas.
+          items:
+            required:
+              - brokerId
+              - commissionId
+              - installments
+            type: object
+            properties:
+              commissionId:
+                type: integer
+                description: ID da comissão liberada.
+                format: int32
+                example: 123
+              brokerId:
+                type: integer
+                description: ID do corretor vinculado à comissão.
+                format: int32
+                example: 123
+              installments:
+                type: array
+                description: Lista das parcelas da comissão.
+                items:
+                  type: integer
+                  format: int32
+                  example: 123
+          example:
+            - commissionId: 123
+              brokerId: 456
+              installments:
+                - 1
+                - 2
+    CommissionBrokersPostPatchDocument:
+      description: >-
+        Estrutura para atualização em lote dos dados de corretores via método
+        POST, vinculados a uma comissão.
+      required:
+        - brokers
+      type: object
+      properties:
+        brokers:
+          type: array
+          description: Corretores a serem adicionados na comissão.
+          items:
+            $ref: '#/components/schemas/CommissionBrokerPatchDocument'
+      example:
+        brokers:
+          - number: 1
+            value: 1000
+            dueDate: '2025-01-01'
+            id: 10
+            percentage: 35
+            firstPayment: '2025-09-01'
+            baseDate: '2025-08-01'
+            installmentsNumber: 12
+            indexerId: 2
+            documentNumber: DOC-2025-001
+            documentId: '123456'
+            departmentId: 1
+            buildingId: 1
+            constructUnitId: 1
+            resourceItem: 1
+    CommissionCountFilterDocument:
+      type: object
+      properties:
+        all:
+          type: integer
+          description: Total de parcelas, sem filtro por situação.
+          example: 1
+        paid:
+          type: integer
+          description: Total de parcelas pagas.
+          example: 1
+        cancelled:
+          type: integer
+          description: Total de parcelas canceladas.
+          example: 1
+        awaitingAuthorization:
+          type: integer
+          description: Total de parcelas aguardando autorização.
+          example: 1
+        awaitingRelease:
+          type: integer
+          description: Total de parcelas aguardando liberação.
+          example: 1
+        released:
+          type: integer
+          description: Total de parcelas liberadas.
+          example: 1
+      description: Totalizador das parcelas das comissões.
+    BrokerConfigurationGetDocument:
+      description: >-
+        Estrutura de resposta para consulta das configurações padrão dos
+        corretores, incluindo parcelas e percentual.
+      type: object
+      properties:
+        resultSetMetadata:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: Total de configurações cadastradas
+              example: 1
+            offset:
+              type: integer
+              description: Página atual
+              example: 0
+            limit:
+              type: integer
+              description: Limite de configurações retornadas
+              example: 150
+        results:
+          type: array
+          description: Configurações dos corretores.
+          items:
+            type: object
+            properties:
+              configurationId:
+                type: integer
+                description: Código da configuração.
+                format: int32
+                example: 1
+              brokerId:
+                type: integer
+                description: Código do corretor da configuração.
+                format: int32
+                example: 6
+              brokerName:
+                type: string
+                description: Nome do corretor da configuração.
+                example: João da Silva
+              installments:
+                type: integer
+                description: Quantidade de parcelas padrão do corretor.
+                format: int32
+                example: 5
+              percentage:
+                type: number
+                description: Percentual padrão do corretor. Formato -> 100.00000.
+                example: 12.005
+          example:
+            - configurationId: 1
+              brokerId: 6
+              brokerName: João da Silva
+              installments: 5
+              percentage: 12.005
+    BrokerConfigurationPatchDocument:
+      description: >-
+        Estrutura para atualização dos parâmetros de configuração padrão de
+        corretor, como parcelas e percentual.
+      required:
+        - installments
+        - percentage
+      type: object
+      properties:
+        percentage:
+          type: number
+          description: >
+            Percentual padrão. Este valor deve ser maior que zero, e menor ou
+            igual a cem. Formato aceito: 100.00000
+          format: double
+          example: 100
+        installments:
+          type: integer
+          description: >
+            Quantidade de parcelas padrão. O valor mínimo aceito é um, e o valor
+            máximo é 200.
+          format: int32
+          example: 2
+    EnterpriseConfigurationPutDocument:
+      type: object
+      description: >-
+        Estrutura para atualização de configurações de comissão por
+        empreendimento.
+      properties:
+        indexerId:
+          type: integer
+          description: Código do indexador da parcela.
+          format: int32
+          example: 7
+        limitPercentage:
+          type: number
+          description: Percentual limite de comissão por contrato para o empreendimento.
+          format: double
+          example: 100
+        releasePercentageAdjustment:
+          type: number
+          description: >-
+            Percentual para alteração do valor total das parcelas para liberação
+            de comissão.
+          format: double
+          example: 100
+        cancelCommissionsOnContractCancelation:
+          type: boolean
+          description: >-
+            Caso "true", ao cancelar o contrato vinculado a comissão, a mesma
+            será cancelada automaticamente.
+          example: true
+        allowReleaseCommissionWithPendings:
+          type: boolean
+          description: >-
+            Caso "true", deve permitir liberar comissão quando o contrato
+            vinculado a comissão possuir parcelas em atraso.
+          example: true
+        considerForPayment:
+          type: object
+          properties:
+            considerOn:
+              type: string
+              description: >
+                `NOT_CONSIDER` - Não considerar percentual pago do contrato.
+
+                `RELEASE` - Considerar percentual pago do contrato na liberação.
+
+                `AUTHORIZE` - Considerar percentual pago do contrato na
+                autorização.
+              example: RELEASE
+              enum:
+                - NOT_CONSIDER
+                - RELEASE
+                - AUTHORIZE
+            percentagePaidContract:
+              type: number
+              description: >-
+                Percentual pago do contrato a ser considerado para autorização
+                ou liberação de pagamento da comissão, conforme configurado no
+                campo "considerOn".
+              format: double
+              example: 100
+            embeddedInterest:
+              type: boolean
+              description: >-
+                Caso "true", considera percentual pago do contrato com juros
+                embutidos, conforme configurado no campo
+                "percentagePaidContract".
+              example: true
+          description: Considerar para pagamento na liberação ou autorização.
+        nuDaysForReleaseCommission:
+          type: integer
+          format: int32
+          description: Número mínimo de dias necessários para liberar uma comissão.
+          example: 1
+        departmentId:
+          type: integer
+          format: int32
+          description: Código do departamento.
+          example: 123
+        buildAppropriation:
+          description: Apropriação de Obra.
+          $ref: '#/components/schemas/BuildAppropriationWriteDocument'
+    EnterpriseConfigurationGetDocument:
+      description: >-
+        Estrutura de resposta para consulta de configurações de comissão por
+        empreendimento, incluindo parâmetros de cálculo, limites e regras de
+        liberação/cancelamento.
+      allOf:
+        - $ref: '#/components/schemas/BuildAppropriationWriteDocument'
+        - type: object
+          properties:
+            configurationId:
+              type: integer
+              description: Código da configuração do empreendimento.
+              format: int32
+              example: 1
+            enterpriseId:
+              type: integer
+              description: Código do empreendimento.
+              format: int32
+              example: 6
+            indexerId:
+              type: integer
+              description: Código do indexador padrão.
+              format: int32
+              example: 7
+            releasePercentageAdjustment:
+              type: number
+              description: >-
+                Percentual para alteração do valor total da liberação das
+                parcelas de comissão.
+              format: double
+              example: 100
+            limitPercentage:
+              type: number
+              description: >-
+                Percentual limite de comissão por contrato padrão do
+                empreendimento.
+              format: double
+              example: 100
+            cancelCommissionsOnContractCancelation:
+              type: boolean
+              description: >-
+                Caso "true", quando o contrato vinculado a comissão for
+                cancelado a comissão será cancelada automaticamente.
+              example: true
+            allowReleaseCommissionWithPendings:
+              type: boolean
+              description: >-
+                Caso "true", deve permitir liberar comissão quando o contrato da
+                comissão possuir parcelas em atraso.
+              example: true
+            considerOn:
+              type: string
+              description: >
+                `NOT_CONSIDER` - Não considerar percentual pago do contrato.
+
+                `RELEASE` - Considerar percentual pago do contrato apenas na
+                liberação.
+
+                `AUTHORIZE` - Considerar percentual pago do contrato apenas na
+                autorização.
+              example: RELEASE
+              enum:
+                - NOT_CONSIDER
+                - RELEASE
+                - AUTHORIZE
+            percentagePaidContract:
+              type: number
+              description: >
+                Percentual pago do contrato a ser considerado para autorização
+                ou liberação de pagamento da comissão, conforme configurado no
+                campo "considerOn".
+              example: 100
+            embeddedInterest:
+              type: boolean
+              description: >
+                Caso "true", considera percentual pago do contrato com juros
+                embutidos, conforme configurado no campo
+                "percentagePaidContract".
+              example: true
+            nuDaysForReleaseCommission:
+              type: integer
+              description: Número de dias mínimo para liberação de uma comissão.
+              example: 1
+    SalesCommissionCreatedWebhookPayload:
+      type: object
+      description: Payload para webhook de criação de comissão
+      properties:
+        commissionId:
+          type: integer
+          description: Código da comissão criada
+          example: 123
+        commissionsBillId:
+          type: array
+          description: Lista de códigos das parcelas
+          items:
+            type: integer
+          example:
+            - 456
+            - 789
+      required:
+        - commissionId
+        - commissionsBillId
+    SalesCommissionInstallmentsAuthorizedWebhookPayload:
+      type: object
+      description: Payload para webhook de autorização de parcelas
+      properties:
+        commissionId:
+          type: integer
+          description: Código da comissão autorizada
+          example: 123
+        authorize:
+          type: boolean
+          description: Status de autorização
+          example: true
+        installmentsNumber:
+          type: array
+          description: Números das parcelas autorizadas
+          items:
+            type: integer
+          example:
+            - 1
+            - 2
+            - 3
+      required:
+        - commissionId
+        - authorize
+        - installmentsNumber
+    SalesCommissionInstallmentsCanceledWebhookPayload:
+      type: object
+      description: Payload para webhook de cancelamento de parcelas
+      properties:
+        commissionId:
+          type: integer
+          description: Código da comissão cancelada
+          example: 123
+        cancel:
+          type: boolean
+          description: Status de cancelamento
+          example: true
+        installmentsNumber:
+          type: array
+          description: Números das parcelas de comissão canceladas
+          items:
+            type: integer
+          example:
+            - 1
+            - 2
+      required:
+        - commissionId
+        - cancel
+        - installmentsNumber
+    SalesCommissionInstallmentsReleasedWebhookPayload:
+      type: object
+      description: Payload para webhook de liberação de parcelas
+      properties:
+        commissionId:
+          type: integer
+          description: Código da comissão liberada
+          example: 123
+        commissionBillId:
+          type: integer
+          description: Número do título da comissão liberada
+          example: 456
+        installmentsNumber:
+          type: array
+          description: Números das parcelas de comissão liberadas
+          items:
+            type: integer
+          example:
+            - 1
+        comissionReleasedId:
+          type: integer
+          description: Código da liberação da comissão
+          example: 789
+        comissionReleasedBillId:
+          type: integer
+          description: Código da parcela da liberação
+          example: 101112
+      required:
+        - commissionId
+        - commissionBillId
+        - installmentsNumber
+        - comissionReleasedId
+        - comissionReleasedBillId
+    SalesCommissionReleasesExcludedWebhookPayload:
+      type: object
+      description: Payload para webhook de exclusão de liberação
+      properties:
+        commissionId:
+          type: integer
+          description: Código da comissão removida
+          example: 123
+        commissionBillId:
+          type: integer
+          description: Código da parcela de comissão removida
+          example: 456
+        installmentNumber:
+          type: integer
+          description: Número da parcela de comissão removida
+          example: 1
+        comissionExcludedId:
+          type: integer
+          description: Código da comissão excluída
+          example: 789
+        comissionExcludedBillId:
+          type: integer
+          description: Número do título de comissão excluído
+          example: 101112
+      required:
+        - commissionId
+        - commissionBillId
+        - installmentNumber
+        - comissionExcludedId
+        - comissionExcludedBillId
+    SalesCommissionExcludedWebhookPayload:
+      type: object
+      description: Payload para webhook de exclusão de comissão
+      properties:
+        commissionId:
+          description: Código da comissão
+          example: 123
+          format: int32
+          type: integer
+        commissionBillId:
+          type: integer
+          description: Código da parcela da comissão
+          example: 456
+      required:
+        - commissionId
+        - commissionBillId
+    CommissionBrokerInsertDocument:
+      description: >-
+        Estrutura para criação de um corretor vinculado a uma comissão,
+        incluindo dados obrigatórios para cálculo, identificação e
+        personalização de parcelas.
+      required:
+        - baseDate
+        - firstPayment
+        - id
+        - indexerId
+        - installmentsNumber
+        - percentage
+        - value
+      allOf:
+        - $ref: '#/components/schemas/BuildAppropriationWriteDocument'
+        - type: object
+          properties:
+            id:
+              type: integer
+              description: Código do corretor a ser vinculado à comissão.
+              format: int32
+              example: 123
+            percentage:
+              type: number
+              description: Porcentagem de comissão. Formato -> 12.00
+              example: 12
+            value:
+              type: number
+              description: Valor da comissão. Formato -> 1200.00
+              example: 1200
+            firstPayment:
+              type: string
+              description: Primeiro vencimento. Formato YYYY-MM-DD. Exemplo -> 1990-12-31.
+              example: '2025-01-31'
+            baseDate:
+              type: string
+              description: Data base. Formato YYYY-MM-DD. Exemplo -> 1990-12-25.
+              example: '2025-01-01'
+            installmentsNumber:
+              maximum: 200
+              minimum: 1
+              type: integer
+              description: Número de parcelas a serem geradas.
+              format: int32
+              example: 12
+            indexerId:
+              type: integer
+              description: Código do indexador a ser vinculado à comissão.
+              format: int32
+              example: 1
+            documentNumber:
+              type: string
+              description: >
+                Número do documento.
+
+                Este campo só é lido caso a propriedade "released", da comissão,
+                seja verdadeiro. Neste caso, este campo se torna obrigatório.
+              example: DOC-789
+            documentId:
+              type: string
+              description: >
+                Código do documento.
+
+                Este campo só é lido caso a propriedade "released", da comissão,
+                seja verdadeiro. Neste caso, este campo se torna obrigatório.
+              example: ID-101
+            installments:
+              type: array
+              description: >-
+                Parcelas para criação da comissão, utilizado para criação
+                personalizada de parcelas. Não obrigatório.
+              items:
+                required:
+                  - dueDate
+                  - number
+                  - value
+                type: object
+                properties:
+                  number:
+                    type: number
+                    description: Número da parcela (quando já criada).
+                    format: int32
+                    example: 1
+                  value:
+                    type: number
+                    description: Valor da parcela da comissão.
+                    format: double
+                    example: 1000
+                  dueDate:
+                    type: string
+                    description: >-
+                      Vencimento da parcela. Formato YYYY-MM-DD. Exemplo ->
+                      1990-12-31.
+                    example: '2025-01-31'
+    CommissionBrokerGetOneDocument:
+      description: >-
+        Estrutura detalhada de um corretor vinculado a uma comissão, incluindo
+        dados do corretor, títulos, valores, parcelas e status de pagamento.
+      allOf:
+        - $ref: '#/components/schemas/BuildAppropriationReadDocument'
+        - type: object
+          properties:
+            id:
+              type: integer
+              description: Código do corretor vinculado à comissão.
+              format: int32
+              example: 123
+            billingBrokerId:
+              type: integer
+              description: Código do corretor de faturamento.
+              example: 456
+            billingBrokerName:
+              type: string
+              description: Nome do corretor de faturamento.
+              example: Maria Santos
+            billWasPaid:
+              type: boolean
+              description: Retorna se o título do corretor foi paga.
+              example: false
+            billId:
+              type: integer
+              description: Número do título a pagar gerado para este corretor.
+              format: int32
+              example: 789
+            name:
+              type: string
+              description: Nome completo do corretor vinculado.
+              example: João Silva
+            percentage:
+              type: number
+              description: Porcentagem de participação do valor base. Formato -> 35.00
+              example: 35
+            value:
+              type: number
+              description: Valor total da parcela. Formato -> 28000.00
+              example: 28000
+            firstPayment:
+              type: string
+              description: >-
+                Data do primeiro vencimento da parcela. Formato YYYY-MM-DD.
+                Exemplo -> 1990-12-25.
+              example: '2025-01-15'
+            installmentNumbers:
+              type: number
+              description: Total de parcelas.
+              example: 12
+            indexerId:
+              type: number
+              description: Indexador da parcela.
+              example: 1
+            baseDate:
+              type: string
+              description: >-
+                Data base do indexador da parcela. Formato YYYY-MM-DD. Exemplo
+                -> 1990-12-25.
+              example: '2025-01-01'
+            documentNumber:
+              type: string
+              description: Número do documento.
+              example: DOC-456
+            documentId:
+              description: Código do documento
+              example: NF | AV
+              type: string
+            installments:
+              type: array
+              description: Lista de parcelas de uma comissão.
+              items:
+                $ref: '#/components/schemas/CommissionBrokerInstallmentsDocument'
+    CommissionReleaseCompositionDocument:
+      description: >-
+        Estrutura de uma parcela de previsão de comissão liberada, com
+        informações de contrato, título, valor, vencimento e credor.
+      type: object
+      properties:
+        salesContractNumber:
+          type: string
+          description: Número do contrato ao qual a comissão está vinculada.
+          example: CONT-2025-001
+        billId:
+          type: integer
+          description: Número do título da parcela de previsão liberada.
+          format: int32
+          example: 1001
+        installmentNumber:
+          type: number
+          description: Número da parcela de previsão liberada.
+          format: int32
+          example: 1
+        value:
+          type: number
+          description: Valor total da parcela. Formato -> 11000.00
+          example: 11000
+        dueDate:
+          type: string
+          description: >-
+            Data de vencimento da parcela. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-25.
+          example: '2025-02-15'
+        brokerId:
+          type: number
+          description: Id do credor.
+          format: int32
+          example: 123
+        customerId:
+          description: Código do cliente
+          example: 123
+          format: int32
+          type: integer
+    CommissionAuthorizeCancelInstallmentsDocument:
+      type: array
+      description: Lista das comissões e parcelas.
+      items:
+        type: object
+        properties:
+          commissionId:
+            type: integer
+            description: ID da comissão.
+            format: int32
+            example: 123
+          brokerId:
+            type: integer
+            description: ID do corretor vinculado.
+            format: int32
+            example: 456
+          installments:
+            type: array
+            description: Lista das parcelas.
+            items:
+              type: integer
+              format: int32
+      example:
+        - commissionId: 123
+          brokerId: 456
+          installments:
+            - 1
+            - 2
+    CommissionBrokerPatchDocument:
+      description: >-
+        Estrutura para atualização parcial dos dados de um corretor vinculado a
+        uma comissão, incluindo campos obrigatórios para cálculo e
+        identificação.
+      required:
+        - baseDate
+        - documentId
+        - documentNumber
+        - firstPayment
+        - id
+        - indexerId
+        - installmentsNumber
+        - percentage
+        - value
+      allOf:
+        - $ref: '#/components/schemas/BuildAppropriationWriteDocument'
+        - type: object
+          properties:
+            id:
+              type: number
+              description: Id do corretor da comissão.
+              format: int32
+              example: 123
+            percentage:
+              type: number
+              description: Porcentagem de comissão. Formato -> 35.00
+              format: double
+              example: 35
+            value:
+              type: number
+              description: Valor da comissão. Formato -> 1000.00
+              format: double
+              example: 1000
+            firstPayment:
+              type: string
+              description: >-
+                Data do primeiro vencimento. Formato YYYY-MM-DD. Exemplo ->
+                1990-12-25.
+              example: '2025-01-15'
+            baseDate:
+              type: string
+              description: >-
+                Data base do indexador. Formato YYYY-MM-DD. Exemplo ->
+                1990-12-25.
+              example: '2025-01-01'
+            installmentsNumber:
+              maximum: 200
+              minimum: 1
+              type: integer
+              description: Número de parcelas.
+              format: int32
+              example: 12
+            indexerId:
+              description: Código do indexador.
+              example: 5
+              type: integer
+            documentNumber:
+              type: string
+              description: Número do documento a ser atualizado.
+              example: '123'
+            documentId:
+              type: string
+              description: Código do documento a ser atualizado.
+              example: '456'
+    BuildAppropriationWriteDocument:
+      description: Dados de apropriação de obra para operações de escrita.
+      properties:
+        buildingId:
+          description: Código da obra.
+          example: 123
+          format: int32
+          type: integer
+        constructUnitId:
+          description: Código da unidade construtiva.
+          example: 456
+          format: int32
+          type: integer
+        departmentId:
+          description: Código do departamento.
+          example: 123
+          format: int32
+          type: integer
+        resourceItem:
+          description: Código do item de orçamento.
+          example: 123
+          format: int32
+          type: integer
+      type: object
+    BuildAppropriationReadDocument:
+      allOf:
+        - $ref: '#/components/schemas/BuildAppropriationWriteDocument'
+        - properties:
+            buildingAppropriationLevel:
+              description: Nível de aprovação da obra.
+              example: 4
+              type: integer
+            buildingIdKey:
+              description: Chave do código da obra.
+              example: 123
+              type: integer
+            buildingName:
+              description: Nome da obra.
+              example: Obra Exemplo
+              type: string
+            constructUnitName:
+              description: Nome da unidade construtiva.
+              example: Unidade Construtiva Exemplo
+              type: string
+            departmentName:
+              description: Nome do departamento.
+              example: Departamento Exemplo
+              type: string
+            resourceItemName:
+              description: Nome do item de orçamento.
+              example: Item Exemplo
+              type: string
+            resourceItemReference:
+              description: Referência do item de orçamento.
+              example: 01.001.001.001
+              type: string
+          type: object
+      description: Dados de apropriação de obra para operações de leitura.
+    CommissionBrokerInstallmentsDocument:
+      description: >-
+        Estrutura de uma parcela individual de comissão de corretor, contendo
+        número, valor e data de vencimento.
+      type: object
+      properties:
+        number:
+          type: number
+          description: Número da parcela de comissão.
+          format: int32
+          example: 1
+        value:
+          type: number
+          description: Valor em R$ da parcela de comissão.
+          format: double
+          example: 2500
+        dueDate:
+          type: string
+          description: >-
+            Data de vencimento da parcela. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-31.
+          example: '2025-01-31'
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    CommissionId:
+      name: commissionId
+      in: path
+      description: Id da comissão.
+      required: true
+      schema:
+        type: integer
+        format: int32
+    BrokerId:
+      name: brokerId
+      in: path
+      description: Id do Corretor.
+      required: true
+      schema:
+        type: integer
+        format: int32
+    EnterpriseId:
+      description: Id do empreendimento.
+      in: path
+      name: enterpriseId
+      required: true
+      schema:
+        format: int32
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1
+webhooks:
+  SALES_COMMISSION_CREATED:
+    post:
+      tags:
+        - Webhooks - Comissões
+      summary: Comissão de vendas criada
+      description: Sempre que uma comissão de vendas é criada
+      operationId: salesCommissionCreatedWebhook
+      requestBody:
+        description: Dados do evento de criação de comissão
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesCommissionCreatedWebhookPayload'
+            example:
+              commissionId: 123
+              commissionsBillId:
+                - 456
+                - 789
+        required: true
+      responses:
+        2XX:
+          description: O evento SALES_COMMISSION_CREATED foi processado com sucesso
+      x-audience:
+        - public
+  SALES_COMMISSION_INSTALLMENTS_AUTHORIZED:
+    post:
+      tags:
+        - Webhooks - Comissões
+      summary: Parcela de comissão autorizada
+      description: Sempre que uma parcela da comissão de vendas é autorizada
+      operationId: salesCommissionInstallmentsAuthorizedWebhook
+      requestBody:
+        description: Dados do evento de autorização de parcela
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/SalesCommissionInstallmentsAuthorizedWebhookPayload
+            example:
+              commissionId: 123
+              authorize: true
+              installmentsNumber:
+                - 1
+                - 2
+                - 3
+        required: true
+      responses:
+        2XX:
+          description: >-
+            O evento SALES_COMMISSION_INSTALLMENTS_AUTHORIZED foi processado com
+            sucesso
+      x-audience:
+        - public
+  SALES_COMMISSION_INSTALLMENTS_CANCELED:
+    post:
+      tags:
+        - Webhooks - Comissões
+      summary: Parcela de comissão cancelada
+      description: Sempre que uma parcela da comissão de vendas é cancelada
+      operationId: salesCommissionInstallmentsCanceledWebhook
+      requestBody:
+        description: Dados do evento de cancelamento de parcela
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/SalesCommissionInstallmentsCanceledWebhookPayload
+            example:
+              commissionId: 123
+              cancel: true
+              installmentsNumber:
+                - 1
+                - 2
+        required: true
+      responses:
+        2XX:
+          description: >-
+            O evento SALES_COMMISSION_INSTALLMENTS_CANCELED foi processado com
+            sucesso
+      x-audience:
+        - public
+  SALES_COMMISSION_INSTALLMENTS_RELEASED:
+    post:
+      tags:
+        - Webhooks - Comissões
+      summary: Parcela de comissão liberada
+      description: Sempre que uma parcela da comissão de vendas é liberada
+      operationId: salesCommissionInstallmentsReleasedWebhook
+      requestBody:
+        description: Dados do evento de liberação de parcela
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/SalesCommissionInstallmentsReleasedWebhookPayload
+            example:
+              commissionId: 123
+              commissionBillId: 456
+              installmentsNumber:
+                - 1
+              comissionReleasedId: 789
+              comissionReleasedBillId: 101112
+        required: true
+      responses:
+        2XX:
+          description: >-
+            O evento SALES_COMMISSION_INSTALLMENTS_RELEASED foi processado com
+            sucesso
+      x-audience:
+        - public
+  SALES_COMMISSION_RELEASES_EXCLUDED:
+    post:
+      tags:
+        - Webhooks - Comissões
+      summary: Liberação de comissão excluída
+      description: Sempre que uma liberação da parcela da comissão de vendas é excluída
+      operationId: salesCommissionReleasesExcludedWebhook
+      requestBody:
+        description: Dados do evento de exclusão de liberação
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/SalesCommissionReleasesExcludedWebhookPayload
+            example:
+              commissionId: 123
+              commissionBillId: 456
+              installmentNumber: 1
+              comissionExcludedId: 789
+              comissionExcludedBillId: 101112
+        required: true
+      responses:
+        2XX:
+          description: >-
+            O evento SALES_COMMISSION_RELEASES_EXCLUDED foi processado com
+            sucesso
+      x-audience:
+        - public
+  SALES_COMMISSION_EXCLUDED:
+    post:
+      tags:
+        - Webhooks - Comissões
+      summary: Comissão de vendas excluída
+      description: Sempre que uma comissão de vendas é excluída
+      operationId: salesCommissionExcludedWebhook
+      requestBody:
+        description: Dados do evento de exclusão de comissão
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesCommissionExcludedWebhookPayload'
+            example:
+              commissionId: 123
+              commissionBillId: 456
+        required: true
+      responses:
+        2XX:
+          description: O evento SALES_COMMISSION_EXCLUDED foi processado com sucesso
+      x-audience:
+        - public

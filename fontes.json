@@ -1,0 +1,790 @@
+[
+  {
+    "group": "📘 Introdução",
+    "title": "Introdução",
+    "url": "https://api.sienge.com.br/v1/docs/general/introducao.html?v=1793725047901",
+    "page": "oficial/general/introducao.html"
+  },
+  {
+    "group": "📘 Introdução",
+    "title": "URL e Requisições",
+    "url": "https://api.sienge.com.br/v1/docs/general/url-e-requisicoes.html?v=1793725047901",
+    "page": "oficial/general/url-e-requisicoes.html"
+  },
+  {
+    "group": "📘 Introdução",
+    "title": "Limites de Requisições - Rate-Limits",
+    "url": "https://api.sienge.com.br/v1/docs/general/limites-de-requisicoes-rate-limits.html?v=1793725047901",
+    "page": "oficial/general/limites-de-requisicoes-rate-limits.html"
+  },
+  {
+    "group": "📘 Introdução",
+    "title": "Pacotes de APIs",
+    "url": "https://api.sienge.com.br/v1/docs/general/pacotes-de-apis.html?v=1793725047901",
+    "page": "oficial/general/pacotes-de-apis.html"
+  },
+  {
+    "group": "📘 Introdução",
+    "title": "Autenticação",
+    "url": "https://api.sienge.com.br/v1/docs/general/autenticacao.html?v=1793725047901",
+    "page": "oficial/general/autenticacao.html"
+  },
+  {
+    "group": "📘 Introdução",
+    "title": "APIs REST",
+    "url": "https://api.sienge.com.br/v1/docs/general/apis-rest.html?v=1793725047901",
+    "page": "oficial/general/apis-rest.html"
+  },
+  {
+    "group": "📘 Introdução",
+    "title": "Status de Resposta",
+    "url": "https://api.sienge.com.br/v1/docs/general/status-de-resposta.html?v=1793725047901",
+    "page": "oficial/general/status-de-resposta.html"
+  },
+  {
+    "group": "📘 Introdução",
+    "title": "APIs Bulk Data",
+    "url": "https://api.sienge.com.br/v1/docs/general/apis-bulk-data.html?v=1793725047901",
+    "page": "oficial/general/apis-bulk-data.html"
+  },
+  {
+    "group": "📘 Introdução",
+    "title": "Webhooks",
+    "url": "https://api.sienge.com.br/v1/docs/general/webhooks.html?v=1793725047901",
+    "page": "oficial/general/webhooks.html"
+  },
+  {
+    "group": "🏗️ Engenharia",
+    "title": "Empreendimentos (Obras)",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/enterprise-v1.html?v=1793725047901",
+    "page": "oficial/html-files/enterprise-v1.html",
+    "spec": "oficial/yaml-files/enterprise-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/enterprise-v1.yaml?timestamp=1793725047813"
+  },
+  {
+    "group": "🏗️ Engenharia",
+    "title": "Planejamentos de Obra",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/building-projects-v1.html?v=1793725047901",
+    "page": "oficial/html-files/building-projects-v1.html",
+    "spec": "oficial/yaml-files/building-projects-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/building-projects-v1.yaml?timestamp=1793725047756"
+  },
+  {
+    "group": "🏗️ Engenharia",
+    "title": "Acompanhamentos de Obra",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/building-projects-progress-logs-v1.html?v=1793725047901",
+    "page": "oficial/html-files/building-projects-progress-logs-v1.html",
+    "spec": "oficial/yaml-files/building-projects-progress-logs-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/building-projects-progress-logs-v1.yaml?timestamp=1793725047754"
+  },
+  {
+    "group": "🏗️ Engenharia",
+    "title": "Locais de Obra",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/sites-v1.html?v=1793725047901",
+    "page": "oficial/html-files/sites-v1.html",
+    "spec": "oficial/yaml-files/sites-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/sites-v1.yaml?timestamp=1793725047853"
+  },
+  {
+    "group": "🏗️ Engenharia",
+    "title": "Diário de Obra",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/construction-daily-report-v1.html?v=1793725047901",
+    "page": "oficial/html-files/construction-daily-report-v1.html",
+    "spec": "oficial/yaml-files/construction-daily-report-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/construction-daily-report-v1.yaml?timestamp=1793725047789"
+  },
+  {
+    "group": "🏗️ Engenharia",
+    "title": "Orçamentos de Obra",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/building-cost-estimations-v1.html?v=1793725047901",
+    "page": "oficial/html-files/building-cost-estimations-v1.html",
+    "spec": "oficial/yaml-files/building-cost-estimations-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/building-cost-estimations-v1.yaml?timestamp=1793725047753"
+  },
+  {
+    "group": "🏗️ Engenharia",
+    "title": "Insumos Orçados",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/building-cost-estimation-cost-estimate-resources-v1.html?v=1793725047901",
+    "page": "oficial/html-files/building-cost-estimation-cost-estimate-resources-v1.html",
+    "spec": "oficial/yaml-files/building-cost-estimation-cost-estimate-resources-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/building-cost-estimation-cost-estimate-resources-v1.yaml?timestamp=1793725047750"
+  },
+  {
+    "group": "🏗️ Engenharia",
+    "title": "Insumos do Orçamento da Obra",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/building-cost-estimation-resources-v1.html?v=1793725047901",
+    "page": "oficial/html-files/building-cost-estimation-resources-v1.html",
+    "spec": "oficial/yaml-files/building-cost-estimation-resources-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/building-cost-estimation-resources-v1.yaml?timestamp=1793725047752"
+  },
+  {
+    "group": "🏗️ Engenharia",
+    "title": "Tabelas do Custos Unitários",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/cost-databases-v1.html?v=1793725047901",
+    "page": "oficial/html-files/cost-databases-v1.html",
+    "spec": "oficial/yaml-files/cost-databases-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/cost-databases-v1.yaml?timestamp=1793725047795"
+  },
+  {
+    "group": "🏗️ Engenharia",
+    "title": "Unidades de movimento",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/resource-units-of-movement-v1.html?v=1793725047901",
+    "page": "oficial/html-files/resource-units-of-movement-v1.html",
+    "spec": "oficial/yaml-files/resource-units-of-movement-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/resource-units-of-movement-v1.yaml?timestamp=1793725047845"
+  },
+  {
+    "group": "🏗️ Engenharia",
+    "title": "Calendários de Obra",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/building-calendar-v1.html?v=1793725047901",
+    "page": "oficial/html-files/building-calendar-v1.html",
+    "spec": "oficial/yaml-files/building-calendar-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/building-calendar-v1.yaml?timestamp=1793725047749"
+  },
+  {
+    "group": "🏗️ Engenharia",
+    "title": "Grupos de Serviços",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/grupos-de-servicos.html?v=1793725047901",
+    "page": "oficial/html-files/grupos-de-servicos.html",
+    "spec": "oficial/yaml-files/grupos-de-servicos.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/grupos-de-servicos.yaml?timestamp=1793725047865"
+  },
+  {
+    "group": "📦 Suprimentos",
+    "title": "Contratos de Suprimentos",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/contracts-v1.html?v=1793725047901",
+    "page": "oficial/html-files/contracts-v1.html",
+    "spec": "oficial/yaml-files/contracts-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/contracts-v1.yaml?timestamp=1793725047793"
+  },
+  {
+    "group": "📦 Suprimentos",
+    "title": "Medições de Contratos de Suprimentos",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/measurement-v1.html?v=1793725047901",
+    "page": "oficial/html-files/measurement-v1.html",
+    "spec": "oficial/yaml-files/measurement-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/measurement-v1.yaml?timestamp=1793725047818"
+  },
+  {
+    "group": "📦 Suprimentos",
+    "title": "Pedidos de Compra",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/purchase-orders-v1.html?v=1793725047901",
+    "page": "oficial/html-files/purchase-orders-v1.html",
+    "spec": "oficial/yaml-files/purchase-orders-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/purchase-orders-v1.yaml?timestamp=1793725047837"
+  },
+  {
+    "group": "📦 Suprimentos",
+    "title": "Solicitações de Compra",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/solicitacoes-de-compra.html?v=1793725047901",
+    "page": "oficial/html-files/solicitacoes-de-compra.html",
+    "spec": "oficial/yaml-files/solicitacoes-de-compra.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/solicitacoes-de-compra.yaml?timestamp=1793725047843"
+  },
+  {
+    "group": "📦 Suprimentos",
+    "title": "Cotações de Preços",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/purchase-quotations-v1.html?v=1793725047901",
+    "page": "oficial/html-files/purchase-quotations-v1.html",
+    "spec": "oficial/yaml-files/purchase-quotations-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/purchase-quotations-v1.yaml?timestamp=1793725047840"
+  },
+  {
+    "group": "📦 Suprimentos",
+    "title": "Nota Fiscal de Compra",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/purchase-invoices-v1.html?v=1793725047901",
+    "page": "oficial/html-files/purchase-invoices-v1.html",
+    "spec": "oficial/yaml-files/purchase-invoices-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/purchase-invoices-v1.yaml?timestamp=1793725047834"
+  },
+  {
+    "group": "📦 Suprimentos",
+    "title": "Estoque de Insumos",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/stock-inventories-v1.html?v=1793725047901",
+    "page": "oficial/html-files/stock-inventories-v1.html",
+    "spec": "oficial/yaml-files/stock-inventories-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/stock-inventories-v1.yaml?timestamp=1793725047856"
+  },
+  {
+    "group": "📦 Suprimentos",
+    "title": "Categorias de Suprimentos",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/categorias-de-suprimentos.html?v=1793725047901",
+    "page": "oficial/html-files/categorias-de-suprimentos.html",
+    "spec": "oficial/yaml-files/categorias-de-suprimentos.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/categorias-de-suprimentos.yaml?timestamp=1793725047857"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Contas-Correntes",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/checking-accounts-v1.html?v=1793725047901",
+    "page": "oficial/html-files/checking-accounts-v1.html",
+    "spec": "oficial/yaml-files/checking-accounts-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/checking-accounts-v1.yaml?timestamp=1793725047777"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Centro de Custos",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/centro-de-custos.html?v=1793725047901",
+    "page": "oficial/html-files/centro-de-custos.html",
+    "spec": "oficial/yaml-files/centro-de-custos.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/centro-de-custos.yaml?timestamp=1793725047793"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Credores",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/creditor-v1.html?v=1793725047901",
+    "page": "oficial/html-files/creditor-v1.html",
+    "spec": "oficial/yaml-files/creditor-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/creditor-v1.yaml?timestamp=1793725047799"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Departamentos",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/departments-v1.html?v=1793725047901",
+    "page": "oficial/html-files/departments-v1.html",
+    "spec": "oficial/yaml-files/departments-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/departments-v1.yaml?timestamp=1793725047809"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Documentos",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/document-identification-v1.html?v=1793725047901",
+    "page": "oficial/html-files/document-identification-v1.html",
+    "spec": "oficial/yaml-files/document-identification-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/document-identification-v1.yaml?timestamp=1793725047810"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Planos Financeiros",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/payment-categories-v1.html?v=1793725047901",
+    "page": "oficial/html-files/payment-categories-v1.html",
+    "spec": "oficial/yaml-files/payment-categories-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/payment-categories-v1.yaml?timestamp=1793725047824"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Relatório de Extrato de Credores",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/creditor-report-v1.html?v=1793725047901",
+    "page": "oficial/html-files/creditor-report-v1.html",
+    "spec": "oficial/yaml-files/creditor-report-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/creditor-report-v1.yaml?timestamp=1793725047796"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Títulos do Contas a Receber",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/accounts-receivable-v1.html?v=1793725047901",
+    "page": "oficial/html-files/accounts-receivable-v1.html",
+    "spec": "oficial/yaml-files/accounts-receivable-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/accounts-receivable-v1.yaml?timestamp=1793725047733"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Títulos do Contas a Pagar",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bill-debt-v1.html?v=1793725047901",
+    "page": "oficial/html-files/bill-debt-v1.html",
+    "spec": "oficial/yaml-files/bill-debt-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bill-debt-v1.yaml?timestamp=1793725047748"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Portadores Para o Contas a Receber",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bearers-receivable-v1.html?v=1793725047901",
+    "page": "oficial/html-files/bearers-receivable-v1.html",
+    "spec": "oficial/yaml-files/bearers-receivable-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bearers-receivable-v1.yaml?timestamp=1793725047736"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Geração do Saldo Devedor Presente do Cliente",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/current-debit-balance-v1.html?v=1793725047901",
+    "page": "oficial/html-files/current-debit-balance-v1.html",
+    "spec": "oficial/yaml-files/current-debit-balance-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/current-debit-balance-v1.yaml?timestamp=1793725047801"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Extrato de Cliente Por E-Mail",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/customer-financial-statements-v1.html?v=1793725047901",
+    "page": "oficial/html-files/customer-financial-statements-v1.html",
+    "spec": "oficial/yaml-files/customer-financial-statements-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/customer-financial-statements-v1.yaml?timestamp=1793725047802"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Informe de Rendimentos - Imposto de Renda",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/customer-income-tax-v1.html?v=1793725047901",
+    "page": "oficial/html-files/customer-income-tax-v1.html",
+    "spec": "oficial/yaml-files/customer-income-tax-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/customer-income-tax-v1.yaml?timestamp=1793725047803"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Saldo Devedor Presente",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/email-current-debit-balance-v1.html?v=1793725047901",
+    "page": "oficial/html-files/email-current-debit-balance-v1.html",
+    "spec": "oficial/yaml-files/email-current-debit-balance-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/email-current-debit-balance-v1.yaml?timestamp=1793725047811"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Indexadores",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/indexers-v1.html?v=1793725047901",
+    "page": "oficial/html-files/indexers-v1.html",
+    "spec": "oficial/yaml-files/indexers-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/indexers-v1.yaml?timestamp=1793725047815"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Reparcelamentos - Conta a Receber",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/remade-installments-v1.html?v=1793725047901",
+    "page": "oficial/html-files/remade-installments-v1.html",
+    "spec": "oficial/yaml-files/remade-installments-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/remade-installments-v1.yaml?timestamp=1793725047845"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Saldo Devedor Presente do Cliente (Total)",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/total-current-debit-balance-v1.html?v=1793725047901",
+    "page": "oficial/html-files/total-current-debit-balance-v1.html",
+    "spec": "oficial/yaml-files/total-current-debit-balance-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/total-current-debit-balance-v1.yaml?timestamp=1793725047859"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Geração de Cobrança de Parcelas Vencidas",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/overdue-receivable-v1.html?v=1793725047901",
+    "page": "oficial/html-files/overdue-receivable-v1.html",
+    "spec": "oficial/yaml-files/overdue-receivable-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/overdue-receivable-v1.yaml?timestamp=1793725047823"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Geração de Boleto (Segunda Via)",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/payment-slip-notification-v1.html?v=1793725047901",
+    "page": "oficial/html-files/payment-slip-notification-v1.html",
+    "spec": "oficial/yaml-files/payment-slip-notification-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/payment-slip-notification-v1.yaml?timestamp=1793725047825"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Antecipação de Parcelas",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/prepayment-slip-register-v1.html?v=1793725047901",
+    "page": "oficial/html-files/prepayment-slip-register-v1.html",
+    "spec": "oficial/yaml-files/prepayment-slip-register-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/prepayment-slip-register-v1.yaml?timestamp=1793725047826"
+  },
+  {
+    "group": "💰 Financeiro",
+    "title": "Histórico de Notificação de Cobranças",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/collections-notification-history-v1.html?v=1793725047901",
+    "page": "oficial/html-files/collections-notification-history-v1.html",
+    "spec": "oficial/yaml-files/collections-notification-history-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/collections-notification-history-v1.yaml?timestamp=1793725047779"
+  },
+  {
+    "group": "📄 Notas Fiscais",
+    "title": "Notas Fiscais Eletrônicas de Produto",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/nfe-api-v1.html?v=1793725047901",
+    "page": "oficial/html-files/nfe-api-v1.html",
+    "spec": "oficial/yaml-files/nfe-api-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/nfe-api-v1.yaml?timestamp=1793725047822"
+  },
+  {
+    "group": "📄 Notas Fiscais",
+    "title": "Informações Fiscais de Serviço - Contas a Pagar",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/tax-information-v1.html?v=1793725047901",
+    "page": "oficial/html-files/tax-information-v1.html",
+    "spec": "oficial/yaml-files/tax-information-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/tax-information-v1.yaml?timestamp=1793725047858"
+  },
+  {
+    "group": "📄 Notas Fiscais",
+    "title": "Pré-Cadastro de Nota Fiscal de Serviço",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/pre-cadastro-de-nota-fiscal-de-servico.html?v=1793725047901",
+    "page": "oficial/html-files/pre-cadastro-de-nota-fiscal-de-servico.html",
+    "spec": "oficial/yaml-files/pre-cadastro-de-nota-fiscal-de-servico.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/pre-cadastro-de-nota-fiscal-de-servico.yaml?timestamp=1793725047853"
+  },
+  {
+    "group": "📊 Contabilidade/Fiscal",
+    "title": "Contas Contábeis",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/accountancy-accounts-v1.html?v=1793725047901",
+    "page": "oficial/html-files/accountancy-accounts-v1.html",
+    "spec": "oficial/yaml-files/accountancy-accounts-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/accountancy-accounts-v1.yaml?timestamp=1793725047718"
+  },
+  {
+    "group": "📊 Contabilidade/Fiscal",
+    "title": "Lotes Contábeis (Contabilidade)",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/accountancy-batch-v1.html?v=1793725047901",
+    "page": "oficial/html-files/accountancy-batch-v1.html",
+    "spec": "oficial/yaml-files/accountancy-batch-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/accountancy-batch-v1.yaml?timestamp=1793725047720"
+  },
+  {
+    "group": "📊 Contabilidade/Fiscal",
+    "title": "Fechamento Contábil (Contabilidade)",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/accountancy-closingaccountancy-v1.html?v=1793725047901",
+    "page": "oficial/html-files/accountancy-closingaccountancy-v1.html",
+    "spec": "oficial/yaml-files/accountancy-closingaccountancy-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/accountancy-closingaccountancy-v1.yaml?timestamp=1793725047722"
+  },
+  {
+    "group": "📊 Contabilidade/Fiscal",
+    "title": "Lançamentos Contábeis (Contabilidade)",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/accountancy-entries-v1.html?v=1793725047901",
+    "page": "oficial/html-files/accountancy-entries-v1.html",
+    "spec": "oficial/yaml-files/accountancy-entries-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/accountancy-entries-v1.yaml?timestamp=1793725047725"
+  },
+  {
+    "group": "📊 Contabilidade/Fiscal",
+    "title": "Lançamentos Contábeis (Integração Contábil)",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/lancamentos-contabeis-integracao-contabil.html?v=1793725047901",
+    "page": "oficial/html-files/lancamentos-contabeis-integracao-contabil.html",
+    "spec": "oficial/yaml-files/lancamentos-contabeis-integracao-contabil.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/lancamentos-contabeis-integracao-contabil.yaml?timestamp=1793725047727"
+  },
+  {
+    "group": "📊 Contabilidade/Fiscal",
+    "title": "Saldo de Contas Correntes",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/accounts-balances-v1.html?v=1793725047901",
+    "page": "oficial/html-files/accounts-balances-v1.html",
+    "spec": "oficial/yaml-files/accounts-balances-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/accounts-balances-v1.yaml?timestamp=1793725047729"
+  },
+  {
+    "group": "📊 Contabilidade/Fiscal",
+    "title": "Extrato de Contas",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/accounts-statements-v1.html?v=1793725047901",
+    "page": "oficial/html-files/accounts-statements-v1.html",
+    "spec": "oficial/yaml-files/accounts-statements-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/accounts-statements-v1.yaml?timestamp=1793725047735"
+  },
+  {
+    "group": "📊 Contabilidade/Fiscal",
+    "title": "Balancete de Verificação",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/trial-balance-v1.html?v=1793725047901",
+    "page": "oficial/html-files/trial-balance-v1.html",
+    "spec": "oficial/yaml-files/trial-balance-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/trial-balance-v1.yaml?timestamp=1793725047860"
+  },
+  {
+    "group": "🤝 Comercial",
+    "title": "Tipos de Clientes",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/customer-types-v1.html?v=1793725047901",
+    "page": "oficial/html-files/customer-types-v1.html",
+    "spec": "oficial/yaml-files/customer-types-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/customer-types-v1.yaml?timestamp=1793725047804"
+  },
+  {
+    "group": "🤝 Comercial",
+    "title": "Comissões",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/commissions-v1.html?v=1793725047901",
+    "page": "oficial/html-files/commissions-v1.html",
+    "spec": "oficial/yaml-files/commissions-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/commissions-v1.yaml?timestamp=1793725047784"
+  },
+  {
+    "group": "🤝 Comercial",
+    "title": "Comissões (Antigo)",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/commissions-forecasts-v1.html?v=1793725047901",
+    "page": "oficial/html-files/commissions-forecasts-v1.html",
+    "spec": "oficial/yaml-files/commissions-forecasts-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/commissions-forecasts-v1.yaml?timestamp=1793725047780"
+  },
+  {
+    "group": "🤝 Comercial",
+    "title": "Contratos de Vendas",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/sales-contracts-v1.html?v=1793725047901",
+    "page": "oficial/html-files/sales-contracts-v1.html",
+    "spec": "oficial/yaml-files/sales-contracts-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/sales-contracts-v1.yaml?timestamp=1793725047851"
+  },
+  {
+    "group": "🤝 Comercial",
+    "title": "Unidades de Imóveis",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/unit-v1.html?v=1793725047901",
+    "page": "oficial/html-files/unit-v1.html",
+    "spec": "oficial/yaml-files/unit-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/unit-v1.yaml?timestamp=1793725047864"
+  },
+  {
+    "group": "🤝 Comercial",
+    "title": "Reservas de Unidades",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/unit-bookings-v1.html?v=1793725047901",
+    "page": "oficial/html-files/unit-bookings-v1.html",
+    "spec": "oficial/yaml-files/unit-bookings-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/unit-bookings-v1.yaml?timestamp=1793725047860"
+  },
+  {
+    "group": "🤝 Comercial",
+    "title": "Tabela de Preços",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/price-tables-v1.html?v=1793725047901",
+    "page": "oficial/html-files/price-tables-v1.html",
+    "spec": "oficial/yaml-files/price-tables-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/price-tables-v1.yaml?timestamp=1793725047827"
+  },
+  {
+    "group": "🤝 Comercial",
+    "title": "Profissões",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/professions-v1.html?v=1793725047901",
+    "page": "oficial/html-files/professions-v1.html",
+    "spec": "oficial/yaml-files/professions-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/professions-v1.yaml?timestamp=1793725047827"
+  },
+  {
+    "group": "🤝 Comercial",
+    "title": "Locação de Imóveis",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/property-rental-v1.html?v=1793725047901",
+    "page": "oficial/html-files/property-rental-v1.html",
+    "spec": "oficial/yaml-files/property-rental-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/property-rental-v1.yaml?timestamp=1793725047829"
+  },
+  {
+    "group": "🤝 Comercial",
+    "title": "Tipo de Imóveis",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/property-types-v1.html?v=1793725047901",
+    "page": "oficial/html-files/property-types-v1.html",
+    "spec": "oficial/yaml-files/property-types-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/property-types-v1.yaml?timestamp=1793725047830"
+  },
+  {
+    "group": "🤝 Comercial",
+    "title": "Estados Civis",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/civil-status-v1.html?v=1793725047901",
+    "page": "oficial/html-files/civil-status-v1.html",
+    "spec": "oficial/yaml-files/civil-status-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/civil-status-v1.yaml?timestamp=1793725047778"
+  },
+  {
+    "group": "🤝 Comercial",
+    "title": "Tipos de Condição de Pagamento",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/payment-condition-types-v1.html?v=1793725047901",
+    "page": "oficial/html-files/payment-condition-types-v1.html",
+    "spec": "oficial/yaml-files/payment-condition-types-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/payment-condition-types-v1.yaml?timestamp=1793725047825"
+  },
+  {
+    "group": "🏢 Gestão de Ativos",
+    "title": "Bens Imóveis",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/fixed-assets-v1.html?v=1793725047901",
+    "page": "oficial/html-files/fixed-assets-v1.html",
+    "spec": "oficial/yaml-files/fixed-assets-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/fixed-assets-v1.yaml?timestamp=1793725047814"
+  },
+  {
+    "group": "🏢 Gestão de Ativos",
+    "title": "Bens Móveis",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/movable-assets-v1.html?v=1793725047901",
+    "page": "oficial/html-files/movable-assets-v1.html",
+    "spec": "oficial/yaml-files/movable-assets-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/movable-assets-v1.yaml?timestamp=1793725047819"
+  },
+  {
+    "group": "🏢 Gestão de Ativos",
+    "title": "Mapa Imobiliário Consolidado",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/real-estate-map-v1.html?v=1793725047901",
+    "page": "oficial/html-files/real-estate-map-v1.html",
+    "spec": "oficial/yaml-files/real-estate-map-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/real-estate-map-v1.yaml?timestamp=1793725047843"
+  },
+  {
+    "group": "🛡️ Segurança",
+    "title": "Parâmetros",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/parameters-v1.html?v=1793725047901",
+    "page": "oficial/html-files/parameters-v1.html",
+    "spec": "oficial/yaml-files/parameters-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/parameters-v1.yaml?timestamp=1793725047823"
+  },
+  {
+    "group": "🔧 Apoio",
+    "title": "Marcas",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/marcas.html?v=1793725047901",
+    "page": "oficial/html-files/marcas.html",
+    "spec": "oficial/yaml-files/marcas.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/marcas.yaml?timestamp=1793725047859"
+  },
+  {
+    "group": "🔧 Apoio",
+    "title": "Unidades de Medidas",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/unidades-de-medidas.html?v=1793725047901",
+    "page": "oficial/html-files/unidades-de-medidas.html",
+    "spec": "oficial/yaml-files/unidades-de-medidas.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/unidades-de-medidas.yaml?timestamp=1793725047865"
+  },
+  {
+    "group": "🔧 Apoio",
+    "title": "Clientes",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/customers-v1.html?v=1793725047901",
+    "page": "oficial/html-files/customers-v1.html",
+    "spec": "oficial/yaml-files/customers-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/customers-v1.yaml?timestamp=1793725047809"
+  },
+  {
+    "group": "🔧 Apoio",
+    "title": "Empresas",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/company-v1.html?v=1793725047901",
+    "page": "oficial/html-files/company-v1.html",
+    "spec": "oficial/yaml-files/company-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/company-v1.yaml?timestamp=1793725047785"
+  },
+  {
+    "group": "🔧 Apoio",
+    "title": "Municípios",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/cities-v1.html?v=1793725047901",
+    "page": "oficial/html-files/cities-v1.html",
+    "spec": "oficial/yaml-files/cities-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/cities-v1.yaml?timestamp=1793725047777"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Business Budget",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-business-budget.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-business-budget.html",
+    "spec": "oficial/yaml-files/bulk-data-business-budget.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-business-budget.yaml?timestamp=1793725047763"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Caixas e Bancos",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-caixas-e-bancos.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-caixas-e-bancos.html",
+    "spec": "oficial/yaml-files/bulk-data-caixas-e-bancos.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-caixas-e-bancos.yaml?timestamp=1793725047759"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Contratos de Vendas",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-sales-v1.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-sales-v1.html",
+    "spec": "oficial/yaml-files/bulk-data-sales-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-sales-v1.yaml?timestamp=1793725047776"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Cotações de preços",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-purchase-quotations-v1.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-purchase-quotations-v1.html",
+    "spec": "oficial/yaml-files/bulk-data-purchase-quotations-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-purchase-quotations-v1.yaml?timestamp=1793725047774"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Extrato Cliente Histórico",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-customer-extract-history-v1.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-customer-extract-history-v1.html",
+    "spec": "oficial/yaml-files/bulk-data-customer-extract-history-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-customer-extract-history-v1.yaml?timestamp=1793725047766"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Insumos da Obra",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-building-resource-v1.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-building-resource-v1.html",
+    "spec": "oficial/yaml-files/bulk-data-building-resource-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-building-resource-v1.yaml?timestamp=1793725047762"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Itens de Orçamento",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-building-cost-estimations-v1.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-building-cost-estimations-v1.html",
+    "spec": "oficial/yaml-files/bulk-data-building-cost-estimations-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-building-cost-estimations-v1.yaml?timestamp=1793725047760"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Parcelas a Pagar",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-parcelas-a-pagar.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-parcelas-a-pagar.html",
+    "spec": "oficial/yaml-files/bulk-data-parcelas-a-pagar.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-parcelas-a-pagar.yaml?timestamp=1793725047774"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Parcelas do Contas a Receber",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-income-v1.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-income-v1.html",
+    "spec": "oficial/yaml-files/bulk-data-income-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-income-v1.yaml?timestamp=1793725047771"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Relatório de Notas Fiscais",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-invoice-items-v1.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-invoice-items-v1.html",
+    "spec": "oficial/yaml-files/bulk-data-invoice-items-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-invoice-items-v1.yaml?timestamp=1793725047772"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Saldo Devedor Cliente",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-customer-debt-balance.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-customer-debt-balance.html",
+    "spec": "oficial/yaml-files/bulk-data-customer-debt-balance.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-customer-debt-balance.yaml?timestamp=1793725047765"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Saldos Contábeis Consolidados Por Centro de Custo",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-account-cost-center-balance-v1.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-account-cost-center-balance-v1.html",
+    "spec": "oficial/yaml-files/bulk-data-account-cost-center-balance-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-account-cost-center-balance-v1.yaml?timestamp=1793725047757"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Saldos Contábeis Consolidados Por Empresa",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-account-company-balance-v1.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-account-company-balance-v1.html",
+    "spec": "oficial/yaml-files/bulk-data-account-company-balance-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-account-company-balance-v1.yaml?timestamp=1793725047756"
+  },
+  {
+    "group": "📚 Bulk Data",
+    "title": "Bulk-data Títulos Inadimplentes",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/bulk-data-defaulters-receivable-bills-v1.html?v=1793725047901",
+    "page": "oficial/html-files/bulk-data-defaulters-receivable-bills-v1.html",
+    "spec": "oficial/yaml-files/bulk-data-defaulters-receivable-bills-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/bulk-data-defaulters-receivable-bills-v1.yaml?timestamp=1793725047768"
+  },
+  {
+    "group": "🔔 Webhooks",
+    "title": "Gerenciamento de Webhooks",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/hooks-v1.html?v=1793725047901",
+    "page": "oficial/html-files/hooks-v1.html",
+    "spec": "oficial/yaml-files/hooks-v1.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/hooks-v1.yaml?timestamp=1793725047814"
+  },
+  {
+    "group": "🔔 Webhooks",
+    "title": "Índice de Webhooks",
+    "url": "https://api.sienge.com.br/v1/docs/webhooks-index.html?v=1793725047901",
+    "page": "oficial/webhooks-index.html"
+  },
+  {
+    "group": "",
+    "title": "Gerenciamento de Cobrança",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/gerenciamento-de-cobranca.html",
+    "page": "oficial/html-files/gerenciamento-de-cobranca.html",
+    "spec": "oficial/yaml-files/gerenciamento-de-cobranca.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/gerenciamento-de-cobranca.yaml?timestamp=1793725047866"
+  },
+  {
+    "group": "",
+    "title": "Registro de Boletos",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/registro-de-boletos.html",
+    "page": "oficial/html-files/registro-de-boletos.html",
+    "spec": "oficial/yaml-files/registro-de-boletos.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/registro-de-boletos.yaml?timestamp=1793725047866"
+  },
+  {
+    "group": "",
+    "title": "Assistência Técnica",
+    "url": "https://api.sienge.com.br/v1/docs/html-files/assistencia-tecnica.html",
+    "page": "oficial/html-files/assistencia-tecnica.html",
+    "spec": "oficial/yaml-files/assistencia-tecnica.yaml",
+    "source": "https://api.sienge.com.br/v1/docs/yaml-files/assistencia-tecnica.yaml?timestamp=1793725047866"
+  }
+]

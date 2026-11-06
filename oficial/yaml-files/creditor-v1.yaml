@@ -1,0 +1,2255 @@
+openapi: 3.1.1
+info:
+  title: Credores
+  version: 1.24.0
+  description: API REST de credores
+paths:
+  /creditors:
+    get:
+      x-original-file: creditor-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Credores
+      summary: Busca o credores
+      operationId: getAllCreditors
+      parameters:
+        - name: cpf
+          in: query
+          description: CPF do credor sem máscara, somento números.
+          schema:
+            type: string
+        - name: cnpj
+          in: query
+          description: >-
+            CNPJ do credor sem máscara, somento números. Pode ser informado
+            múltiplos valores.
+          schema:
+            type: array
+            items:
+              type: string
+            example:
+              - 79.164.911/0001-04
+              - '77288031000114'
+        - name: creditor
+          in: query
+          description: >-
+            Pode pesquisar por um desses três: nome do credor, nome fantasia do
+            credor ou código do credor.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Lista de credores encontrados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseCreditors'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca os credores no Sienge (REST)
+    post:
+      tags:
+        - Credores
+      summary: Inserção de credor
+      operationId: insertCreditor
+      requestBody:
+        description: Objeto para criação do credores
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditorInsert'
+        required: true
+      responses:
+        '201':
+          description: Credor inserido
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: creditor-v1.yaml
+      description: Inserção de credor no Sienge (REST)
+      x-audience:
+        - public
+  /creditors/{creditorId}:
+    get:
+      x-original-file: creditor-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Credores
+      summary: Busca o credor
+      operationId: getCreditor
+      parameters:
+        - $ref: '#/components/parameters/CreditorId'
+      responses:
+        '200':
+          description: Credor encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Creditor'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca o credor no Sienge (REST)
+    patch:
+      tags:
+        - Credores
+      summary: Atualiza informações referentes ao credor
+      operationId: updateCreditor
+      parameters:
+        - name: creditorId
+          in: path
+          description: Código do credor a ser atualizado
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: >-
+          Objeto para atualização do credor, não é necessário envio de todos os
+          campos.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditorUpdate'
+        required: true
+      responses:
+        '204':
+          description: Credor atualizado com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: creditor-v1.yaml
+      description: Atualiza informações referentes ao credor no Sienge (REST)
+      x-audience:
+        - public
+  /creditors/{creditorId}/bank-informations:
+    get:
+      x-original-file: creditor-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Credores
+      summary: Busca as informações bancárias do credor
+      operationId: getBankInformationsCreditor
+      parameters:
+        - $ref: '#/components/parameters/CreditorId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Informação bancária encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseBankInformation'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca as informações bancárias do credor no Sienge (REST)
+    post:
+      tags:
+        - Credores
+      summary: Inserção das informações bancárias do credor
+      operationId: insertBankInformations
+      parameters:
+        - $ref: '#/components/parameters/CreditorIdInsert'
+      requestBody:
+        description: Lista de objetos para criação das informações bancárias do credor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditorForBankingAccountInsert'
+        required: true
+      responses:
+        '201':
+          description: Informações bancárias inseridas
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: creditor-v1.yaml
+      description: Inserção das informações bancárias do credor no Sienge (REST)
+      x-audience:
+        - public
+  /creditors/{creditorId}/bank-informations/{banckInformationId}:
+    patch:
+      tags:
+        - Credores
+      summary: Atualizar as informações bancárias do credor
+      operationId: updateBankInformations
+      parameters:
+        - $ref: '#/components/parameters/CreditorIdInsert'
+        - name: banckInformationId
+          in: path
+          description: Código da informação bancária do credor a ser alterado.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Objeto para alteração das informações bancárias do credor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditorForBankingAccountUpdate'
+        required: true
+      responses:
+        '204':
+          description: Informações bancárias Alteradas
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: creditor-v1.yaml
+      description: Atualizar as informações bancárias do credor no Sienge (REST)
+      x-audience:
+        - public
+  /creditors/{creditorId}/pix-informations:
+    get:
+      x-original-file: creditor-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Credores
+      summary: Busca as informações de pix do credor
+      operationId: getPixInformationsCreditor
+      parameters:
+        - $ref: '#/components/parameters/CreditorId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Informação pix encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponsePixInformation'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca as informações de pix do credor no Sienge (REST)
+    post:
+      tags:
+        - Credores
+      summary: Insere as informações de pix do credor
+      operationId: insertPixInformationCreditor
+      parameters:
+        - name: creditorId
+          in: path
+          description: Código do credor a ser inserido informação de pix
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Objeto para criação de informação de pix do credor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PixInformation'
+        required: true
+      responses:
+        '201':
+          description: Informação inserida
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: creditor-v1.yaml
+      description: Insere as informações de pix do credor no Sienge (REST)
+      x-audience:
+        - public
+  /creditors/{creditorId}/pix-informations/{pixInformationId}:
+    patch:
+      tags:
+        - Credores
+      summary: Altera as informações de pix do credor
+      operationId: updatePixInformationCreditor
+      parameters:
+        - name: creditorId
+          in: path
+          description: Código do credor a ser alterada informação de pix.
+          required: true
+          schema:
+            type: integer
+        - name: pixInformationId
+          in: path
+          description: Código da informação de pix a ser alterada.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Objeto para alteração de informação de pix do credor.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PixInformation'
+        required: true
+      responses:
+        '204':
+          description: Informação alterada
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: creditor-v1.yaml
+      description: Altera as informações de pix do credor no Sienge (REST)
+      x-audience:
+        - public
+  /creditors/{creditorId}/phone/{phoneId}:
+    patch:
+      tags:
+        - Credores
+      summary: Atualizar as informações de um telefone do credor
+      operationId: updateCreditorPhone
+      parameters:
+        - $ref: '#/components/parameters/CreditorIdUpdate'
+        - name: phoneId
+          in: path
+          description: Código do telefone do credor a ser alterado
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Objeto para criação do telefone do credor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditorPhoneUpdate'
+        required: true
+      responses:
+        '204':
+          description: Telefone do credor atualizado com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: creditor-v1.yaml
+      description: Atualizar as informações de um telefone do credor no Sienge (REST)
+      x-audience:
+        - public
+  /creditors/{creditorId}/contact/{contactId}:
+    patch:
+      tags:
+        - Credores
+      summary: Atualizar as informações de um contato do credor
+      operationId: updateCreditorContact
+      parameters:
+        - $ref: '#/components/parameters/CreditorIdUpdate'
+        - name: contactId
+          in: path
+          description: Código do contato do credor a ser alterado
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Objeto para atualização do telefone do credor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactUpdate'
+        required: true
+      responses:
+        '204':
+          description: Contato do credor atualizado com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: creditor-v1.yaml
+      description: Atualizar as informações de um contato do credor no Sienge (REST)
+      x-audience:
+        - public
+  /creditors/{creditorId}/procurator/{procuratorId}:
+    patch:
+      tags:
+        - Credores
+      summary: Atualizar as informações de um procurador do credor
+      operationId: updateCreditorProcurator
+      parameters:
+        - $ref: '#/components/parameters/CreditorIdUpdate'
+        - name: procuratorId
+          in: path
+          description: Código do procurador do credor a ser alterado
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Objeto de atualização do procurador do credor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcuratorUpdate'
+        required: true
+      responses:
+        '204':
+          description: Procurador do credor atualizado com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: creditor-v1.yaml
+      description: Atualizar as informações de um procurador do credor no Sienge (REST)
+      x-audience:
+        - public
+  /creditors/{creditorId}/agents:
+    put:
+      tags:
+        - Credores
+      summary: Atualizar a lista de representantes do credor no Sienge
+      description: Enviar todos os códigos de representantes quando for atualizar (REST)
+      operationId: updateCreditorAgents
+      parameters:
+        - $ref: '#/components/parameters/CreditorIdUpdate'
+      requestBody:
+        description: Objeto para atualização dos representantes do credor
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AgentUpdate'
+              example:
+                - agentId: 48
+        required: true
+      responses:
+        '204':
+          description: Lista de representantes do credor atualizada com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: creditor-v1.yaml
+      x-audience:
+        - public
+  /creditors/{creditorId}/payslip-desoneration-years:
+    put:
+      tags:
+        - Credores
+      summary: Atualizar informações da desoneração da folha de pgto
+      description: >-
+        Ao atualizar os anos referente a desoneração da folha de pagamento,
+        todos os anos cadastrados serão excluídos e atualizados com os novos que
+        forem enviados. (REST)
+      operationId: updateCreditorPayslipDesonerationYears
+      parameters:
+        - $ref: '#/components/parameters/CreditorId'
+      requestBody:
+        description: >-
+          Objeto para atualização da lista de anos optantes pela desoneração na
+          folha de pagamento do credor
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PayslipDesonerationYearUpdate'
+              example:
+                - year: 2022
+        required: true
+      responses:
+        '204':
+          description: >-
+            Lista de anos optantes pela desoneração na folha de pagamento
+            atualizada com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: creditor-v1.yaml
+      x-audience:
+        - public
+  /creditors/{creditorId}/activate:
+    put:
+      x-original-file: creditor-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Credores
+      summary: Ativar um credor desativado
+      operationId: activateCreditor
+      parameters:
+        - name: creditorId
+          in: path
+          description: Código do credor a ser ativado
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Credor ativado com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Ativar um credor desativado no Sienge (REST)
+  /creditors/{creditorId}/deactivate:
+    put:
+      x-original-file: creditor-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Credores
+      summary: Desativar um credor ativado
+      operationId: deactivateCreditor
+      parameters:
+        - name: creditorId
+          in: path
+          description: Código do credor a ser desativado
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Credor desativado com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Desativar um credor ativado no Sienge (REST)
+components:
+  schemas:
+    GetResponseCreditors:
+      type: object
+      description: Retorna uma lista de credores
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de Credores retornadas como resultado da pesquisa
+          items:
+            $ref: '#/components/schemas/Creditor'
+          example:
+            - id: 123
+              name: Nome do credor
+              tradeName: Nome fantasia do credor
+              cpf: 123.456.789-00
+              cnpj: 12.345.678/0001-90
+              supplier: S
+              broker: 'N'
+              employee: 'N'
+              active: true
+              stateRegistrationNumber: '12345'
+              stateRegistrationType: C
+              taxClassificationId: 2
+              taxClassification: Simples Nacional
+              paymentTypeId: 1
+              address:
+                cityId: 1
+                cityName: Florianópolis
+                streetName: Rua dos Acarás
+                number: '321'
+                complement: Bloco 1
+                neighborhood: Centro
+                zipCode: '88050555'
+              phones:
+                - ddd: '48'
+                  number: 99999-8888
+                  main: true
+                  type: 1
+                  extension: 231A
+                  observation: Telefone para emergência
+              contacts:
+                - contactId: 1
+                  name: João da Silva
+                  ddd: '48'
+                  number: 99999-8888
+                  extension: '1255'
+                  email: joaodasilva@gmail.com
+                  skype: joaodasilva@skype.com
+                  msn: joaodasilva@msn.com
+              otherContactMethods:
+                - type: '3'
+                  address: www.joaodasilva.com.br
+                  observation: Esta é a página web do João da Silva
+    CreditorInsert:
+      description: Objeto para inserção do credor
+      example:
+        accountStatement:
+          accountBeneficiaryCnpjNumber: '00506302000136'
+          accountBeneficiaryCpfNumber: '22853233014'
+          accountBeneficiaryName: John Doe
+          accountDac: '1'
+          accountDigit: '1'
+          accountNumber: '123456789'
+          accountType: C
+          bankBranchDigit: '1'
+          bankBranchNumber: '1234'
+          bankCode: '001'
+        address:
+          cityId: 48
+          complement: Bloco 1
+          neighborhood: Centro
+          number: '321'
+          streetName: Rua dos Acarás
+          zipCode: '88050555'
+        agents:
+          - agentId: 48
+        contacts:
+          - email: joaodasilva@email.com
+            msn: joaodasilva@msn.com
+            name: João da Silva
+            phoneDdd: '48'
+            phoneExtension: 458A
+            phoneNumber: '999998888'
+            skype: joaodasilva@skype.com
+        municipalSubscription: '12345'
+        name: Nome do credor
+        paymentTypeId: 1
+        payslipDesonerationYears:
+          - year: 2022
+        personType: F
+        phone:
+          ddd: '48'
+          number: '999998888'
+          type: '1'
+        procurators:
+          - addressNumber: '321'
+            cityId: 48
+            complement: Bloco 1
+            cpf: '22853233014'
+            name: João da Silva
+            neighborhood: Centro
+            phoneDdd: '48'
+            phoneExtension: 458A
+            phoneNumber: '999998888'
+            rg: '123456789'
+            streetName: Rua dos Acarás
+            zipCode: '88050555'
+        registerNumber: '22853233014'
+        stateRegistrationNumber: '12345'
+        stateRegistrationType: C
+        typesId:
+          - CO
+      properties:
+        accountStatement:
+          $ref: '#/components/schemas/CreditorAccountStatementInsert'
+        address:
+          $ref: '#/components/schemas/CreditorAddressInsert'
+        agents:
+          description: Lista de representantes
+          items:
+            $ref: '#/components/schemas/AgentInsert'
+          type: array
+        contacts:
+          description: Lista de contatos
+          items:
+            $ref: '#/components/schemas/ContactInsert'
+          type: array
+        municipalSubscription:
+          description: Inscrição municipal, enviar somente para pessoa Jurídica
+          example: '12345'
+          type: string
+        name:
+          description: Nome do credor
+          example: Credor Exemplo
+          type: string
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        payslipDesonerationYears:
+          description: Lista de anos optantes por desoneração na folha de pagamento
+          items:
+            $ref: '#/components/schemas/PayslipDesonerationYearInsert'
+          type: array
+        personType:
+          description: Tipo de credor 'F' para físico e 'J' para jurídico
+          example: F
+          type: string
+        phone:
+          $ref: '#/components/schemas/CreditorPhoneInsert'
+        procurators:
+          description: Lista de procuradores
+          items:
+            $ref: '#/components/schemas/ProcuratorInsert'
+          type: array
+        registerNumber:
+          description: >-
+            Quando pessoa física enviar CPF e para jurídica CNPJ, número sem
+            máscara
+          example: '22853233014'
+          type: string
+        stateRegistrationNumber:
+          description: Número de inscrição estadual
+          example: '12345'
+          type: string
+        stateRegistrationType:
+          description: >-
+            Tipo de inscrição estadual 'C' para Contribuinte, 'I' para Isento e
+            'N' para Não Contribuinte
+          example: C
+          type: string
+        typesId:
+          $ref: '#/components/schemas/CreditorTypesId'
+      type: object
+    Creditor:
+      description: Objeto do credor
+      example:
+        active: true
+        address:
+          cityId: 1
+          cityName: Florianópolis
+          complement: Bloco 1
+          neighborhood: Centro
+          number: '321'
+          streetName: Rua dos Acarás
+          zipCode: '88050555'
+        broker: 'N'
+        cnpj: 12.345.678/0001-90
+        contacts:
+          - ddd: '48'
+            email: joaodasilva@gmail.com
+            extension: 231A
+            msn: joaodasilva@msn.com
+            name: João da Silva
+            number: '999998888'
+            skype: joaodasilva@skype.com
+        cpf: 123.456.789-00
+        creationDate: '2018-01-20'
+        employee: 'N'
+        id: 123
+        lastModificationDate: '2025-09-24'
+        name: Nome do credor
+        otherContactMethods:
+          - address: www.joaodasilva.com.br
+            observation: Esta é a página web do João da Silva
+            type: '3'
+        paymentTypeId: 1
+        phones:
+          - ddd: '48'
+            extension: 231A
+            main: true
+            number: '999998888'
+            observation: Telefone para emergência
+            type: 1
+        stateRegistrationNumber: '12345'
+        stateRegistrationType: C
+        supplier: S
+        taxClassification: Simples Nacional
+        taxClassificationId: 2
+        tradeName: Nome fantasia do credor
+      properties:
+        active:
+          description: Informa se credor está ativo
+          example: true
+          type: boolean
+        address:
+          $ref: '#/components/schemas/CreditorAddress'
+        broker:
+          description: Corretor ('S' or 'N')
+          example: 'N'
+          type: string
+        cnpj:
+          description: CNPJ do credor
+          example: 12.345.678/0001-90
+          type: string
+        contacts:
+          description: Lista de contatos do credor
+          items:
+            $ref: '#/components/schemas/CreditorContacts'
+          type: array
+        cpf:
+          description: CPF do credor
+          example: 123.456.789-00
+          type: string
+        creationDate:
+          description: Data de cadastramento do credor no formato yyyy-MM-dd.
+          example: '2018-01-20'
+          format: date
+          type: string
+        employee:
+          description: Colaborador ('S' or 'N')
+          example: 'N'
+          type: string
+        id:
+          description: Código do credor
+          example: 123
+          format: int32
+          type: integer
+        lastModificationDate:
+          description: Data da última alteração feita no credor no formato yyyy-MM-dd.
+          example: '2025-09-24'
+          format: date
+          type: string
+        name:
+          description: Nome do credor
+          example: Credor Exemplo
+          type: string
+        otherContactMethods:
+          description: Lista de outras formas de contato do credor
+          items:
+            $ref: '#/components/schemas/CreditorOtherContactMethods'
+          type: array
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+        phones:
+          description: Lista de telefones do credor
+          items:
+            $ref: '#/components/schemas/CreditorPhone'
+          type: array
+        stateRegistrationNumber:
+          description: Número de inscrição estadual
+          example: '12345'
+          type: string
+        stateRegistrationType:
+          description: >-
+            Tipo de inscrição estadual 'C' para Contribuinte, 'I' para Isento e
+            'N' para Não Contribuinte
+          example: C
+          type: string
+        supplier:
+          description: Fornecedor ('S' or 'N')
+          example: S
+          type: string
+        taxClassification:
+          description: Classificação Tributária
+          example: Simples Nacional
+          type: string
+        taxClassificationId:
+          $ref: '#/components/schemas/TaxClassificationId'
+        tradeName:
+          description: Nome fantasia do credor
+          example: Nome fantasia do credor
+          type: string
+      type: object
+    CreditorUpdate:
+      description: Objeto para atualização do credor
+      properties:
+        address:
+          $ref: '#/components/schemas/CreditorAddressInsert'
+        cnpj:
+          description: Quando pessoa física enviar CNPJ, número sem máscara
+          example: '82845322000104'
+          type: string
+        cpf:
+          description: Quando pessoa física enviar CPF, número sem máscara
+          example: '22853233014'
+          type: string
+        municipalSubscription:
+          description: Inscrição municipal, enviar somente para pessoa Jurídica
+          example: '12345'
+          type: string
+        name:
+          description: Nome do credor
+          example: Credor Exemplo
+          type: string
+        personType:
+          description: >-
+            Tipo de credor 'F' para físico e 'J' para jurídico. Caso troque o
+            tipo de pessoa, o CPF/CNPJ se torna obrigatório de acordo com o
+            tipo.
+          example: F
+          type: string
+        stateRegistrationNumber:
+          description: Número de inscrição estadual, somente pessoa Jurídica
+          example: '12345'
+          type: string
+        stateRegistrationType:
+          description: >-
+            Tipo de inscrição estadual 'C' para Contribuinte, 'I' para Isento e
+            'N' para Não Contribuinte, somente pessoa Jurídica
+          example: C
+          type: string
+        taxClassificationId:
+          $ref: '#/components/schemas/TaxClassificationId'
+      type: object
+    GetResponseBankInformation:
+      type: object
+      description: Retorna uma lista de informação bancaria
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de informações bancárias retornadas como resultado da pesquisa
+          items:
+            $ref: '#/components/schemas/BankInformation'
+          example:
+            - id: 1
+              paymentForm: Boleto
+              bank: '001'
+              nameOfBank: Banco do Brasil S.A.
+              agency: '1234'
+              accountNumber: '12345678'
+              accountType: P
+              checkDigit: '9'
+              defaultFlag: S
+              cpf: 123.456.789-00
+              cnpj: 12.345.678/0001-90
+              nameOfRecipient: John Doe
+      example:
+        resultSetMetadata:
+          count: 1
+          offset: 0
+          limit: 1
+        results:
+          - id: 1
+            paymentForm: Boleto
+            bank: '001'
+            nameOfBank: Banco do Brasil S.A.
+            agency: '1234'
+            accountNumber: '12345678'
+            accountType: P
+            checkDigit: '9'
+            defaultFlag: S
+            cpf: 123.456.789-00
+            cnpj: 12.345.678/0001-90
+            nameOfRecipient: John Doe
+    CreditorForBankingAccountInsert:
+      description: Lista de informações bancarias
+      example:
+        - accountBeneficiaryCnpjNumber: '00506302000136'
+          accountBeneficiaryCpfNumber: '22853233014'
+          accountBeneficiaryName: John Doe
+          accountDac: '1'
+          accountDigit: '6'
+          accountNumber: '13354'
+          accountType: C
+          bankBranchDigit: '6'
+          bankBranchName: Agência da praça
+          bankBranchNumber: '4611'
+          bankCode: '001'
+          defaultFlag: S
+          example: null
+      items:
+        $ref: '#/components/schemas/AccountStatements'
+      type: array
+    CreditorForBankingAccountUpdate:
+      description: Objeto para alteração das informações bancárias
+      properties:
+        accountStatement:
+          $ref: '#/components/schemas/AccountStatements'
+        paymentTypeId:
+          description: Código da forma de pagamento
+          example: 1
+          type: integer
+      type: object
+    GetResponsePixInformation:
+      type: object
+      description: Retorna uma lista de informação pix
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de informações de pix retornadas como resultado da pesquisa
+          items:
+            $ref: '#/components/schemas/GetPixInformation'
+      example:
+        resultSetMetadata:
+          count: 1
+          offset: 0
+          limit: 1
+        results:
+          - id: 123456
+            type: C
+            key: '123456'
+            beneficiary: John Doe
+            cpfCnpjBeneficiary: '12345678900'
+            defaultFlag: S
+    PixInformation:
+      description: Informações de pix
+      properties:
+        beneficiary:
+          description: Nome do favorecido
+          example: John Doe
+          type: string
+        cpfCnpjBeneficiary:
+          description: CPF ou CNPJ do favorecido
+          example: '12345678900'
+          type: string
+        defaultFlag:
+          description: Informação pix padrão ('S' or 'N')
+          example: S
+          type: string
+        key:
+          description: Chave pix
+          example: '123456'
+          type: string
+        type:
+          description: >-
+            Tipo da chave pix ('C' - CNPJ/CPF, 'T' - Telefone, 'E' - E-mail e
+            'A' - Aleatória)
+          example: C
+          type: string
+      type: object
+    CreditorPhoneUpdate:
+      description: Telefone do credor para atualização
+      properties:
+        ddd:
+          description: Número do DDD
+          example: '48'
+          type: string
+        main:
+          description: Indica se o telefone é o principal, obrigatório ter um principal
+          example: true
+          type: boolean
+        number:
+          description: Número do telefone, enviar sem máscara
+          example: '944445555'
+          type: string
+        type:
+          description: |-
+            Indica o tipo de telefone:
+              - 1 - Telefone Residencial
+              - 2 - Telefone Residencial Alternativo
+              - 3 - Telefone Celular
+              - 4 - Telefone Celular Alternativo
+              - 5 - Telefone Comercial
+              - 6 - Telefone Comercial Alternativo
+              - 7 - Telefone Fax
+              - 8 - Telefone Fax Alternativo
+              - 9 - Telefone Rádio
+              - 10 - Telefone Rádio Alternativo
+          example: '1'
+          type: string
+      type: object
+    ContactUpdate:
+      description: Objeto para atualização do contato
+      properties:
+        email:
+          description: Email do representante
+          example: joaodasilva@email.com
+          type: string
+        name:
+          description: Nome do representante
+          example: João da Silva
+          type: string
+        phoneDdd:
+          description: Número do DDD
+          example: '48'
+          type: string
+        phoneExtension:
+          description: Ramal do telefone
+          example: 458A
+          type: string
+        phoneNumber:
+          description: Número do telefone, enviar sem máscara
+          example: '944445555'
+          type: string
+      type: object
+    ProcuratorUpdate:
+      description: Objeto para atualização do procurador do credor
+      properties:
+        addressNumber:
+          description: Número do endereço
+          example: '321'
+          type: string
+        cityId:
+          description: Código do município
+          example: 1
+          type: integer
+        complement:
+          description: Complemento do endereço
+          example: Bloco 1
+          type: string
+        cpf:
+          description: CPF do procurador, enviar sem máscara
+          example: '22853233014'
+          type: string
+        name:
+          description: Nome do procurador
+          example: João da Silva
+          type: string
+        neighborhood:
+          description: Bairro
+          example: Centro
+          type: string
+        phoneDdd:
+          description: Número do DDD
+          example: '48'
+          type: string
+        phoneExtension:
+          description: Ramal do telefone
+          example: 458A
+          type: string
+        phoneNumber:
+          description: Número do telefone, enviar sem máscara
+          example: '944445555'
+          type: string
+        rg:
+          description: RG do procurador
+          example: '6544000'
+          type: string
+        streetName:
+          description: Nome do logradouro
+          example: Rua dos Acarás
+          type: string
+        zipCode:
+          description: CEP sem máscara
+          example: '88050555'
+          type: string
+      type: object
+    AgentUpdate:
+      description: Objeto para atualização dos representantes
+      properties:
+        agentId:
+          description: Id do representante
+          example: 48
+          type: integer
+      type: object
+    PayslipDesonerationYearUpdate:
+      description: >-
+        Objeto para atualização do ano optante pela desoneração em folha de
+        pagamento
+      properties:
+        year:
+          description: Ano optante pela desoneração em folha de pagamento
+          example: 2022
+          type: integer
+      type: object
+    CreditorWebhookPayload:
+      type: object
+      description: Payload enviado nos webhooks de eventos do credor
+      required:
+        - creditorId
+        - typesId
+      properties:
+        creditorId:
+          description: Código do credor
+          example: 123
+          format: int32
+          type: integer
+        typesId:
+          $ref: '#/components/schemas/CreditorTypesId'
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    CreditorAccountStatementInsert:
+      description: Objeto para inserção da conta bancária do credor
+      properties:
+        accountBeneficiaryCnpjNumber:
+          description: CNPJ do beneficiário sem máscara
+          example: '00506302000136'
+          type: string
+        accountBeneficiaryCpfNumber:
+          description: CPF do beneficiário sem máscara
+          example: '22853233014'
+          type: string
+        accountBeneficiaryName:
+          description: Nome do beneficiário
+          example: John Doe
+          type: string
+        accountDac:
+          description: DAC da conta
+          example: '1'
+          type: string
+        accountDigit:
+          description: Dígito da conta
+          example: '6'
+          type: string
+        accountNumber:
+          description: Número da conta
+          example: '13354'
+          type: string
+        accountType:
+          description: Tipo de conta 'C' para corrente 'P' para poupança
+          example: C
+          type: string
+        bankBranchDigit:
+          description: Dígito da agência
+          example: '6'
+          type: string
+        bankBranchNumber:
+          description: Número da agência
+          example: '4611'
+          type: string
+        bankCode:
+          description: Código do banco
+          example: '001'
+          type: string
+      type: object
+    CreditorAddressInsert:
+      description: Objeto para inserção do endereço do credor
+      properties:
+        cityId:
+          description: Código do município
+          example: 1
+          type: integer
+        complement:
+          description: Complemento do endereço
+          example: Bloco 1
+          type: string
+        neighborhood:
+          description: Bairro
+          example: Centro
+          type: string
+        number:
+          description: Número do endereço
+          example: '321'
+          type: string
+        streetName:
+          description: Nome do logradouro
+          example: Rua dos Acarás
+          type: string
+        zipCode:
+          description: CEP sem máscara
+          example: '88050555'
+          type: string
+      type: object
+    AgentInsert:
+      description: Objeto para inserção do representante
+      properties:
+        agentId:
+          description: Id do representante
+          example: 48
+          type: integer
+      type: object
+    ContactInsert:
+      description: Objeto para inserção do contato
+      properties:
+        email:
+          description: Email do representante
+          example: joaodasilva@email.com
+          type: string
+        msn:
+          description: MSN do representante
+          example: joaodasilva@msn.com
+          type: string
+        name:
+          description: Nome do representante
+          example: João da Silva
+          type: string
+        phoneDdd:
+          description: Número do DDD
+          example: '48'
+          type: string
+        phoneExtension:
+          description: Ramal do telefone
+          example: 458A
+          type: string
+        phoneNumber:
+          description: Número do telefone, enviar sem máscara
+          example: '944445555'
+          type: string
+        skype:
+          description: Skype do representante
+          example: joaodasilva@skype.com
+          type: string
+      type: object
+    PayslipDesonerationYearInsert:
+      description: >-
+        Objeto para inserção do ano optante pela desoneração em folha de
+        pagamento
+      properties:
+        year:
+          description: Ano optante pela desoneração em folha de pagamento
+          example: 2022
+          type: integer
+      type: object
+    CreditorPhoneInsert:
+      description: Telefone do credor para inserção
+      properties:
+        ddd:
+          description: Número do DDD
+          example: '48'
+          type: string
+        number:
+          description: Número do telefone, enviar sem máscara
+          example: '944445555'
+          type: string
+        type:
+          description: |-
+            Indica o tipo de telefone:
+              - 1 - Telefone Residencial
+              - 2 - Telefone Residencial Alternativo
+              - 3 - Telefone Celular
+              - 4 - Telefone Celular Alternativo
+              - 5 - Telefone Comercial
+              - 6 - Telefone Comercial Alternativo
+              - 7 - Telefone Fax
+              - 8 - Telefone Fax Alternativo
+              - 9 - Telefone Rádio
+              - 10 - Telefone Rádio Alternativo
+          example: '1'
+          type: string
+      type: object
+    ProcuratorInsert:
+      description: Objeto para inserção do procurador do credor
+      properties:
+        addressNumber:
+          description: Número do endereço
+          example: '321'
+          type: string
+        cityId:
+          description: Código do município
+          example: 1
+          type: integer
+        complement:
+          description: Complemento do endereço
+          example: Bloco 1
+          type: string
+        cpf:
+          description: CPF do procurador, enviar sem máscara
+          example: '22853233014'
+          type: string
+        name:
+          description: Nome do procurador
+          example: João da Silva
+          type: string
+        neighborhood:
+          description: Bairro
+          example: Centro
+          type: string
+        phoneDdd:
+          description: Número do DDD
+          example: '48'
+          type: string
+        phoneExtension:
+          description: Ramal do telefone
+          example: 458A
+          type: string
+        phoneNumber:
+          description: Número do telefone, enviar sem máscara
+          example: '944445555'
+          type: string
+        rg:
+          description: RG do procurador
+          example: '6544000'
+          type: string
+        streetName:
+          description: Nome do logradouro
+          example: Rua dos Acarás
+          type: string
+        zipCode:
+          description: CEP sem máscara
+          example: '88050555'
+          type: string
+      type: object
+    CreditorTypesId:
+      description: >-
+        Tipo de credor 'CO' para Corretor, 'FO' para fornecedor e 'FU' para
+        colaborador
+      example:
+        - CO
+        - FO
+      items:
+        type: string
+      type: array
+    CreditorAddress:
+      description: Endereço do credor
+      properties:
+        cityId:
+          description: Código do município
+          example: 1
+          type: integer
+        cityName:
+          description: Nome município
+          example: Florianópolis
+          type: string
+        complement:
+          description: Complemento do endereço
+          example: Bloco 1
+          type: string
+        neighborhood:
+          description: Bairro
+          example: Centro
+          type: string
+        number:
+          description: Número do endereço
+          example: '321'
+          type: string
+        streetName:
+          description: Nome do logradouro
+          example: Rua dos Acarás
+          type: string
+        zipCode:
+          description: CEP sem máscara
+          example: '88050555'
+          type: string
+      type: object
+    CreditorContacts:
+      description: Contatos do credor
+      properties:
+        contactId:
+          description: Código do contato
+          example: 1
+          type: integer
+        ddd:
+          description: Número do DDD
+          example: '48'
+          type: string
+        email:
+          description: E-mail do contato
+          example: joaodasilva@gmail.com
+          type: string
+        extension:
+          description: Ramal do telefone
+          example: '1255'
+          type: string
+        msn:
+          description: MSN do contato
+          example: joaodasilva@msn.com
+          type: string
+        name:
+          description: Nome do contato
+          example: João da Silva
+          type: string
+        number:
+          description: Número do telefone com mascára
+          example: 99999-8888
+          type: string
+        skype:
+          description: Skype do contato
+          example: joaodasilva@skype.com
+          type: string
+      type: object
+    CreditorOtherContactMethods:
+      description: Outros contatos do credor
+      properties:
+        address:
+          description: Endereço do contato
+          example: www.joaodasilva.com.br
+          type: string
+        observation:
+          description: Observação do contato
+          example: Esta é a página web do João da Silva
+          type: string
+        type:
+          description: |-
+            Indica o tipo de contato:
+              - 1 - E-mail principal
+              - 2 - E-mail alternativo
+              - 3 - Página na internet
+              - 4 - Blog
+              - 5 - Orkut
+              - 6 - Twitter
+              - 7 - Google talk
+              - 8 - MSN
+              - 9 - Skype
+              - 10 - Outros
+          example: '3'
+          type: string
+      type: object
+    CreditorPhone:
+      description: Telefone do credor
+      properties:
+        ddd:
+          description: Número do DDD
+          example: '48'
+          type: string
+        extension:
+          description: Indica o ramal do telefone
+          example: 231A
+          type: string
+        main:
+          description: Indica se é o número de telefone principal
+          example: true
+          type: boolean
+        number:
+          description: Número do telefone, com mascára
+          example: 99999-8888
+          type: string
+        observation:
+          description: Observação do telefone
+          example: Telefone para emergência
+          type: string
+        type:
+          description: |-
+            Indica o tipo de telefone :
+              - 1 - Telefone Residencial
+              - 2 - Telefone Residencial Alternativo
+              - 3 - Telefone Celular
+              - 4 - Telefone Celular Alternativo
+              - 5 - Telefone Comercial
+              - 6 - Telefone Comercial Alternativo
+              - 7 - Telefone Fax
+              - 8 - Telefone Fax Alternativo
+              - 9 - Telefone Rádio
+              - 10 - Telefone Rádio Alternativo
+          example: 1
+          type: integer
+      type: object
+    TaxClassificationId:
+      description: |-
+        Código da Classificação Tributária:
+          - 1: MEI
+          - 2: Simples Nacional
+          - 3: Lucro Presumido
+          - 4: Lucro Real
+          - 5: Lucro Arbitrado
+          - 6: Isenta
+          - 7: Imune
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+      example: 2
+      type: integer
+    BankInformation:
+      description: Informação bancária do credor
+      properties:
+        accountNumber:
+          description: Código da conta
+          example: '13354'
+          type: string
+        accountType:
+          description: Corretor ('P' or 'C')
+          example: P
+          type: string
+        agency:
+          description: Código da agência
+          example: '4611'
+          type: string
+        bank:
+          description: Código do banco
+          example: '001'
+          type: string
+        checkDigit:
+          description: Dígito verificador da conta
+          example: '6'
+          type: string
+        cnpj:
+          description: CNPJ do credor
+          example: 12.345.678/0001-90
+          type: string
+        cpf:
+          description: CPF do credor
+          example: 123.456.789-00
+          type: string
+        defaultFlag:
+          description: Informação bancária padrão ('S' or 'N')
+          example: S
+          type: string
+        id:
+          description: Sequencial da informação bancária
+          example: 1
+          format: int32
+          type: integer
+        nameOfBank:
+          description: Nome do Banco
+          example: Banco do Brasil S.A.
+          type: string
+        nameOfRecipient:
+          description: Nome do favorecido
+          example: John Doe
+          type: string
+        paymentForm:
+          description: Nome da forma de Pagamento
+          example: Boleto
+          type: string
+      type: object
+    AccountStatements:
+      description: Objeto de informação bancaria
+      properties:
+        accountBeneficiaryCnpjNumber:
+          description: CNPJ do beneficiário sem máscara
+          example: '00506302000136'
+          type: string
+        accountBeneficiaryCpfNumber:
+          description: CPF do beneficiário sem máscara
+          example: '22853233014'
+          type: string
+        accountBeneficiaryName:
+          description: Nome do beneficiário
+          example: John Doe
+          type: string
+        accountDac:
+          description: DAC da conta
+          example: '1'
+          type: string
+        accountDigit:
+          description: Dígito da conta
+          example: '6'
+          type: string
+        accountNumber:
+          description: Número da conta
+          example: '13354'
+          type: string
+        accountType:
+          description: Tipo de conta 'C' para corrente 'P' para poupança
+          example: C
+          type: string
+        bankBranchDigit:
+          description: Dígito da agência
+          example: '6'
+          type: string
+        bankBranchName:
+          description: Nome da agência
+          example: Agência da praça
+          type: string
+        bankBranchNumber:
+          description: Número da agência
+          example: '4611'
+          type: string
+        bankCode:
+          description: Código do banco
+          example: '001'
+          type: string
+        defaultFlag:
+          description: Informação bancária padrão ('S' or 'N')
+          example: S
+          type: string
+      type: object
+    GetPixInformation:
+      description: Retorna as informações de pix
+      properties:
+        beneficiary:
+          description: Nome do favorecido
+          example: John Doe
+          type: string
+        cpfCnpjBeneficiary:
+          description: CPF ou CNPJ do favorecido
+          example: '12345678900'
+          type: string
+        defaultFlag:
+          description: Informação pix padrão ('S' or 'N')
+          example: S
+          type: string
+        id:
+          description: Sequencial da informação pix
+          example: 123456
+          type: integer
+        key:
+          description: Chave pix
+          example: '123456'
+          type: string
+        type:
+          description: >-
+            Tipo da chave pix ('C' - CNPJ/CPF, 'T' - Telefone, 'E' - E-mail e
+            'A' - Aleatória)
+          example: C
+          type: string
+      type: object
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    CreditorId:
+      description: Código do credor a ser apresentado
+      in: path
+      name: creditorId
+      required: true
+      schema:
+        type: integer
+    CreditorIdInsert:
+      description: Código do credor em que será inserido as informações bancárias
+      in: path
+      name: creditorId
+      required: true
+      schema:
+        type: integer
+    CreditorIdUpdate:
+      description: Código do credor a ser alterado
+      in: path
+      name: creditorId
+      required: true
+      schema:
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1
+webhooks:
+  CREDITORS_CREATED:
+    post:
+      tags:
+        - Webhooks - Credores
+      summary: Webhook disparado quando um credor é criado
+      description: Sempre que um credor é criado
+      operationId: creditorCreatedWebhook
+      requestBody:
+        description: Dados do evento de criação de credor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditorWebhookPayload'
+            example:
+              creditorId: 123
+              typesId:
+                - CO
+                - FO
+        required: true
+      responses:
+        2XX:
+          description: O evento CREDITORS_CREATED foi processado com sucesso
+      x-audience:
+        - public
+  CREDITORS_UPDATED:
+    post:
+      tags:
+        - Webhooks - Credores
+      summary: Webhook disparado quando um credor é atualizado
+      description: Sempre que um credor é atualizado
+      operationId: creditorUpdatedWebhook
+      requestBody:
+        description: Dados do evento de atualização de credor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditorWebhookPayload'
+            example:
+              creditorId: 123
+              typesId:
+                - CO
+                - FO
+        required: true
+      responses:
+        2XX:
+          description: O evento CREDITORS_UPDATED foi processado com sucesso
+      x-audience:
+        - public
+  CREDITORS_REMOVED:
+    post:
+      tags:
+        - Webhooks - Credores
+      summary: Webhook disparado quando um credor é removido
+      description: Sempre que um credor é removido
+      operationId: creditorRemovedWebhook
+      requestBody:
+        description: Dados do evento de remoção de credor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditorWebhookPayload'
+            example:
+              creditorId: 123
+              typesId:
+                - CO
+                - FO
+        required: true
+      responses:
+        2XX:
+          description: O evento CREDITORS_REMOVED foi processado com sucesso
+      x-audience:
+        - public
+  CREDITORS_DISABLED:
+    post:
+      tags:
+        - Webhooks - Credores
+      summary: Webhook disparado quando um credor é desativado
+      description: Sempre que um credor é desativado
+      operationId: creditorDisabledWebhook
+      requestBody:
+        description: Dados do evento de desativação de credor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditorWebhookPayload'
+            example:
+              creditorId: 123
+              typesId:
+                - CO
+                - FO
+        required: true
+      responses:
+        2XX:
+          description: O evento CREDITORS_DISABLED foi processado com sucesso
+      x-audience:
+        - public
+  CREDITORS_ENABLED:
+    post:
+      tags:
+        - Webhooks - Credores
+      summary: Webhook disparado quando um credor é ativado
+      description: Sempre que um credor é ativado
+      operationId: creditorEnabledWebhook
+      requestBody:
+        description: Dados do evento de ativação de credor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditorWebhookPayload'
+            example:
+              creditorId: 123
+              typesId:
+                - CO
+                - FO
+        required: true
+      responses:
+        2XX:
+          description: O evento CREDITORS_ENABLED foi processado com sucesso
+      x-audience:
+        - public

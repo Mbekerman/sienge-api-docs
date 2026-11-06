@@ -1,0 +1,763 @@
+openapi: 3.1.1
+info:
+  title: Geração do Saldo Devedor Presente do Cliente
+  version: 1.24.0
+  description: API de geração do saldo devedor presente do cliente
+paths:
+  /current-debit-balance:
+    get:
+      x-original-file: current-debit-balance-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Geração do Saldo Devedor Presente do Cliente
+      summary: Gera o saldo devedor presente do cliente informado.
+      operationId: getCurrentDebtiBalance
+      parameters:
+        - name: cpf
+          in: query
+          description: >-
+            CPF do cliente físico sem formatação (somente números). Possui
+            precedência sobre o parâmetro <code>cnpj</code>. </br><b>Obrigatório
+            quando o parâmetro <code>cnpj</code> não for
+            informado</b><br><b>Exemplo</b>:77415844483
+          schema:
+            type: string
+        - name: cnpj
+          in: query
+          description: >-
+            CNPJ do cliente jurídico sem formatação (somente números). Ignorado
+            quando o parãmetro <code>cpf</code> está preenchido. 
+            </br><b>Obrigatório quando o parâmetro <code>cpf</code> não for
+            informado</b><br> <b>Exemplo</b>:21427113000148
+          schema:
+            type: string
+        - $ref: '#/components/parameters/DueDateStartParcels'
+        - $ref: '#/components/parameters/DueDateEndParcels'
+        - name: generatedBoleto
+          in: query
+          description: >-
+            Filtra as parcelas que possuem boletos gerados (<code>true</code>)
+            ou que não possuem nenhum boleto gerado (<code>false</code>).
+          schema:
+            type: boolean
+        - $ref: '#/components/parameters/NumberTitle'
+        - $ref: '#/components/parameters/CorrectionDate'
+        - name: correctAnnualInstallment
+          in: query
+          description: >-
+            Para aplicar o cálculo de correção anual: S - Sim, aplicar correção
+            anual, N - Não aplicar correção anual
+          schema:
+            type: string
+            enum:
+              - S
+              - 'N'
+            default: 'N'
+        - $ref: '#/components/parameters/ConditionIdIn'
+        - $ref: '#/components/parameters/ConditionIdNotIn'
+        - name: costCenterIdIn
+          in: query
+          description: >-
+            Id dos centros de custo para incluir na consulta (Exemplo: 1,2,3) |
+            Preenchendo este parâmetro, serão considerados somente os centros de
+            custo cadastrados com os mesmos códigos informados no parâmetro.
+          style: form
+          explode: false
+          schema:
+            type: array
+            example:
+              - 1
+              - 2
+              - 3
+            items:
+              type: integer
+        - name: costCenterIdNotIn
+          in: query
+          description: >-
+            Id dos centros de custo para excluir da consulta (Exemplo: 1,2,3) |
+            Preenchendo este parâmetro, serão considerados somente os centros de
+            custo cadastrados com os códigos diferentes dos informados no
+            parâmetro. | Obs: O parâmetro 'costCenterIdIn' tem prioridade sobre
+            este, ou seja, caso sejam preenchidos os parâmetros 'costCenterIdIn'
+            e 'costCenterIdNotIn', será aplicado o filtro do parâmetro
+            'costCenterIdIn' e ignorada a informação preenchida no parâmetro
+            'costCenterIdNotIn'.
+          style: form
+          explode: false
+          schema:
+            type: array
+            example:
+              - 1
+              - 2
+              - 3
+            items:
+              type: integer
+        - $ref: '#/components/parameters/UnitNumber'
+        - $ref: '#/components/parameters/UnitIdQuery'
+      responses:
+        '200':
+          description: Saldo devedor presente gerado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentDebtBalanceResults'
+              example:
+                billReceivableId: 123456
+                documentId: CT
+                paidInstallments:
+                  - installmentId: 1
+                    currentBalance: 0
+                    latePaymentInterest: 2.5
+                    adjustedValue: 1000
+                    additionalValue: 10
+                    originalValue: 1000
+                    monetaryCorrectionValue: 5
+                    conditionType: AT
+                    indexerCode: 101
+                    indexerName: IGPM
+                    baseDateOfCorrection: '2025-01-01'
+                    indexerValueBaseDate: 1.05
+                    indexerValueCalculationDate: 1.07
+                    installmentNumber: 1/1
+                dueInstallments:
+                  - installmentId: 2
+                    currentBalance: 500
+                    latePaymentInterest: 0
+                    adjustedValue: 500
+                    additionalValue: 0
+                    originalValue: 500
+                    monetaryCorrectionValue: 2
+                    conditionType: PM
+                    indexerCode: 101
+                    indexerName: IGPM
+                    baseDateOfCorrection: '2025-01-01'
+                    indexerValueBaseDate: 1.05
+                    indexerValueCalculationDate: 1.07
+                    installmentNumber: 2/2
+                payableInstallments:
+                  - installmentId: 3
+                    currentBalance: 1000
+                    latePaymentInterest: 0
+                    adjustedValue: 1000
+                    additionalValue: 0
+                    originalValue: 1000
+                    monetaryCorrectionValue: 0
+                    conditionType: AT
+                    indexerCode: 101
+                    indexerName: IGPM
+                    baseDateOfCorrection: '2025-01-01'
+                    indexerValueBaseDate: 1.05
+                    indexerValueCalculationDate: 1.07
+                    installmentNumber: 3/3
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Gera as informações referentes ao saldo devedor presente do cliente
+        informado. (REST)
+  /current-debit-balance/pdf:
+    get:
+      x-original-file: current-debit-balance-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Geração do Saldo Devedor Presente do Cliente
+      summary: Gera o link do PDF Saldo Devedor Presente (Expira em 5 min.)
+      description: >-
+        Gera o link para o download do PDF referente ao Saldo Devedor Presente
+        do cliente. O link expira em 5 minutos. (REST)
+      operationId: linkCurrentDebitBalance
+      parameters:
+        - $ref: '#/components/parameters/CustomerIdQueryRequired'
+        - $ref: '#/components/parameters/NumberTitle'
+        - $ref: '#/components/parameters/UnitNumber'
+        - $ref: '#/components/parameters/UnitIdQuery'
+        - $ref: '#/components/parameters/CorrectionDate'
+        - $ref: '#/components/parameters/ConditionIdIn'
+        - $ref: '#/components/parameters/ConditionIdNotIn'
+        - name: customerPortalBills
+          in: query
+          description: >-
+            Flag utilizada para indicar se serão apresentadas apenas as parcelas
+            com origem Comercial e Locações e com documento "CT". | Obs: Caso
+            não seja informado, considerado verdadeiro.
+          schema:
+            type: boolean
+        - name: documentIdIn
+          in: query
+          description: >-
+            Id dos documentos para incluir na consulta (Exemplo: CT, NF) |
+            Preenchendo este parâmetro serão considerados somente os títulos
+            cadastrados com um dos documentos informados neste parâmetro.
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+          example:
+            - CT
+            - NF
+        - name: documentIdNotIn
+          in: query
+          description: >-
+            Id dos documentos para excluir da consulta (Exemplo: CT, NF) |
+            Preenchendo este parâmetro serão considerados somente os títulos
+            cadastrados com o documento diferente das informadas no parâmetro. |
+            Obs: O parâmetro 'customerPortalBills' tem prioridade sobre este,
+            caso seja preenchido o parâmetros 'customerPortalBills' com o valor
+            falso, será aplicado o filtro do parâmetro 'documentIdIn' incluindo
+            os documentos 'CT' e ignorada a informação preenchida no parâmetro
+            'documentIdNotIn'.
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+          example:
+            - CT
+            - NF
+        - name: costCenterIdIn
+          in: query
+          description: >-
+            Id dos centros de custo para incluir na consulta (Exemplo: 1,2,3) |
+            Preenchendo este parâmetro, serão considerados somente os centros de
+            custo cadastrados com os mesmos códigos informados no parâmetro.
+          style: form
+          explode: false
+          schema:
+            type: array
+            example:
+              - 1
+              - 2
+              - 3
+            items:
+              type: integer
+        - name: costCenterIdNotIn
+          in: query
+          description: >-
+            Id dos centros de custo para excluir da consulta (Exemplo: 1,2,3) |
+            Preenchendo este parâmetro, serão considerados somente os centros de
+            custo cadastrados com os códigos diferentes dos informados no
+            parâmetro. | Obs: O parâmetro 'costCenterIdIn' tem prioridade sobre
+            este, ou seja, caso sejam preenchidos os parâmetros 'costCenterIdIn'
+            e 'costCenterIdNotIn', será aplicado o filtro do parâmetro
+            'costCenterIdIn' e ignorada a informação preenchida no parâmetro
+            'costCenterIdNotIn'.
+          style: form
+          explode: false
+          schema:
+            type: array
+            example:
+              - 1
+              - 2
+              - 3
+            items:
+              type: integer
+      responses:
+        '200':
+          description: Saldo devedor presente gerado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentDebtBalancePdfResults'
+              example:
+                urlReport: >-
+                  https://example.com/sienge/visualizar_relatorio?arquivo=123&formato=pdf
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    CurrentDebtBalanceResults:
+      type: object
+      description: Informações do Saldo Devedor Presente do título a receber.
+      properties:
+        billReceivableId:
+          type: integer
+          example: 123456
+        documentId:
+          type: string
+          description: Código do documento do título.
+          example: CT
+        paidInstallments:
+          type: array
+          description: Parcelas pagas
+          items:
+            $ref: '#/components/schemas/PaidInstallmentReceivable'
+          example:
+            - installmentId: 1
+              currentBalance: 0
+              latePaymentInterest: 2.5
+              adjustedValue: 1000
+              additionalValue: 10
+              originalValue: 1000
+              monetaryCorrectionValue: 5
+              conditionType: AT
+              indexerCode: 101
+              indexerName: IGPM
+              baseDateOfCorrection: '2025-01-01'
+              indexerValueBaseDate: 1.05
+              indexerValueCalculationDate: 1.07
+              installmentNumber: 1/1
+        dueInstallments:
+          type: array
+          description: Parcelas não pagas
+          items:
+            $ref: '#/components/schemas/CurrentDebitBalanceInstallmentReceivable'
+          example:
+            - installmentId: 2
+              currentBalance: 500
+              latePaymentInterest: 0
+              adjustedValue: 500
+              additionalValue: 0
+              originalValue: 500
+              monetaryCorrectionValue: 2
+              conditionType: PM
+              indexerCode: 101
+              indexerName: IGPM
+              baseDateOfCorrection: '2025-01-01'
+              indexerValueBaseDate: 1.05
+              indexerValueCalculationDate: 1.07
+              installmentNumber: 2/2
+        payableInstallments:
+          type: array
+          description: Parcelas a pagar
+          items:
+            $ref: '#/components/schemas/CurrentDebitBalanceInstallmentReceivable'
+          example:
+            - installmentId: 3
+              currentBalance: 1000
+              latePaymentInterest: 0
+              adjustedValue: 1000
+              additionalValue: 0
+              originalValue: 1000
+              monetaryCorrectionValue: 0
+              conditionType: AT
+              indexerCode: 101
+              indexerName: IGPM
+              baseDateOfCorrection: '2025-01-01'
+              indexerValueBaseDate: 1.05
+              indexerValueCalculationDate: 1.07
+              installmentNumber: 3/3
+    CurrentDebtBalancePdfResults:
+      type: object
+      description: Resultado com link para download do PDF referente ao Saldo Devedor.
+      properties:
+        urlReport:
+          type: string
+          description: Url para download do PDF referente ao Saldo Devedor.
+          example: >-
+            https://example.com/sienge/visualizar_relatorio?arquivo=123&formato=pdf
+    PaidInstallmentReceivable:
+      description: >-
+        Informações de parcela paga do título a receber do Saldo Devedor
+        Presente.
+      allOf:
+        - $ref: '#/components/schemas/BaseInstallmentReceivable'
+        - type: object
+          properties:
+            receipts:
+              type: array
+              items:
+                $ref: '#/components/schemas/CurrentDebitBalancePaymentReceived'
+    CurrentDebitBalanceInstallmentReceivable:
+      $ref: '#/components/schemas/BaseInstallmentReceivable'
+    BaseInstallmentReceivable:
+      type: object
+      description: Informações de parcelas do título a receber para Saldo Devedor Presente
+      properties:
+        installmentId:
+          allOf:
+            - $ref: '#/components/schemas/InstallmentIdDescription'
+            - type: integer
+              format: int32
+        currentBalance:
+          type: number
+          description: Valor atual
+          format: double
+        latePaymentInterest:
+          type: number
+          description: Percentual de encargos de mora (multa + juros)
+          format: double
+        adjustedValue:
+          type: number
+          description: Valor corrigido
+          format: double
+        additionalValue:
+          allOf:
+            - $ref: '#/components/schemas/AdditionalValueDescription'
+            - type: number
+              format: double
+        originalValue:
+          type: number
+          description: Valor original
+          format: double
+        monetaryCorrectionValue:
+          type: number
+          description: Valor da correção monetária da parcela.
+          format: double
+        conditionType:
+          type: string
+          description: Tipo de condição da Parcela.
+        indexerCode:
+          description: Código do indexador.
+          example: 5
+          type: integer
+        indexerName:
+          description: Nome do indexador.
+          example: IGP-M
+          type: string
+        baseDateOfCorrection:
+          description: Data base. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        indexerValueBaseDate:
+          type: number
+          description: Valor do indexador na data base.
+          format: double
+        indexerValueCalculationDate:
+          type: number
+          description: Valor do indexador na data cálculo para a parcela.
+          format: double
+        installmentNumber:
+          description: >-
+            Numero "sequencial" das parcelas 1, 2, 3, ou por "Condição de
+            Pagamento" 1/2, 2/2... (Resultado será apresentado conforme
+            Parâmetro 651).
+          example: 1/2
+          type: string
+    CurrentDebitBalancePaymentReceived:
+      type: object
+      description: Informações de baixa de parcelas do título a receber do Saldo Devedor.
+      properties:
+        receiptId:
+          type: integer
+          description: Código do recebimento
+          format: int32
+        receiptDate:
+          type: string
+          description: 'Data de recebimento. Formato esperado: yyyy-MM-dd.'
+          format: date
+          example: {}
+        receiptValue:
+          type: number
+          description: Valor do recebimento
+          format: double
+        monetaryCorrectionValue:
+          type: number
+          description: Valor da correção monetária da baixa
+          format: double
+        calculationDate:
+          type: string
+          description: 'Data de cálculo. Formato esperado: yyyy-MM-dd.'
+          format: date
+          example: {}
+        indexerValueCalculationDate:
+          type: number
+          description: Valor do indexador na data cálculo para a baixa.
+          format: double
+    InstallmentIdDescription:
+      description: Código da parcela
+    AdditionalValueDescription:
+      description: Valor do acréscimo
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    DueDateStartParcels:
+      description: Data inicial de vencimento das parcelas.<br> (yyyy-MM-dd)
+      in: query
+      name: dueDateStart
+      schema:
+        format: date
+        type: string
+    DueDateEndParcels:
+      description: Data final de vencimento das parcelas.<br> (yyyy-MM-dd)
+      in: query
+      name: dueDateEnd
+      schema:
+        format: date
+        type: string
+    NumberTitle:
+      name: numberTitle
+      in: query
+      description: Filtra as parcelas pelo Número do Titulo enviado.
+      schema:
+        type: integer
+    CorrectionDate:
+      description: >-
+        Data para correção do indexador. Se o parâmetro não for fornecido, será
+        considerada a data atual. Formato ISO 8601 (yyyy-MM-dd).
+      in: query
+      name: correctionDate
+      schema:
+        format: date
+        type: string
+    ConditionIdIn:
+      description: Filtro para incluir condições de pagamento.
+      example:
+        - AT
+        - PM
+      explode: false
+      in: query
+      name: conditionIdIn
+      schema:
+        example:
+          - AT
+          - PM
+        items:
+          type: string
+        type: array
+      style: form
+    ConditionIdNotIn:
+      description: Filtro para excluir condições de pagamento.
+      example:
+        - AT
+        - PM
+      explode: false
+      in: query
+      name: conditionIdNotIn
+      schema:
+        example:
+          - AT
+          - PM
+        items:
+          example: PM
+          type: string
+        type: array
+      style: form
+    UnitNumber:
+      description: Número da unidade.
+      in: query
+      name: unitNumber
+      schema:
+        type: string
+    UnitIdQuery:
+      description: Código da unidade (opcional).
+      in: query
+      name: unitId
+      schema:
+        example: 123
+        type: integer
+    CustomerIdQueryRequired:
+      description: Código do cliente (obrigatório)
+      in: query
+      name: customerId
+      required: true
+      schema:
+        example: 1001
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

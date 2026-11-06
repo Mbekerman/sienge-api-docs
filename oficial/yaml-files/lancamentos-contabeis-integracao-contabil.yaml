@@ -1,0 +1,674 @@
+openapi: 3.1.1
+info:
+  title: Lançamentos Contábeis (Integração Contábil)
+  version: 1.24.0
+  description: >-
+    Operações de listagem de lotes e lançamentos contábeis gerados pela
+    integração contábil
+paths:
+  /accountancy/entry-generator/entry-batches:
+    get:
+      tags:
+        - Lotes
+      summary: Lista lotes contábeis existentes
+      description: >-
+        Lista todos os lotes contábeis disponíveis ordenados pelo seu
+        identificador. (REST)
+      operationId: loadAllEntryBatches
+      x-section: Lotes
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/CompanyIdQuery'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: >-
+            Resultado da pesquisa retornado com sucesso - (Lançamentos Contábeis
+            (Integração Contábil))
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/AccountacyPaginationResultGeneratorEntryBatch
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /accountancy/entry-generator/entry-batches/{id}:
+    get:
+      tags:
+        - Lotes
+      summary: Busca lote por ID
+      description: Retorna os detalhes de um lote contábil específico. (REST)
+      operationId: loadEntryBatch
+      x-section: Lotes
+      x-audience:
+        - public
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Código do lote - (Lançamentos Contábeis (Integração Contábil))
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: >-
+            Resultado da pesquisa retornado com sucesso - Lançamentos Contábeis
+            (Integração Contábil)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountacyEntryGeneratorBatch'
+              example:
+                id: 1
+                companyId: 10
+                startDate: '2023-01-01'
+                endDate: '2023-01-31'
+                links:
+                  - rel: entries
+                    href: >-
+                      https://api.sienge.com.br/suporte/public/api/v1/accountancy/entry-generator/entry-batches/1/entries
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /accountancy/entry-generator/entry-batches/{id}/entries:
+    get:
+      tags:
+        - Lançamentos
+      summary: Lista lançamentos de um lote
+      description: >-
+        Retorna todos os lançamentos contábeis associados a um lote específico.
+        (REST)
+      operationId: loadEntryBatchById
+      x-section: Lançamentos
+      x-audience:
+        - public
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Id do lote
+          schema:
+            type: integer
+            example: 1
+        - $ref: '#/components/parameters/StartDateQueryRequired'
+        - $ref: '#/components/parameters/EndDateQueryRequired'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: >-
+            Lançamentos encontrados - (Lançamentos Contábeis (Integração
+            Contábil))
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountacyEntryGeneratorPaginationResult'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /accountancy/entry-generator/entries:
+    get:
+      tags:
+        - Lançamentos
+      summary: Lista todos os lançamentos
+      description: >-
+        Retorna todos os lançamentos contábeis de todos os lotes existentes.
+        (REST)
+      operationId: loadAllEntries
+      x-section: Lançamentos
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/CompanyIdQuery'
+        - $ref: '#/components/parameters/StartDateQueryRequired'
+        - $ref: '#/components/parameters/EndDateQueryRequired'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Lançamentos retornados com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountacyEntryGeneratorPaginationResult'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /accountancy/entry-generator/entry-batches/{id}/entries/{entryId}:
+    get:
+      tags:
+        - Lançamentos
+      summary: Busca lançamento por ID
+      description: >-
+        Retorna os detalhes de um lançamento específico identificado pelo seu
+        código. (REST)
+      operationId: loadAllEntriesById
+      x-section: Lançamentos
+      x-audience:
+        - public
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Id do lote contábil
+          schema:
+            type: integer
+            example: 1
+        - name: entryId
+          in: path
+          required: true
+          description: Código do lançamento - (Lançamentos Contábeis (Integração Contábil))
+          schema:
+            type: integer
+            example: 300
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Lançamento encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountacyEntryGeneratorBatches'
+              example:
+                id: 300
+                eventId: 20
+                entryBatchId: 1
+                date: '2023-03-10'
+                type: D
+                accountId: 1.2.03.04
+                descriptionId: '123'
+                description: Provisão do pagamento de...
+                amount: 5000
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    AccountacyPaginationResultGeneratorEntryBatch:
+      description: Estrutura de resposta paginada contendo os lotes
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de lotes retornados como resultado da pesquisa
+          items:
+            $ref: '#/components/schemas/AccountacyEntryGeneratorBatch'
+          example:
+            - id: 1
+              companyId: 10
+              startDate: '2023-01-01'
+              endDate: '2023-01-31'
+              links:
+                - rel: entries
+                  href: >-
+                    /sienge/api/v1/accountancy/entry-generator/entry-batches/1/entries
+    AccountacyEntryGeneratorBatch:
+      description: Estrutura de dados de um lote contábil
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Código do lote contábil
+          example: 1
+        companyId:
+          type: integer
+          description: Código da empresa do lote contábil
+          example: 10
+        startDate:
+          type: string
+          format: date
+          description: Data de início do lote contábil
+          example: '2023-01-01'
+        endDate:
+          type: string
+          format: date
+          description: Data final do lote contábil
+          example: '2023-01-31'
+        links:
+          $ref: '#/components/schemas/Links'
+          description: Links para os lançamentos do lote contábil
+    AccountacyEntryGeneratorPaginationResult:
+      description: Estrutura de resposta paginada contendo os lançamentos
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountacyEntryGeneratorBatches'
+          example:
+            - id: 100
+              eventId: 10
+              entryBatchId: 1
+              date: '2023-01-15'
+              type: D
+              accountId: 1.2.03.01
+              description: Provisão pagamento fornecedor
+              amount: 1500.5
+              links:
+                - href: ''
+                  rel: ''
+    AccountacyEntryGeneratorBatches:
+      description: Estrutura de dados de um lançamento contábil
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 300
+        eventId:
+          type: integer
+          example: 20
+        entryBatchId:
+          type: integer
+          example: 3
+        date:
+          type: string
+          format: date
+          example: '2023-03-10'
+        type:
+          $ref: '#/components/schemas/DebitCreditTypeEnum'
+        accountId:
+          type: string
+          example: 1.2.03.04
+        descriptionId:
+          type: string
+          example: Código do histórico contábil
+        description:
+          type: string
+          example: Descrição do histórico contábil
+        amount:
+          type: number
+          example: 5000
+        links:
+          $ref: '#/components/schemas/Links'
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    Links:
+      description: Links para acessar outros recursos
+      example:
+        - href: https://../v1/purchase-..
+          rel: Recurso
+      items:
+        $ref: '#/components/schemas/Link'
+      type: array
+    DebitCreditTypeEnum:
+      type: string
+      description: Tipo de lançamento débito ou crédito
+      enum:
+        - D
+        - C
+      example: D
+    Link:
+      description: Representa um link para outro recurso.
+      properties:
+        href:
+          description: URL do recurso associado
+          example: https://../v1/purchase-..
+          type: string
+        rel:
+          description: Nome da recurso associado
+          example: Recurso
+          type: string
+      type: object
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    CompanyIdQuery:
+      description: Código da empresa (opcional)
+      in: query
+      name: companyId
+      required: false
+      schema:
+        example: 1
+        type: integer
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    StartDateQueryRequired:
+      description: Data inicial para filtro de período
+      in: query
+      name: startDate
+      required: true
+      schema:
+        example: '2023-01-01'
+        format: date
+        type: string
+    EndDateQueryRequired:
+      description: Data final para filtro de período
+      in: query
+      name: endDate
+      required: true
+      schema:
+        example: '2023-01-31'
+        format: date
+        type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

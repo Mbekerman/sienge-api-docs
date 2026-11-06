@@ -1,0 +1,2258 @@
+openapi: 3.1.1
+info:
+  title: Unidades de Imóveis
+  version: 1.24.0
+  description: API de Unidades de Imóveis
+paths:
+  /units/{unitId}:
+    get:
+      x-original-file: unit-v1.yaml
+      x-section: Unidades
+      x-audience:
+        - public
+      tags:
+        - Unidades
+      summary: Busca a unidade no Sienge
+      operationId: getUnit
+      parameters:
+        - $ref: '#/components/parameters/UnitId'
+      responses:
+        '200':
+          description: A unidade foi encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealEstateUnitDocument'
+              example:
+                id: 1
+                name: Exemplo de Unidade
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Busca detalhada de uma unidade específica no Sienge pelo seu
+        identificador único. (REST)
+    patch:
+      tags:
+        - Unidades
+      summary: Atualiza informações da Unidade
+      operationId: patchUnitsId
+      x-section: Unidades
+      x-original-file: unit-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - name: unitId
+          in: path
+          description: Código da unidade para ser atualizada
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        description: Objeto para atualização da unidade.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RealEstateUnitUpdateDocument'
+            example:
+              commercialStock: D
+              prizedCompliance: 0
+              iptuValue: 100
+              realEstateRegistration: '123456'
+        required: true
+      responses:
+        '204':
+          description: Unidade atualizada com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Atualização dos dados cadastrais de uma unidade existente no Sienge.
+        (REST)
+  /units:
+    get:
+      x-original-file: unit-v1.yaml
+      x-section: Unidades
+      x-audience:
+        - public
+      tags:
+        - Unidades
+      summary: Retorna as unidades ordenadas decrescentemente pelo id
+      operationId: getAllUnits
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+        - name: enterpriseId
+          in: query
+          description: Código do empreendimento (centro de custo).
+          schema:
+            type: integer
+            format: int32
+            example: 1001
+        - name: commercialStock
+          in: query
+          description: >
+            Estoque comercial da unidade.  <br /> <b>Opções:</b>  <br /> C -
+            Reservada  <br /> D - Disponível <br /> R - Reserva técnica <br /> E
+            - Permuta <br /> M - Mútuo <br /> P - Proposta <br /> V - Vendida
+            <br /> L - Locado <br /> T - Transferido
+          schema:
+            type: string
+            example: D
+        - name: name
+          in: query
+          description: Nome/Identificador da unidade.
+          schema:
+            type: string
+            example: Unidade 101
+        - name: additionalData
+          in: query
+          description: |-
+            Enums:
+              `ALL` - Carrega todos os dados adicionais. Unidades Filhas, Agrupamentos e Valores Especiais.
+              `NONE` - Não carrega os dados adicionais.
+          schema:
+            type: string
+            enum:
+              - ALL
+              - NONE
+            example: ALL
+      responses:
+        '200':
+          description: Unidades encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnitsResponse'
+              example:
+                resultSetMetadata:
+                  count: 1
+                  offset: 0
+                  limit: 10
+                results:
+                  - id: 1
+                    name: Unidade Exemplo
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Lista todas as unidades cadastradas, ordenadas de forma decrescente pelo
+        id. (REST)
+    post:
+      tags:
+        - Unidades
+      summary: Persiste uma Unidade.
+      operationId: insert
+      x-section: Unidades
+      x-original-file: unit-v1.yaml
+      x-audience:
+        - public
+      requestBody:
+        description: Objeto para criação da unidade
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RealEstateUnitInsertDocument'
+            example:
+              enterpriseId: 1
+              indexerId: 1
+              classificationUnit: 1
+              propertyTypeId: 1
+              situationId: 1
+              privateArea: 50
+              name: Nova Unidade
+              availableDate: '2023-12-01'
+              commercialStock: D
+              commonArea: 10
+              constructionStock: P
+              idealFraction: 0.1
+              idealFractionSquareMeter: 5
+              indexedQuantity: 10
+              legalStock: E
+              terrainArea: 100
+              usableArea: 50
+        required: true
+      responses:
+        '201':
+          description: Unidade criada
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Criação de uma nova unidade no sistema. (REST)
+  /units/{unitId}/child-unit:
+    post:
+      tags:
+        - Unidades filhas
+      summary: Adiciona uma ou mais unidades filhas na unidade pelo ID.
+      operationId: addChildUnit
+      x-section: Unidades filhas
+      x-original-file: unit-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/UnitId'
+      requestBody:
+        description: Lista de unidades filhas a serem adicionadas.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RealEstateChildUnitInsertDocument'
+            example:
+              propertyTypeId: 1
+              privateArea: 20
+              commonArea: 10
+              idealFraction: 0.5
+              idealFractionSquareMeter: 10
+              name: Unidade Filha
+        required: true
+      responses:
+        '201':
+          description: Unidades filhas adicionadas à unidade com sucesso.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Realiza o vínculo de unidades filhas a uma unidade principal pelo seu
+        identificador. (REST)
+  /units/{unitId}/groupings:
+    get:
+      x-original-file: unit-v1.yaml
+      x-section: Agrupamentos de unidade
+      x-audience:
+        - public
+      tags:
+        - Agrupamentos de unidade
+      summary: Busca agrupamentos de unidade no Sienge
+      operationId: getUnitsGrouping
+      parameters:
+        - $ref: '#/components/parameters/UnitId'
+      responses:
+        '200':
+          description: Unidade encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealEstateUnitGroupingDocument'
+              example:
+                - id: 1
+                  name: Agrupamento Exemplo
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Retorna agrupamentos de unidades relacionadas ao id informado. (REST)
+  /units/{unitId}/attachments:
+    post:
+      x-original-file: unit-v1.yaml
+      x-section: Anexos de unidade
+      x-audience:
+        - public
+      tags:
+        - Anexos de unidade
+      summary: Inclui um anexo a unidade.
+      operationId: insertUnitAttachment
+      parameters:
+        - $ref: '#/components/parameters/UnitId'
+        - name: description
+          in: query
+          description: Descrição do anexo da unidade.
+          required: true
+          schema:
+            type: string
+            example: Planta da unidade
+      requestBody:
+        description: >-
+          Arquivo para inserção | Tamanho máximo: 70 MB | Tamanho máximo do nome
+          do arquivo: 100 caracteres | Apenas 1 Anexo por requisição. Caso seja
+          enviado mais de 1 Anexo, apenas o primeiro selecionado será aceito.
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: >-
+                    Arquivo para inserção | Tamanho máximo: 70 MB | Tamanho
+                    máximo do nome do arquivo: 100 caracteres | Somente 1 Anexo
+                    por requisição. Caso seja enviado mais de 1 Anexo, o Sienge
+                    vai aceitar somente o primeiro selecionado.
+                  format: binary
+                  example: documento.pdf
+            examples:
+              exemplo1:
+                summary: Exemplo de PDF
+                value:
+                  file: documento.pdf
+        required: true
+      responses:
+        '201':
+          description: Anexo inserido da unidade com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Adiciona um novo anexo ao cadastro da unidade informada. (REST)
+  /units/characteristics:
+    get:
+      x-original-file: unit-v1.yaml
+      x-section: Características para unidade
+      x-audience:
+        - public
+      tags:
+        - Características para unidade
+      summary: Retorna todas características de unidade cadastradas
+      operationId: getAllUnitCharacteristics
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Características de unidade encontradas com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllUnitCharacteristicsResponseDocument'
+              example:
+                resultSetMetadata:
+                  count: 1
+                  offset: 0
+                  limit: 10
+                results:
+                  - id: 1
+                    description: Característica de unidade
+                  - id: 2
+                    description: Outra característica de unidade
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Lista todas as características de unidade cadastradas. (REST)
+    post:
+      tags:
+        - Características para unidade
+      summary: Cria uma característica da unidade.
+      operationId: insertUnitCharacteristic
+      x-section: Características para unidade
+      x-original-file: unit-v1.yaml
+      x-audience:
+        - public
+      requestBody:
+        description: Objeto para criação da característica de unidade.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RealEstateUnitCharacteristicInsertDocument'
+            example:
+              description: Exemplo de característica criada via API
+        required: true
+      responses:
+        '201':
+          description: Característica de unidade criada com sucesso
+          headers:
+            Location:
+              description: URL para acessar a característica de unidade criada
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Cadastro de uma nova característica para a unidade. (REST)
+  /units/{unitId}/characteristics:
+    put:
+      tags:
+        - Características para unidade
+      summary: Vincula uma ou mais características a uma unidade
+      operationId: updateUnitCharacteristics
+      x-section: Características para unidade
+      x-original-file: unit-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/UnitId'
+      requestBody:
+        description: >-
+          Array de objetos contendo as informações das características a serem
+          vinculadas na unidade informada.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RealEstateUnitCharacteristicUpdateDocument'
+            example:
+              - id: 1
+                quantity: 2
+              - id: 2
+                quantity: 1
+        required: true
+      responses:
+        '204':
+          description: Características da unidade atualizadas.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Realiza o vínculo de características previamente cadastradas a uma
+        unidade. (REST)
+  /units/situations:
+    get:
+      x-original-file: unit-v1.yaml
+      x-section: Situações para unidade
+      x-audience:
+        - public
+      tags:
+        - Situações para unidade
+      summary: Retorna todas situaçãos de unidade cadastradas
+      operationId: getAllUnitSituations
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Situações de unidade encontradas com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllUnitSituationResponseDocument'
+              example:
+                resultSetMetadata:
+                  count: 2
+                  offset: 0
+                  limit: 10
+                results:
+                  - id: 1
+                    description: Situação ativa
+                  - id: 2
+                    description: Situação inativa
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Lista todas as situações de unidade cadastradas. (REST)
+    post:
+      tags:
+        - Situações para unidade
+      summary: Cria uma situação para uso em unidade.
+      operationId: insertUnitSituation
+      x-section: Situações para unidade
+      x-original-file: unit-v1.yaml
+      x-audience:
+        - public
+      requestBody:
+        description: Objeto para criação da situação de unidade.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RealEstateUnitSituationInsertDocument'
+            example:
+              description: Situação de unidade exemplo
+              active: true
+        required: true
+      responses:
+        '201':
+          description: Situação de unidade criada com sucesso
+          headers:
+            Location:
+              description: URL para acessar a situação de unidade criada
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Cria uma situação para unidade. (REST)
+  /units/{unitId}/address:
+    post:
+      tags:
+        - Endereço da Unidade
+      summary: Insere o endereço da unidade
+      operationId: insertUnitAddress
+      x-section: Endereço da Unidade
+      x-original-file: unit-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/UnitId'
+      requestBody:
+        description: Objeto para inserção do endereço da unidade.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RealEstateUnitAddressDocument'
+            example:
+              cityId: 1
+              streetType: 1
+              streetName: Rua Exemplo
+              number: '100'
+              complement: Apto 101
+              neighborhood: Centro
+              zipCode: 12345-678
+        required: true
+      responses:
+        '201':
+          description: Endereço da unidade inserido com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Insere o endereço da unidade informada. (REST)
+    put:
+      tags:
+        - Endereço da Unidade
+      summary: Atualiza o endereço da unidade
+      operationId: updateUnitAddress
+      x-section: Endereço da Unidade
+      x-original-file: unit-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/UnitId'
+      requestBody:
+        description: Objeto para atualização do endereço da unidade.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RealEstateUnitAddressDocument'
+            example:
+              cityId: 1
+              streetType: 1
+              streetName: Rua Exemplo
+              number: '100'
+              complement: Apto 101
+              neighborhood: Centro
+              zipCode: 12345-678
+        required: true
+      responses:
+        '204':
+          description: Endereço da unidade atualizado com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Atualiza o endereço da unidade informada. (REST)
+  /units/{unitId}/evaluations:
+    get:
+      tags:
+        - Avaliações de unidade
+      summary: Busca avaliações cadastradas para a unidade
+      operationId: getUnitEvaluations
+      x-section: Avaliações de unidade
+      x-original-file: unit-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/UnitId'
+      responses:
+        '200':
+          description: Avaliações da unidade encontradas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetUnitEvaluationListItem'
+              example:
+                - id: 1
+                  evaluationDate: '2024-01-01'
+                  evaluationPrice: 100000
+                  saleValueDate: '2024-02-01'
+                  saleValuePrice: 120000
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Lista avaliações cadastradas para a unidade informada. (REST)
+    post:
+      tags:
+        - Avaliações de unidade
+      summary: Cria uma nova avaliação para a unidade
+      operationId: createUnitEvaluation
+      x-section: Avaliações de unidade
+      x-original-file: unit-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/UnitId'
+      requestBody:
+        description: Dados da avaliação a ser criada.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnitEvaluationInsert'
+            example:
+              evaluationDate: '2024-01-10'
+              evaluationPrice: 150000
+              saleValueDate: '2024-02-10'
+              saleValuePrice: 170000
+        required: true
+      responses:
+        '201':
+          description: Avaliação criada com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Cria uma avaliação para a unidade informada. (REST)
+components:
+  schemas:
+    RealEstateUnitDocument:
+      description: Schema que representa uma unidade imobiliária.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Código
+          format: int32
+          example: 1
+        enterpriseId:
+          type: integer
+          description: Código do empreendimento ao qual a unidade pertence.
+          format: int32
+          example: 1
+        contractId:
+          type: integer
+          description: Código do contrato ao qual a unidade pertence.
+          format: int32
+          example: 1
+        indexerId:
+          type: integer
+          description: Código do indexador
+          format: int32
+          example: 1
+        name:
+          type: string
+          description: Nome/Identificador
+          example: Unidade Exemplo
+        propertyType:
+          type: string
+          description: Tipo de imóvel
+          example: Unidade Exemplo
+        note:
+          type: string
+          description: Observação da unidade imobiliária.
+          example: Observação Exemplo
+        commercialStock:
+          type: string
+          description: >-
+            Estoque comercial (D = Disponível, V = Vendida, L = Locada, C =
+            Reservada, R = Reserva Técnica, E = Permuta, M = Mutuo, P =
+            Proposta, T = Transferido, G = Vendido/Terceiros, O = Vendida em
+            pré-contrato)
+          example: D
+        latitude:
+          type: string
+          description: Latitude
+          example: '-22.9167'
+        longitude:
+          type: string
+          description: Longitude
+          example: '-43.2000'
+        legalRegistrationNumber:
+          type: string
+          description: Matrícula
+          example: '123456'
+        deliveryDate:
+          type: string
+          description: Data de entrega
+          format: date
+          example: '2022-01-01'
+        privateArea:
+          type: number
+          description: Área privativa unidade
+          example: 50
+        commonArea:
+          type: number
+          description: Área comum unidade
+          example: 5
+        terrainArea:
+          type: number
+          description: Área do terreno unidade
+          example: 50
+        nonProportionalCommonArea:
+          type: number
+          description: Área comum de divisão não proporcional
+          example: 5
+        idealFraction:
+          type: number
+          description: Fração ideal unidade
+          example: 0.5
+        idealFractionSquareMeter:
+          type: number
+          description: Fração ideal unidade em m2*
+          example: 2.5
+        generalSaleValueFraction:
+          type: number
+          description: Fração VGV (Valor geral de vendas)
+          example: 50
+        indexedQuantity:
+          type: number
+          description: Quantidade indexada
+          example: 50
+        prizedCompliance:
+          type: number
+          description: Adimplência premiada
+          example: 50
+        terrainValue:
+          type: number
+          description: Valor do terreno
+          example: 50
+        floor:
+          type: string
+          description: Pavimento
+          example: '1'
+        contractNumber:
+          type: string
+          description: Número do contrato
+          example: '123456'
+        usableArea:
+          type: number
+          description: Área útil
+          example: 50
+        iptuValue:
+          type: number
+          description: Valor do IPTU
+          example: 50
+        realEstateRegistration:
+          type: string
+          description: Inscrição imobiliária
+          example: '123456'
+        cibCode:
+          type: string
+          maxLength: 58
+          description: Cadastro Imobiliário Brasileiro.
+          example: CIB-123456
+        incraCode:
+          type: string
+          maxLength: 17
+          description: Código INCRA.
+          example: INC-123456789
+        locationType:
+          $ref: '#/components/schemas/LocationType'
+        frameworkType:
+          $ref: '#/components/schemas/FrameworkType'
+        evaluation:
+          type: array
+          description: Avaliações e valores de venda da unidade imobiliária.
+          items:
+            $ref: '#/components/schemas/GetUnitEvaluation'
+          example:
+            - id: 1
+              evaluationDate: '2024-01-01'
+              evaluationPrice: 100000
+              saleValueDate: '2024-02-01'
+              saleValuePrice: 120000
+        address:
+          $ref: '#/components/schemas/GetUnitAddress'
+        childUnits:
+          type: array
+          description: Unidades Filhas vinculadas à unidade imobiliária.
+          items:
+            $ref: '#/components/schemas/RealEstateChildUnitsDocument'
+          example:
+            - id: 1
+              name: Unidade Filha Exemplo
+        groupings:
+          type: array
+          description: Agrupamentos
+          items:
+            $ref: '#/components/schemas/RealEstateUnitGroupingItemDocument'
+          example:
+            - groupingDescription: Agrupador Exemplo
+              valueGroupingDescription: Valor do Agrupamento Exemplo
+        specialValues:
+          type: array
+          description: Valores especiais relacionados à unidade
+          items:
+            $ref: '#/components/schemas/RealEstateUnitSpecialValuesDocument'
+          example:
+            - tablePricesID: 1
+              indexedQuantity: 100
+        links:
+          $ref: '#/components/schemas/Links'
+    RealEstateUnitUpdateDocument:
+      description: Schema para atualização de unidade imobiliária.
+      type: object
+      properties:
+        commercialStock:
+          maxLength: 1
+          type: string
+          description: >-
+            Unidades vendidas, vendidas em pré-contrato, reservadas, em proposta
+            ou locadas não poderão ter o estoque comercial alterado.</br></br>
+            Estoques comerciais disponíveis:
+
+
+
+
+              `D` - Diponível
+              `R` - Reserva técnica
+              `E` - Permuta
+              `M` - Mútuo
+              `T` - Transferido
+              `G` - Vendido/terceiros
+          example: D
+          enum:
+            - D
+            - R
+            - E
+            - M
+            - T
+            - G
+        prizedCompliance:
+          minimum: 0
+          type: number
+          description: Adimplência premiada. Não pode ser um valor negativo.
+          example: 0
+        iptuValue:
+          minimum: 0
+          type: number
+          description: Valor do IPTU. Não pode ser um valor negativo.
+          example: 0
+        realEstateRegistration:
+          type: string
+          description: Inscrição Imobiliária.
+          example: '123456'
+        idealFraction:
+          type: number
+          description: 'Fração ideal. Valores aceitos: numeric(17,8)<br><br>'
+          example: 0.05
+        cibCode:
+          type: string
+          maxLength: 58
+          description: Cadastro Imobiliário Brasileiro.
+          example: CIB-123456
+        incraCode:
+          type: string
+          maxLength: 17
+          description: Código INCRA.
+          example: INC-123456789
+        locationType:
+          $ref: '#/components/schemas/LocationType'
+        frameworkType:
+          $ref: '#/components/schemas/FrameworkType'
+    UnitsResponse:
+      description: Documento de resposta para busca de unidades.
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de Unidades retornadas como resultado da pesquisa
+          items:
+            $ref: '#/components/schemas/RealEstateUnitDocument'
+      example:
+        resultSetMetadata:
+          count: 1
+          offset: 0
+          limit: 10
+        results:
+          - id: 1
+            name: Unidade Exemplo
+    RealEstateUnitInsertDocument:
+      description: Schema para criação de uma nova unidade imobiliária.
+      required:
+        - availableDate
+        - commercialStock
+        - commonArea
+        - constructionStock
+        - enterpriseId
+        - idealFraction
+        - idealFractionSquareMeter
+        - indexedQuantity
+        - indexerId
+        - legalStock
+        - privateArea
+        - propertyTypeId
+        - terrainArea
+        - usableArea
+      type: object
+      properties:
+        enterpriseId:
+          type: integer
+          description: Código do empreendimento.<br><br>
+          format: int32
+          example: 1
+        indexerId:
+          type: integer
+          description: Código do indexador<br><br>
+          format: int32
+          example: 1
+        classificationUnit:
+          type: integer
+          description: |-
+            Classificação da unidade. <br><br> Valores aceitos:
+              `1` - Padrão equivalente à habitação do mercado popular (HMP)
+              `2` - Padrão equivalente à habitação de interesse social (HIS)
+              `3` - Baixo padrão
+              `4` - Médio padrão
+              `5` - Alto padrão
+              `6` - Altíssimo padrão.
+          format: int32
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+          example: 1
+        propertyTypeId:
+          type: integer
+          description: >-
+            Código do tipo de imóvel. Visível no cadastro do tipo de
+            imóvel.<br><br>
+          format: int32
+          example: 1
+        situationId:
+          type: integer
+          description: 'Código da situação: 1 - Situação A, 2 - Situação B'
+          enum:
+            - 1
+            - 2
+          format: int32
+          example: 1
+        condominiumValue:
+          type: number
+          description: 'Valor do condomínio. Valores aceitos: numeric(8,2)<br><br>'
+          format: double
+          example: 100
+        privateArea:
+          type: number
+          description: 'Área privativa. Valores aceitos: numeric(16,6)<br><br>'
+          format: double
+          example: 50
+        usableArea:
+          type: number
+          description: 'Área útil. Valores aceitos: numeric(16,6)<br><br>'
+          format: double
+          example: 50
+        commonArea:
+          type: number
+          description: 'Área comum. Valores aceitos: numeric(16,6)<br><br>'
+          format: double
+          example: 10
+        nonProportionalCommonArea:
+          type: number
+          description: >-
+            Área comum de divisão não proporcional. O campo será informado e
+            obrigatório quando a categoria do empreendimento for incorporação.
+            Valores aceitos: numeric(16,6)<br><br>
+          format: double
+          example: 10
+        terrainArea:
+          type: number
+          description: 'Área do terreno. Valores aceitos: numeric(16,6)<br><br>'
+          format: double
+          example: 100
+        terrainValue:
+          type: number
+          description: 'Valor do terreno. Valores aceitos: numeric(10,2)<br><br>'
+          format: double
+          example: 100
+        idealFraction:
+          type: number
+          description: 'Fração ideal. Valores aceitos: numeric(17,8)<br><br>'
+          format: double
+          example: 100
+        idealFractionSquareMeter:
+          type: number
+          description: 'Fração ideal em m². Valores aceitos: numeric(18,8)<br><br>'
+          format: double
+          example: 100
+        indexedQuantity:
+          type: number
+          description: 'Quantidade indexada. Valores aceitos: numeric(16,6)<br><br>'
+          format: double
+          example: 100
+        iptuValue:
+          type: number
+          description: 'Valor do IPTU. Valores aceitos: numeric(8,2)<br><br>'
+          format: double
+          example: 100
+        generalSaleValueFraction:
+          type: number
+          description: >-
+            Fração VGV (Valor geral de vendas). Valores aceitos:
+            numeric(10,8)<br><br>
+          format: double
+          example: 100
+        prizedCompliance:
+          type: number
+          description: >-
+            Valor da adimplência premiada. Valores aceitos:
+            numeric(16,6)<br><br>
+          format: double
+          example: 100
+        realEstateRegistration:
+          type: string
+          description: 'Inscrição imobiliária. Valores aceitos: varchar(30)<br><br>'
+          example: '123456'
+        name:
+          type: string
+          description: 'Nome da unidade. Valores aceitos: varchar(50)<br><br>'
+          example: Unidade Exemplo
+        commercialStock:
+          type: string
+          description: |-
+            Esoque comercial.</br></br> Valores aceitos:
+              `D` - Diponível
+              `R` - Reserva técnica
+              `E` - Permuta
+              `M` - Mútuo
+              `T` - Transferido
+              `G` - Vendido/terceiros
+          example: D
+          enum:
+            - D
+            - R
+            - E
+            - M
+            - T
+            - G
+        legalStock:
+          type: string
+          example: E
+          description: |-
+            Estoque legal.<br><br> Valores aceitos:
+              `E` - Escriturado
+              `C` - Caucionado
+              `H` - Hipotecado
+              `P` - Penhorado
+              `A` - Alugado
+              `L` - Livre
+              `F` - Alienação fiduciária
+              `U` - Usufruto
+              `B` - Bloqueio judicial
+              `R` - Arresto
+          enum:
+            - E
+            - C
+            - H
+            - P
+            - A
+            - L
+            - F
+            - U
+            - B
+            - R
+        constructionStock:
+          type: string
+          description: 'Estoque de obra: P - Projeto, E - Em Construção, C - Concluído'
+          enum:
+            - P
+            - E
+            - C
+          example: P
+        location:
+          type: string
+          description: 'Localização. Valores aceitos: varchar(30)<br><br>'
+          maxLength: 30
+          example: Localização
+        floor:
+          type: string
+          description: 'Pavimento. Valores aceitos: varchar(30)<br><br>'
+          maxLength: 30
+          example: Pavimento
+        legalRegistrationNumber:
+          type: string
+          description: 'Matrícula. Valores aceitos: varchar(15)<br><br>'
+          maxLength: 15
+          example: Matrícula
+        latitude:
+          type: string
+          description: 'Latitude. Valores aceitos: varchar(20)<br><br>'
+          maxLength: 20
+          example: Latitude
+        longitude:
+          type: string
+          description: 'Longitude. Valores aceitos: varchar(20)<br><br>'
+          maxLength: 20
+          example: Longitude
+        note:
+          type: string
+          description: Observação da unidade.
+          maxLength: 3800
+          example: Observação
+        endorsement:
+          type: string
+          description: >-
+            Averbação. Informado quando o campo estoque legal for igual a livre.
+            Valores aceitos: varchar(20)<br><br>
+          maxLength: 20
+          example: Averbação
+        availableDate:
+          type: string
+          description: Data da criação. Formato YYYY-MM-DD. Exemplo -> 2023-12-25
+          format: date
+          example: '2023-12-25'
+        deliveryDate:
+          type: string
+          description: Data de entrega. Formato YYYY-MM-DD. Exemplo -> 2023-12-25
+          format: date
+          example: '2023-12-25'
+        occupancyDate:
+          type: string
+          description: Data do habite-se. Formato YYYY-MM-DD. Exemplo -> 2023-12-25
+          format: date
+          example: '2023-12-25'
+        cibCode:
+          type: string
+          maxLength: 58
+          description: Cadastro Imobiliário Brasileiro.
+          example: CIB-123456
+        incraCode:
+          type: string
+          maxLength: 17
+          description: Código INCRA.
+          example: INC-123456789
+        locationType:
+          $ref: '#/components/schemas/LocationType'
+        frameworkType:
+          $ref: '#/components/schemas/FrameworkType'
+        purchaseDeed:
+          type: array
+          description: Escritura da unidade.
+          example:
+            - registry: Registry
+              book: Book
+              registrationGeneral: Registration
+              actNumber: Act Number
+              licensePermit: License Permit
+              registrationNumber: 012345678A
+              comment: Comment
+              taxpayerNumber: Taxpayer Number
+              writDate: '2023-12-25'
+          items:
+            $ref: '#/components/schemas/PurchaseDeedInsert'
+        landDetails:
+          type: array
+          description: Detalhes do lote.
+          example:
+            - registry: Registry
+              book: Book
+              registrationGeneral: Registration
+              actNumber: Act Number
+              licensePermit: License Permit
+              registrationNumber: 123456789
+              comment: Comment
+              taxpayerNumber: Taxpayer Number
+              writDate: '2023-12-25'
+          items:
+            $ref: '#/components/schemas/LandDetailsInsert'
+        unitGroupings:
+          type: array
+          example:
+            - groupingId: 1
+              valueGroupingId: 1
+          items:
+            type: object
+            properties:
+              groupingId:
+                type: integer
+                description: Código do agrupamento.
+                format: int32
+                example: 1
+              valueGroupingId:
+                type: integer
+                description: Valor do agrupamento.
+                format: int32
+                example: 1
+    RealEstateChildUnitInsertDocument:
+      description: Schema para inserção de unidade filha.
+      required:
+        - commonArea
+        - idealFraction
+        - idealFractionSquareMeter
+        - name
+        - privateArea
+        - propertyTypeId
+      type: object
+      properties:
+        propertyTypeId:
+          type: integer
+          description: >-
+            Código do tipo de imóvel unidade filha. Visível no cadastro do tipo
+            de imóvel.<br><br>
+          format: int32
+          example: 1
+        privateArea:
+          type: number
+          description: 'Área privativa unidade filha. Valores aceitos: numeric(16,6)<br><br>'
+          format: double
+          example: 100
+        commonArea:
+          type: number
+          description: 'Área comum unidade filha. Valores aceitos: numeric(16,6)<br><br>'
+          format: double
+          example: 100
+        idealFraction:
+          type: number
+          description: 'Fração ideal unidade filha. Valores aceitos: numeric(17,8)<br><br>'
+          format: double
+          example: 100
+        idealFractionSquareMeter:
+          type: number
+          description: 'Fração ideal em m². Valores aceitos: numeric(15,5)<br><br>'
+          format: double
+          example: 100
+        name:
+          type: string
+          description: 'Nome da unidade filha. Valores aceitos: varchar(50)<br><br>'
+          maxLength: 50
+          example: Unidade Exemplo
+        locationName:
+          type: string
+          description: 'Localização unidade filha. Valores aceitos: varchar(30)<br><br>'
+          maxLength: 30
+          example: Localização Exemplo
+        note:
+          type: string
+          description: 'Observação unidade filha. Valores aceitos: varchar(3800)<br><br>'
+          maxLength: 3800
+          example: Observação Exemplo
+    RealEstateUnitGroupingDocument:
+      description: Lista de agrupamentos da unidade.
+      type: array
+      items:
+        $ref: '#/components/schemas/RealEstateUnitGroupingItemDocument'
+      example:
+        - groupingDescription: Agrupador Exemplo
+          valueGroupingDescription: Valor Exemplo
+    GetAllUnitCharacteristicsResponseDocument:
+      description: Documento de resposta para listagem de características de unidade.
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: >-
+            Lista de características de unidade retornadas como resultado da
+            pesquisa
+          items:
+            $ref: '#/components/schemas/RealEstateUnitCharacteristicGetDocument'
+          example:
+            - id: 1
+              description: Característica da unidade
+            - id: 2
+              description: Característica da unidade
+    RealEstateUnitCharacteristicInsertDocument:
+      description: Schema para inserção de uma nova característica de unidade.
+      required:
+        - description
+      type: object
+      properties:
+        description:
+          type: string
+          description: Característica da unidade.
+          example: Unidade com piscina
+    RealEstateUnitCharacteristicUpdateDocument:
+      type: array
+      description: Características para vincular a uma unidade.
+      items:
+        $ref: '#/components/schemas/RealEstateUnitCharacteristicDocument'
+    GetAllUnitSituationResponseDocument:
+      description: Documento de resposta para listagem de situações de unidade.
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de situações de unidade retornadas como resultado da pesquisa
+          items:
+            $ref: '#/components/schemas/RealEstateUnitSituationGetDocument'
+          example:
+            - id: 1
+              description: Situação ativa
+            - id: 2
+              description: Situação inativa
+    RealEstateUnitSituationInsertDocument:
+      description: Schema para inserção de uma nova situação de unidade.
+      required:
+        - description
+      type: object
+      properties:
+        description:
+          type: string
+          description: Descrição da situação da unidade.
+          example: Situação da unidade
+    RealEstateUnitAddressDocument:
+      description: Schema para atualização de endereço da unidade imobiliária.
+      allOf:
+        - $ref: '#/components/schemas/UnitAddressDocument'
+    GetUnitEvaluationListItem:
+      description: Item de avaliação retornado na listagem da unidade.
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: integer
+              format: int32
+              description: Código da avaliação da unidade.
+              example: 1
+        - $ref: '#/components/schemas/UnitEvaluationBaseDocument'
+    UnitEvaluationInsert:
+      description: Dados necessários para inserir uma avaliação de unidade.
+      allOf:
+        - $ref: '#/components/schemas/UnitEvaluationBaseDocument'
+        - type: object
+          properties:
+            evaluationPrice:
+              type: number
+              minimum: 0
+            saleValuePrice:
+              type: number
+              description: Valor de venda sugerido da unidade.
+              example: 170000
+    UnitBasicWebhookPayload:
+      type: object
+      description: Payload básico para webhooks de unidade
+      properties:
+        unitId:
+          type: integer
+          description: Código da unidade
+          example: 123
+      required:
+        - unitId
+    LocationType:
+      type: string
+      description: Tipo de localização. U - Urbano e R - Rural.
+      enum:
+        - U
+        - R
+      example: U
+    FrameworkType:
+      type: integer
+      description: |-
+        Tipo de enquadramento.
+          1 - Imóvel residencial novo
+          2 - Imóvel residencial usado
+          3 - Lote residencial
+          4 - Não residencial
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+      example: 1
+    GetUnitEvaluation:
+      description: Detalhes da avaliação associada à unidade.
+      allOf:
+        - $ref: '#/components/schemas/UnitEvaluationBaseDocument'
+    GetUnitAddress:
+      description: Endereço associado à unidade imobiliária.
+      allOf:
+        - $ref: '#/components/schemas/UnitAddressWithCityDocument'
+      example:
+        cityId: 1
+        city: Cidade Exemplo
+        streetType: 1
+        streetName: Rua Exemplo
+        number: '100'
+        complement: Apto 101
+        neighborhood: Centro
+        zipCode: 12345-678
+    RealEstateChildUnitsDocument:
+      description: Unidade filha vinculada.
+      type: object
+      properties:
+        name:
+          type: string
+          description: Descrição da unidade filha
+          example: Unidade Filha Exemplo
+        order:
+          type: string
+          description: Numeração
+          example: '1'
+        privateArea:
+          type: number
+          description: Área privativa
+          example: 10
+        commonArea:
+          type: number
+          description: Área comum
+          example: 5
+        idealFraction:
+          type: number
+          description: Fração ideal
+          example: 0.5
+        idealFractionSquareMeter:
+          type: number
+          description: Fração ideal em m2*
+          example: 2.5
+      example:
+        name: Unidade Filha Exemplo
+        order: '1'
+        privateArea: 10
+        commonArea: 5
+        idealFraction: 0.5
+        idealFractionSquareMeter: 2.5
+        locationName: Localização Exemplo
+        note: Observação Exemplo
+    RealEstateUnitGroupingItemDocument:
+      description: Item de agrupamento da unidade.
+      type: object
+      properties:
+        groupingDescription:
+          type: string
+          description: Nome do agrupador
+          example: Agrupador Exemplo
+        valueGroupingDescription:
+          type: string
+          description: Nome do valor do agrupamento
+          example: Valor Exemplo
+    RealEstateUnitSpecialValuesDocument:
+      description: Valores especiais relacionados à unidade.
+      type: object
+      properties:
+        tablePricesID:
+          type: integer
+          description: Identificador da tabela de preços.
+          example: 1
+        indexedQuantity:
+          type: number
+          description: Quantidade indexada na tabela de preços.
+          example: 100
+      example:
+        tablePricesID: 1
+        indexedQuantity: 100
+    Links:
+      description: Links para acessar outros recursos
+      example:
+        - href: https://../v1/purchase-..
+          rel: Recurso
+      items:
+        $ref: '#/components/schemas/Link'
+      type: array
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    PurchaseDeedInsert:
+      description: Informações de escritura da unidade.
+      type: object
+      properties:
+        registry:
+          type: string
+          description: 'Nome cartório. Valores aceitos: varchar(200)<br><br>'
+          maxLength: 200
+          example: Nome cartório
+        book:
+          type: string
+          description: 'Livro. Valores aceitos: varchar(20)<br><br>'
+          maxLength: 20
+          example: Livro
+        registrationGeneral:
+          type: string
+          description: 'Registro Geral. Valores aceitos: varchar(20)<br><br>'
+          maxLength: 20
+          example: Registro Geral
+        actNumber:
+          type: string
+          description: 'Decreto. Valores aceitos: varchar(20)<br><br>'
+          maxLength: 20
+          example: Decreto
+        licensePermit:
+          type: string
+          description: 'Alvará de licença. Valores aceitos: varchar(20)<br><br>'
+          maxLength: 20
+          example: Alvará de licença
+        registrationNumber:
+          type: string
+          description: 'Número de registro. Valores aceitos: varchar(10)<br><br>'
+          maxLength: 10
+          example: '123456'
+        comment:
+          type: string
+          description: 'Comentário. Valores aceitos: varchar(100)'
+          maxLength: 100
+          example: Comentário
+        taxpayerNumber:
+          type: string
+          description: 'Número do contribuinte. Valores aceitos: varchar(50)'
+          maxLength: 50
+          example: Número do contribuinte
+        writDate:
+          type: string
+          description: Data da escritura. Formato YYYY-MM-DD. Exemplo -> 2023-12-25
+          format: date
+          example: '2023-12-25'
+    LandDetailsInsert:
+      description: Informações detalhadas do lote da unidade.
+      type: object
+      properties:
+        frontLimit:
+          type: string
+          description: 'Limite frontal. Valores aceitos: varchar(50)<br><br>'
+          maxLength: 50
+          example: Limite frontal
+        backLimit:
+          type: string
+          description: 'Limite fundos. Valores aceitos: varchar(50)<br><br>'
+          maxLength: 50
+          example: Limite fundos
+        rightSideLimit:
+          type: string
+          description: 'Limite lado direito. Valores aceitos: varchar(50)<br><br>'
+          maxLength: 50
+          example: Limite lado direito
+        leftSideLimit:
+          type: string
+          description: 'Limite lado esquerdo. Valores aceitos: varchar(50)<br><br>'
+          maxLength: 50
+          example: Limite lado esquerdo
+        chamferLimit:
+          type: string
+          description: 'Limite chanfro. Valores aceitos: varchar(50)<br><br>'
+          maxLength: 50
+          example: Limite chanfro
+        front:
+          type: number
+          description: 'Frente. Valores aceitos: numeric(16,6)<br><br>'
+          format: double
+          example: 10
+        back:
+          type: number
+          description: 'Fundo. Valores aceitos: numeric(16,6)<br><br>'
+          format: double
+          example: 10
+        rightSide:
+          type: number
+          description: 'Lado direito. Valores aceitos: numeric(16,6)<br><br>'
+          format: double
+          example: 15
+        leftSide:
+          type: number
+          description: 'Lado esquerdo. Valores aceitos: numeric(16,6)<br><br>'
+          format: double
+          example: 15
+        chamfer:
+          type: number
+          description: 'Chanfro. Valores aceitos: numeric(16,6)<br><br>'
+          format: double
+          example: 2
+    RealEstateUnitCharacteristicGetDocument:
+      description: Característica de unidade cadastrada.
+      required:
+        - description
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Código da característica da unidade.
+          format: int32
+          example: 1
+        description:
+          type: string
+          description: Descrição da característica da unidade.
+          example: Unidade com piscina
+    RealEstateUnitCharacteristicDocument:
+      description: Característica vinculada à unidade.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Identificador da característica.
+          format: int32
+          example: 1
+        quantity:
+          type: integer
+          description: Quantidade da característica.
+          format: int32
+          example: 2
+    RealEstateUnitSituationGetDocument:
+      description: Situação cadastrada da unidade.
+      required:
+        - description
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Código da situação da unidade.
+          format: int32
+          example: 1
+        description:
+          type: string
+          description: Situação da unidade.
+          example: Situação da unidade
+    UnitAddressDocument:
+      description: Documento base de endereço de unidade.
+      type: object
+      properties:
+        cityId:
+          type: integer
+          description: Código da cidade.
+          format: int32
+          example: 1
+        streetName:
+          type: string
+          maxLength: 100
+          description: Nome do logradouro.
+          example: Rua Exemplo
+        complement:
+          type: string
+          maxLength: 40
+          description: Complemento do endereço.
+          example: Apto 101
+        number:
+          type: string
+          maxLength: 10
+          description: Número.
+          example: '100'
+        neighborhood:
+          type: string
+          maxLength: 40
+          description: Bairro.
+          example: Centro
+        zipCode:
+          type: string
+          description: CEP. Formato NNNNN-NNN.
+          example: 12345-678
+        streetType:
+          type: integer
+          description: |-
+            Tipo de logradouro.<br><br> Valores aceitos:
+
+
+
+
+              `0` - Alameda
+              `1` - Avenida
+              `2` - Chácara
+              `3` - Colônia
+              `4` - Condomínio
+              `5` - Estância
+              `6` - Estrada
+              `7` - Fazenda
+              `8` - Praça
+              `9` - Prolongamento
+              `10` - Rodovia
+              `11` - Rua
+              `12` - Sítio
+              `13` - Travessa
+              `14` - Vicinal
+              `15` - Eqnp
+          format: int32
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+            - 10
+            - 11
+            - 12
+            - 13
+            - 14
+            - 15
+          example: 1
+    UnitEvaluationBaseDocument:
+      description: Documento base de avaliação da unidade.
+      type: object
+      properties:
+        evaluationDate:
+          type: string
+          format: date
+          description: Data da avaliação da unidade. Formato YYYY-MM-DD.
+          example: '2024-01-10'
+        evaluationPrice:
+          type: number
+          description: Valor avaliado da unidade.
+          example: 150000
+        saleValueDate:
+          type: string
+          format: date
+          description: Data do valor de venda da unidade. Formato YYYY-MM-DD.
+          example: '2024-02-10'
+        saleValuePrice:
+          type: number
+          description: Valor de venda sugerido da unidade.
+          example: 170000
+    UnitAddressWithCityDocument:
+      description: Documento de endereço de unidade com nome do município.
+      allOf:
+        - $ref: '#/components/schemas/UnitAddressDocument'
+        - type: object
+          properties:
+            city:
+              type: string
+              description: Nome do município do endereço.
+              example: Cidade Exemplo
+    Link:
+      description: Representa um link para outro recurso.
+      properties:
+        href:
+          description: URL do recurso associado
+          example: https://../v1/purchase-..
+          type: string
+        rel:
+          description: Nome da recurso associado
+          example: Recurso
+          type: string
+      type: object
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    UnitId:
+      description: Id unidade.
+      in: path
+      name: unitId
+      required: true
+      schema:
+        format: int32
+        type: integer
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1
+webhooks:
+  UNIT_CREATED:
+    post:
+      tags:
+        - Webhooks - Unidades de Imóveis
+      summary: Nova unidade criada
+      description: Sempre que uma unidade é criada
+      operationId: unitCreatedWebhook
+      requestBody:
+        description: Dados do evento de criação de unidade
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnitBasicWebhookPayload'
+            example:
+              unitId: 123
+        required: true
+      responses:
+        2XX:
+          description: O evento UNIT_CREATED foi processado com sucesso
+      x-audience:
+        - public
+  UNIT_UPDATED:
+    post:
+      tags:
+        - Webhooks - Unidades de Imóveis
+      summary: Unidade atualizada
+      description: Sempre que uma unidade é atualizada
+      operationId: unitUpdatedWebhook
+      requestBody:
+        description: Dados do evento de atualização de unidade
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnitBasicWebhookPayload'
+            example:
+              unitId: 123
+        required: true
+      responses:
+        2XX:
+          description: O evento UNIT_UPDATED foi processado com sucesso
+      x-audience:
+        - public
+  UNIT_REMOVED:
+    post:
+      tags:
+        - Webhooks - Unidades de Imóveis
+      summary: Unidade removida
+      description: Sempre que uma unidade é removida
+      operationId: unitRemovedWebhook
+      requestBody:
+        description: Dados do evento de remoção de unidade
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnitBasicWebhookPayload'
+            example:
+              unitId: 123
+        required: true
+      responses:
+        2XX:
+          description: O evento UNIT_REMOVED foi processado com sucesso
+      x-audience:
+        - public

@@ -1,0 +1,2431 @@
+openapi: 3.1.1
+info:
+  title: Contratos de Suprimentos
+  version: 1.24.0
+  description: APIs para Contratos de Suprimentos
+paths:
+  /supply-contracts:
+    get:
+      operationId: getSupplyContracts
+      x-section: Contratos
+      summary: Consultar contrato
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/getcontract/SupplyContractController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.getcontract.SupplyContractController
+        method: getContractById
+      x-original-file: contracts-v1.yaml
+      x-audience:
+        - public
+      description: >-
+        Retorna os dados do contrato filtrado pelos parâmetros informados.
+        (REST)
+      tags:
+        - Contratos
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+      responses:
+        '200':
+          description: Um contrato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetContractDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/all:
+    get:
+      operationId: getSupplyContractsAll
+      x-section: Contratos
+      summary: Consulta lista de contratos
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/getcontract/SupplyContractController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.getcontract.SupplyContractController
+        method: getContracts
+      x-original-file: contracts-v1.yaml
+      x-audience:
+        - public
+      description: >-
+        Retorna lista paginada de contratos no período informado e filtros
+        opcionais. (REST)
+      tags:
+        - Contratos
+      parameters:
+        - name: contractStartDate
+          in: query
+          description: >
+            Limite inferior para o valor de "data do contrato" dos contratos a
+            serem retornados. Contratos cuja "data do contrato" seja menor que o
+            limite inferior não serão retornados.
+
+
+            Formato: `yyyy-MM-dd`
+          required: true
+          schema:
+            description: Data do contrato
+            type: string
+            format: date
+            example: '2018-03-11'
+          example: '2022-01-01'
+        - name: contractEndDate
+          in: query
+          description: >
+            Limite superior para o valor de "data do contrato" dos contratos a
+            serem retornados. Contratos cuja "data do contrato" seja maior que o
+            limite superior não serão retornados.
+
+
+            Formato: `yyyy-MM-dd`
+          required: true
+          schema:
+            description: Data do contrato
+            type: string
+            format: date
+            example: '2018-03-11'
+          example: '2022-01-31'
+        - $ref: '#/components/parameters/companyId'
+        - $ref: '#/components/parameters/BuildingId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/statusApproval'
+        - $ref: '#/components/parameters/authorization'
+        - $ref: '#/components/parameters/consistency'
+      responses:
+        '200':
+          description: Uma lista de contratos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResultContractDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/attachments:
+    get:
+      operationId: getSupplyContractsAttachments
+      x-section: Anexos do Contrato
+      summary: Retorna o anexo do contrato
+      x-implementations:
+        - source: >-
+            sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/contractattachment/FindSupplyContractAttachmentContentFileController.java
+          name: >-
+            br.com.softplan.unic.contract.measurement.v1.controller.contract.contractattachment.FindSupplyContractAttachmentContentFileController
+          method: download
+        - source: >-
+            sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/contractattachment/FindSupplyContractAttachmentContentFileController.java
+          name: >-
+            br.com.softplan.unic.contract.measurement.v1.controller.contract.contractattachment.FindSupplyContractAttachmentContentFileController
+          method: downloadBase64
+      x-original-file: contracts-v1.yaml
+      x-audience:
+        - public
+      description: >-
+        Retorna o arquivo de anexo do contrato de suprimentos especificado.
+        (REST)
+      tags:
+        - Anexos do Contrato
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/contractAttachmentNumber'
+      responses:
+        '200':
+          description: >
+            Quando utilizada chamada padrão, retorna o anexo.<br/>
+
+            Quando definir no header Accept como `text/plain`, retorna o anexo
+            no formato base64
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+              example: <binary>
+            text/plain:
+              schema: {}
+              example: VGhpcyBpcyBhIGJhc2U2NC1lbmNvZGVkIGFyY2hpdmUu
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+    post:
+      operationId: postSupplyContractsAttachments
+      x-section: Anexos do Contrato
+      summary: Inclui anexo do contrato
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/contractattachment/SupplyContractAttachmentController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.contractattachment.SupplyContractAttachmentController
+        method: create
+      x-original-file: contracts-v1.yaml
+      x-audience:
+        - public
+      description: >-
+        Recebe um arquivo e descrição e cria um anexo associado ao contrato
+        especificado. (REST)
+      tags:
+        - Anexos do Contrato
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/description'
+      requestBody:
+        description: Deve enviar no body da requisição o arquivo a ser inserido
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  description: >
+                    Arquivo para inserção
+
+                    Tamanho máximo: 70 MB<br/>
+
+                    Tamanho máximo do nome do arquivo: 100 caracteres<br/>
+
+                    Somente 1 anexo por requisição. Caso envie mais de 1,
+                    somente o primeiro será aceito.
+                  example: <binary>
+      responses:
+        '201':
+          description: Anexo de contrato inserido com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/attachments/all:
+    get:
+      operationId: getSupplyContractsAtachmentsAll
+      x-section: Anexos do Contrato
+      summary: Lista de anexos do contrato
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/attachmentmetadata/SupplyContractAttachmentMetadataController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.attachmentmetadata.SupplyContractAttachmentMetadataController
+        method: findAttachments
+      x-original-file: contracts-v1.yaml
+      x-audience:
+        - public
+      description: Retorna lista paginada de anexos vinculados ao contrato. (REST)
+      tags:
+        - Anexos do Contrato
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+      responses:
+        '200':
+          description: Uma lista de anexos do contrato
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginationResultContractAttachmentMetadataDTO
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/authorize:
+    patch:
+      operationId: patchSupplyContractsAuthorize
+      x-section: Autorização do Contrato
+      summary: Autoriza um Contrato que está aguardando autorização.
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/authorization/AuthorizeContractController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.authorization.AuthorizeContractController
+        method: authorize
+      x-original-file: contracts-v1.yaml
+      x-audience:
+        - public
+      description: >-
+        Autoriza um Contrato que está aguardando autorização. Somente irá enviar
+        as notificações caso esteja configurado para 'Sempre enviar aviso ao
+        responsável' (REST)
+      tags:
+        - Autorização do Contrato
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+      requestBody:
+        description: Observação relacionada a autorização do contrato
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObservationDTO'
+      responses:
+        '204':
+          description: Autorizado com sucesso.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/buildings:
+    get:
+      operationId: getSupplyContractsBuildings
+      x-section: Obras
+      summary: Consultar obras do contrato com unidades construtivas
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/building/BuildingController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.building.BuildingController
+        method: getBuildings
+      x-original-file: contracts-v1.yaml
+      x-audience:
+        - public
+      description: >-
+        Retorna as obras do contrato e suas unidades construtivas, com
+        paginação. (REST)
+      tags:
+        - Obras
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Uma lista de obras do contrato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResultBuilding'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/addenda:
+    get:
+      operationId: getSupplyContractsBuildingsAddendum
+      x-section: Aditivos de Obras do Contrato
+      summary: Consultar aditivos de obras do contrato
+      x-implementation:
+        source: >-
+          sienge/SiengeEJB-MED/src/main/java/br/com/softplan/sienge/med/infrastructure/web/internalapi/aditivo/v1/AddendumController.java
+        name: >-
+          br.com.softplan.sienge.med.infrastructure.web.internalapi.aditivo.v1.AddendumController
+        method: getAddendum
+      x-original-file: contracts-v1.yaml
+      x-audience:
+        - public
+      description: Retorna os aditivos de obras do contrato, com paginação. (REST)
+      tags:
+        - Aditivos de Obras do Contrato
+      parameters:
+        - $ref: '#/components/parameters/DocumentId'
+        - $ref: '#/components/parameters/ContractNumber'
+        - $ref: '#/components/parameters/BuildingId'
+        - $ref: '#/components/parameters/AddendumNumber'
+        - $ref: '#/components/parameters/AddendumStartDate'
+        - $ref: '#/components/parameters/AddendumEndDate'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Uma lista de aditivos de obras do contrato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResultAddendum'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/addenda/items:
+    get:
+      operationId: getAddendumItems
+      x-section: Itens do Aditivo
+      summary: Consultar itens de aditivo da obra do contrato
+      x-implementation:
+        source: >-
+          sienge/SiengeEJB-MED/src/main/java/br/com/softplan/sienge/med/infrastructure/web/api/aditivo/v1/AddendumController.java
+        name: >-
+          br.com.softplan.sienge.med.infrastructure.web.api.aditivo.v1.AddendumController
+        method: getAddendumItems
+      x-original-file: contracts-v1.yaml
+      x-audience:
+        - public
+      description: >-
+        Retorna os itens do contrato que receberam modificações/aditivos em um
+        aditivo específico de uma obra, com paginação. (REST)
+      tags:
+        - Itens do Aditivo
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/RequiredBuildingId'
+        - $ref: '#/components/parameters/RequiredAddendumNumber'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Uma lista de itens de um aditivo específico de uma obra do contrato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResultAddendumItems'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/disapprove:
+    patch:
+      operationId: patchSupplyContractsDisapprove
+      x-section: Reprovação do Contrato
+      summary: Reprova um Contrato que está aguardando autorização.
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/authorization/DisapproveContractController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.authorization.DisapproveContractController
+        method: authorize
+      x-original-file: contracts-v1.yaml
+      x-audience:
+        - public
+      description: >-
+        Reprova um contrato que está aguardando autorização. Somente irá enviar
+        as notificações caso esteja configurado para 'Sempre enviar aviso ao
+        responsável' (REST)
+      tags:
+        - Reprovação do Contrato
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+      requestBody:
+        description: Observação relacionada a reprovação do contrato
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObservationDTO'
+      responses:
+        '204':
+          description: Reprovado com sucesso.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/items:
+    get:
+      operationId: getSupplyContractsItems
+      x-section: Itens do Contrato
+      summary: Retorna um array com os itens do contrato
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/getcontractitems/SupplyContractItemsController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.getcontractitems.SupplyContractItemsController
+        method: get
+      x-original-file: contracts-v1.yaml
+      x-audience:
+        - public
+      description: >-
+        Retorna um array com os itens do contrato identificados pelo contrato
+        (documentId, contractNumber) e pertencentes a uma planilha (buildingId,
+        buildingUnitId). (REST)
+      tags:
+        - Itens do Contrato
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/RequiredBuildingId'
+        - name: buildingUnitId
+          in: query
+          description: >-
+            Código da unidade construtiva da obra sendo especificada (identifica
+            a planilha)
+          required: true
+          schema:
+            description: Código da unidade construtiva
+            example: 123
+            format: int32
+            type: integer
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: >-
+            Retorna um array com os itens do contrato pertencentes a obra e
+            unidade construtiva. Caso não existam, retorna um array vazio.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResultContractItemsDto'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/items/purchase-requests:
+    get:
+      operationId: getSupplyContractsItemsPurchaseRequests
+      tags:
+        - Contratos de Suprimentos
+      summary: Itens de Solicitação atendidas.
+      description: >-
+        Retorna a lista de Solicitações de Compra vinculadas a um Item
+        específico de um Contrato de Suprimentos, agrupadas por Solicitação,
+        Item de Solicitação e Categoria, com a soma da quantidade atendida de
+        cada agrupamento. (REST)
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/RequiredBuildingId'
+        - name: buildingUnitId
+          in: query
+          description: >-
+            Código da Unidade Construtiva da Obra vinculada ao Contrato de
+            Suprimentos.
+          required: true
+          schema:
+            description: Código da unidade construtiva
+            example: 123
+            format: int32
+            type: integer
+        - name: itemNumber
+          in: query
+          description: Número do Item do Contrato de Suprimentos.
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - $ref: '#/components/parameters/Limit'
+          description: >-
+            Quantidade máxima de resultados a serem retornados. Valor default é
+            100 e o valor máximo permitido é 200.
+        - $ref: '#/components/parameters/Offset'
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default é 0.
+      responses:
+        '200':
+          description: Operação bem sucedida.
+          content:
+            application/json:
+              example:
+                resultSetMetadata:
+                  count: 1
+                  offset: 0
+                  limit: 100
+                results:
+                  - purchaseRequestId: 10
+                    purchaseRequestItemId: 1
+                    categoryId: 5
+                    attendedQuantity: 2.5
+              schema:
+                type: object
+                required:
+                  - resultSetMetadata
+                  - results
+                properties:
+                  resultSetMetadata:
+                    $ref: '#/components/schemas/ResultSetMetadata'
+                  results:
+                    type: array
+                    description: >-
+                      Lista de Solicitações de Compra de origem do Item do
+                      Contrato de Suprimentos.
+                    example:
+                      - purchaseRequestId: 10
+                        purchaseRequestItemId: 1
+                        categoryId: 5
+                        attendedQuantity: 2.5
+                    items:
+                      $ref: '#/components/schemas/PurchaseRequestOrigemDto'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: contracts-v1.yaml
+      x-audience:
+        - public
+components:
+  schemas:
+    GetContractDTO:
+      description: Objeto contendo os dados do Contrato especificado.
+      allOf:
+        - $ref: '#/components/schemas/CommonContractDTO'
+        - type: object
+          properties:
+            laborBalance:
+              description: Saldo dos valores de mão de obra das obras associadas
+              type: number
+              example: 1200.15
+            materialBalance:
+              description: Saldo dos valores de material das obras associadas
+              type: number
+              example: 1100.25
+            securityDeposit:
+              $ref: '#/components/schemas/SecurityDepositDTO'
+      example:
+        companyId: 57
+        consistent: false
+        contractDate: '2018-03-11'
+        contractNumber: '1234'
+        contractType: CONTRACTOR
+        customerId: 123
+        documentId: CT
+        endDate: '2020-05-13'
+        internalNotes: Uma observação do contrato
+        isAuthorized: false
+        itemType: RESOURCE
+        links:
+          - href: https://<tenant>.sienge.com.br/v1/customers/<costumerId>
+            rel: customer
+        object: Contrato de prestação de serviços para execução de alvenarias.
+        registrationType: COMPLETE
+        responsibleId: NOME
+        responsibleName: NOME SOBRENOME
+        startDate: '2019-04-12'
+        status: PENDING
+        statusApproval: APPROVED
+        supplierId: 123
+        totalLaborValue: 1455.15
+        totalMaterialValue: 1155.15
+        priceAgreementId: 1
+        priceAgreementVersion: 1
+        contractTemplateId: 1
+        contractTemplateName: Contrato de prestação de serviços
+        disapprovalReason:
+          - valor total do contrato excede o limite permitido para o usuário
+          - >-
+            quantidade já apropriada juntamente com a quantidade contratada está
+            acima da quantidade orçada para algum insumo do contrato
+          - preço está acima do preço autorizado para algum insumo
+          - manutenção de aditivos de contratos
+          - valor comprometido excedeu o valor orçado em alguma apropriação
+        currentAuthorizationLevel: FIRST_LEVEL
+        laborBalance: 1200.15
+        materialBalance: 1100.25
+        securityDeposit:
+          billIssueDate: DUE_DATE
+          considerContractItemPaymentCategories: true
+          documentId: CAU
+          dueDate: '2018-03-11'
+          hasDirectBillingDiscount: true
+          hasTaxWithhold: true
+          incidenceOver: MATERIAL_AND_LABOUR
+          indexerId: 4
+          paymentCategoryId: '2012011'
+          securityDepositBalance: 1300.35
+          securityDepositPercentage: 12.15
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/getcontract/GetContractDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.getcontract.GetContractDTO
+    PaginationResultContractDTO:
+      description: Resultados paginados da busca de contratos de suprimentos.
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          description: >-
+            Lista de contratos de suprimentos retornados como resultado da
+            pesquisa.
+          type: array
+          items:
+            $ref: '#/components/schemas/ContractDTO'
+      example:
+        resultSetMetadata:
+          count: 200
+          offset: 0
+          limit: 100
+        results:
+          - companyId: 57
+            consistent: false
+            contractDate: '2018-03-11'
+            contractNumber: '1234'
+            contractType: CONTRACTOR
+            customerId: 123
+            documentId: CT
+            endDate: '2020-05-13'
+            internalNotes: Uma observação do contrato
+            isAuthorized: false
+            itemType: RESOURCE
+            links:
+              - href: https://<tenant>.sienge.com.br/v1/customers/<costumerId>
+                rel: customer
+            object: Contrato de prestação de serviços para execução de alvenarias.
+            registrationType: COMPLETE
+            responsibleId: NOME
+            responsibleName: NOME SOBRENOME
+            startDate: '2019-04-12'
+            status: PENDING
+            statusApproval: APPROVED
+            supplierId: 123
+            totalLaborValue: 1455.15
+            totalMaterialValue: 1155.15
+            priceAgreementId: 1
+            priceAgreementVersion: 1
+            contractTemplateId: 1
+            contractTemplateName: Contrato de prestação de serviços
+            disapprovalReason:
+              - valor total do contrato excede o limite permitido para o usuário
+              - >-
+                quantidade já apropriada juntamente com a quantidade contratada
+                está acima da quantidade orçada para algum insumo do contrato
+              - preço está acima do preço autorizado para algum insumo
+              - manutenção de aditivos de contratos
+              - valor comprometido excedeu o valor orçado em alguma apropriação
+            currentAuthorizationLevel: FIRST_LEVEL
+            buildings:
+              - buildingId: 101
+                name: Obra Alphapolis
+            companyName: Empresa XYZ
+            statusId: '1'
+            supplierName: Fornecedor ABC
+    PaginationResultContractAttachmentMetadataDTO:
+      description: >-
+        Objeto contendo os metadados da resposta e os seus respectivos
+        resultados, sendo estes um array de Anexos do Contrato
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          description: Lista de Anexos do Contrato retornados como resultado da requisição.
+          type: array
+          items:
+            $ref: '#/components/schemas/ContractAttachmentMetadataDTO'
+      example:
+        resultSetMetadata:
+          count: 200
+          offset: 0
+          limit: 100
+        results:
+          - contractAttachmentNumber: 1
+            contractNumber: '1234'
+            description: Anexo contendo um contrato de serviços.
+            documentId: CT
+            name: contrato_servico.pdf
+    ObservationDTO:
+      description: >-
+        Objeto contendo a observação relacionada a aprovação ou reprovação do
+        contrato
+      properties:
+        observation:
+          description: >-
+            Observação que será concatenada as observações de autorização e
+            desautorização.
+          example: Texto enviado via Api
+          maxLength: 300
+          type: string
+      type: object
+      x-implementation:
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.authorization.ObservationDTO
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/authorization/ObservationDTO.java
+    PaginationResultBuilding:
+      description: >-
+        Resultados paginados da busca de obras do contrato de suprimentos
+        especificado.
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          description: >-
+            Lista de obras do contrato de suprimentos retornadas como resultado
+            da pesquisa.
+          type: array
+          items:
+            $ref: '#/components/schemas/BuildingDTO'
+      example:
+        resultSetMetadata:
+          count: 200
+          offset: 0
+          limit: 100
+        results:
+          - buildingId: 101
+            buildingIdView: 123
+            buildingName: Obra Alphapolis
+            constructUnits:
+              - areaQuantity: 484.7895
+                id: 10
+                name: Torre A
+                status: L
+            costCenterId: 77
+            costCenterIdView: 1001
+            departmentId: 5
+    PaginationResultAddendum:
+      description: >-
+        Resultados paginados da busca de aditivos de obra do contrato de
+        suprimentos.
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          description: >-
+            Lista de aditivos de obra do contrato de suprimentos retornados como
+            resultado da pesquisa.
+          type: array
+          items:
+            $ref: '#/components/schemas/AddendumDTO'
+      example:
+        resultSetMetadata:
+          count: 200
+          offset: 0
+          limit: 100
+        results:
+          - priceAgreementId: 12345
+            priceAgreementVersion: 1
+            registrationDate: '2024-01-01T14:20:00.000-03:00'
+            registrationUserId: A123
+            registrationUserName: João Silva
+            lastModificationDate: '2024-01-01T14:20:00.000-03:00'
+            lastModificationUserId: M123
+            lastModificationUserName: Maria Santos
+            addendumDate: '2024-01-01'
+            addendumDescription: Aditivo de prazo - 30 dias
+            totalLaborValue: 15000.5
+            totalMaterialValue: 25000.75
+            documentId: CT
+            contractNumber: '1234'
+            buildingId: 100
+            addendumNumber: 1
+    PaginationResultAddendumItems:
+      description: >-
+        Resultados paginados da busca de itens de um aditivo específico de uma
+        obra do contrato.
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          description: >-
+            Lista de itens de um aditivo específico de uma obra do contrato
+            retornados como resultado da pesquisa.
+          type: array
+          items:
+            $ref: '#/components/schemas/AddendumItemDTO'
+      example:
+        resultSetMetadata:
+          count: 200
+          offset: 0
+          limit: 100
+        results:
+          - buildingUnitId: 123
+            id: 205
+            buildingUnitName: Unidade 123
+            level: 4
+            wbsCode: 01.001.000.001
+            auxiliaryCode: I205B
+            resourceId: 1001
+            workItemId: 100
+            description: Descrição do item
+            detailId: 1
+            detailDescription: Detalhe x
+            trademarkId: 1
+            trademarkDescription: Marca y
+            additionalInformation: Informações adicionais
+            unitOfMeasure: vb
+            initialQuantity: 50
+            quantityChange: 5.5
+            initialMeasuredQuantity: 30
+            initialMaterialPrice: 450
+            newMaterialPrice: 455
+            initialLaborPrice: 85
+            newLaborPrice: 90
+            materialCostChange: 2502.5
+            laborCostChange: 495
+            totalCostChange: 2997.5
+    PaginationResultContractItemsDto:
+      description: >-
+        Objeto contendo os metadados da resposta da requisição para obtenção de
+        Itens do Contrato e os seus respectivos resultados
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          description: Lista de Itens do Contrato retornados como resultado da requisição.
+          type: array
+          items:
+            $ref: '#/components/schemas/GetContractItemDto'
+      example:
+        resultSetMetadata:
+          count: 200
+          offset: 0
+          limit: 100
+        results:
+          - additionalInformation: null
+            auxiliaryCode: M1354
+            budgetCategories:
+              - paymentCategoryId: '2010101'
+                percentage: 100
+            buildingAppropriations:
+              - buildingUnitId: 2
+                measuredQuantity: 932.2534
+                percentage: 100
+                quantity: 1340.8374
+                sheetItemId: 42
+                wbsCode: 01.001.001.001
+            description: Contratação de serviços de pavimentação.
+            detailDescription: CP II E 32
+            detailId: 321
+            hasAddendum: true
+            id: 555
+            laborPrice: 9.0005
+            level: 4
+            materialPrice: 16.2314
+            quantity: 3000.2348
+            resourceId: 1001
+            trademarkDescription: ACME
+            trademarkId: 0
+            unitOfMeasure: kg
+            wbsCode: 01.001.000.001
+            workItemId: 100
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    PurchaseRequestOrigemDto:
+      description: Dados Solicitação de Compras
+      properties:
+        attendedQuantity:
+          description: >-
+            Soma da quantidade atendida para a combinação de Solicitação, Item
+            de Solicitação e Categoria.
+          example: 2.5
+          format: double
+          type: number
+        categoryId:
+          description: >-
+            Código da Categoria da Solicitação de Compra. Pode ser nulo quando a
+            Solicitação não possui Categoria associada.
+          example: 5
+          format: int32
+          nullable: true
+          type: integer
+        purchaseRequestId:
+          description: Número da Solicitação de Compra de origem.
+          example: 10
+          format: int32
+          type: integer
+        purchaseRequestItemId:
+          description: Número do Item da Solicitação de Compra de origem.
+          example: 1
+          format: int32
+          type: integer
+      type: object
+    CommonContractDTO:
+      description: Objeto contendo dados comuns do Contrato
+      type: object
+      properties:
+        companyId:
+          description: Código da empresa
+          example: 123
+          format: int32
+          type: integer
+        consistent:
+          description: >-
+            Retornará `true` se o contrato estiver consistente, caso contrário
+            retornará `false`.
+          type: boolean
+          example: false
+        contractDate:
+          description: Data do contrato
+          type: string
+          format: date
+          example: '2018-03-11'
+        contractNumber:
+          description: Número do contrato.
+          example: '1234'
+          type: string
+        contractType:
+          description: |
+            Código da situação do contrato
+            - CONTRACTOR - Contratante
+            - CONTRACTED - Contratado
+          type: string
+          enum:
+            - CONTRACTOR
+            - CONTRACTED
+          example: CONTRACTOR
+        customerId:
+          description: Identificador do cliente.
+          type: integer
+          example: 123
+        documentId:
+          description: Código do documento.
+          example: CT
+          type: string
+        endDate:
+          description: Data de término do contrato
+          type: string
+          format: date
+          example: '2020-05-13'
+        internalNotes:
+          description: Observações internas do contrato
+          type: string
+          example: Uma observação do contrato
+        isAuthorized:
+          description: >-
+            Retornará `true` se o contrato estiver autorizado, caso contrário
+            retornará `false`.
+          type: boolean
+          example: false
+        itemType:
+          description: |
+            Tipo de item do contrato, podendo ser de Insumo ou de Serviço
+            - `RESOURCE` - Insumo
+            - `WORKITEM` - Serviço
+          type: string
+          enum:
+            - RESOURCE
+            - WORKITEM
+          example: RESOURCE
+        links:
+          description: Links para acesso a outros recursos
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        object:
+          description: Objeto do contrato
+          type: string
+          example: Contrato de prestação de serviços para execução de alvenarias.
+        registrationType:
+          description: >
+            Tipo de cadastro atual do contrato, podendo ser completo ou rápido.
+
+            Um contrato rápido que foi convertido para completo será apresentado
+            apenas como contrato completo
+
+            - `COMPLETE` - Contrato completo
+
+            - `FAST` - Contrato rápido
+          type: string
+          enum:
+            - COMPLETE
+            - FAST
+          example: COMPLETE
+        responsibleId:
+          description: Identificador do responsável pelo contrato
+          type: string
+          example: NOME
+        responsibleName:
+          description: Nome do responsável pelo contrato
+          type: string
+          example: NOME SOBRENOME
+        startDate:
+          description: Data de início do contrato
+          type: string
+          format: date
+          example: '2019-04-12'
+        status:
+          $ref: '#/components/schemas/ContractStatus'
+        statusApproval:
+          description: >
+            Código da situação de aprovação do contrato. Todo contrato nasce com
+            situação *APPROVED* e somente será alterado para *DISAPPROVED* se
+            for reprovado.
+
+            - `APPROVED` - Aprovado
+
+            - `DISAPPROVED` - Reprovado
+          type: string
+          enum:
+            - APPROVED
+            - DISAPPROVED
+          example: APPROVED
+        supplierId:
+          description: Identificador do fornecedor.
+          type: integer
+          format: int32
+          example: 123
+        totalLaborValue:
+          description: Soma dos totais de mão de obra das obras associadas
+          type: number
+          example: 1455.15
+        totalMaterialValue:
+          description: Soma dos totais de material das obras associadas
+          type: number
+          example: 1155.15
+        priceAgreementId:
+          type: integer
+          format: int32
+          example: 1
+          description: Número do acordo de preços
+        priceAgreementVersion:
+          type: integer
+          format: int32
+          example: 1
+          description: Versão do acordo de preços
+        contractTemplateId:
+          type: integer
+          format: int32
+          example: 1
+          description: Código do tipo de contrato
+        contractTemplateName:
+          type: string
+          example: Contrato de prestação de serviços
+          description: Descrição do tipo de contrato
+        disapprovalReason:
+          type: array
+          description: Lista contendo motivos de autorização do contrato
+          items:
+            type: string
+        currentAuthorizationLevel:
+          type: string
+          description: >-
+            Alçada atual do contrato. [ADDENDUM, FIRST_LEVEL, SECOND_LEVEL,
+            THIRD_LEVEL, FINAL_APPROVAL, NONE]. Caso a empresa não utilize
+            controle de alçadas, contratos pendentes da ‘alçada única’ serão
+            considerados como pendentes de FIRST_LEVEL
+          example: FIRST_LEVEL
+          enum:
+            - ADDENDUM
+            - FIRST_LEVEL
+            - SECOND_LEVEL
+            - THIRD_LEVEL
+            - FINAL_APPROVAL
+            - NONE
+    SecurityDepositDTO:
+      description: Dados da caução.
+      type: object
+      properties:
+        billIssueDate:
+          description: Data de emissão do título.
+          type: string
+          enum:
+            - DUE_DATE
+            - BILL_REGISTRATION_DATE
+          example: DUE_DATE
+        considerContractItemPaymentCategories:
+          description: Deve apropriar conforme contas dos itens do contrato.
+          type: boolean
+          example: true
+        documentId:
+          description: Código do (tipo de) documento.
+          type: string
+          example: CAU
+        dueDate:
+          description: |
+            Data de vencimento
+
+            Formato `yyyy-MM-dd`.
+          type: string
+          format: date
+          example: '2018-03-11'
+        hasDirectBillingDiscount:
+          description: Considerar desconto de faturamento direto no cálculo da caução.
+          type: boolean
+          example: true
+        hasTaxWithhold:
+          description: Haverá retenções de impostos sobre os títulos da caução.
+          type: boolean
+          example: true
+        incidenceOver:
+          description: Incidência do caução sobre o preço de material e/ou mão de obra.
+          type: string
+          enum:
+            - MATERIAL_AND_LABOUR
+            - MATERIAL
+            - LABOUR
+          example: MATERIAL_AND_LABOUR
+        indexerId:
+          description: Código do indexador.
+          type: integer
+          example: 4
+        paymentCategoryId:
+          description: Identificador da conta do plano financeiro.
+          type: string
+          example: '2012011'
+        securityDepositBalance:
+          description: Saldo da caução
+          type: number
+          example: 1300.35
+        securityDepositPercentage:
+          description: Percentual do caução.
+          type: number
+          example: 12.15
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/getcontract/SecurityDepositDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.getcontract.SecurityDepositDTO
+    ContractDTO:
+      description: Objeto contendo os dados do Contrato
+      allOf:
+        - $ref: '#/components/schemas/CommonContractDTO'
+        - type: object
+          properties:
+            buildings:
+              description: lista de obras do contrato.
+              type: array
+              items:
+                $ref: '#/components/schemas/ContractBuildingDTO'
+            companyName:
+              description: Nome da empresa.
+              type: string
+              example: Empresa XYZ
+            statusId:
+              $ref: '#/components/schemas/ContractStatusNumeric'
+            supplierName:
+              description: Nome do fornecedor.
+              type: string
+              example: Fornecedor ABC
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/getcontract/ContractDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.getcontract.ContractDTO
+    ContractAttachmentMetadataDTO:
+      description: Dados do anexo do contrato.
+      type: object
+      properties:
+        contractAttachmentNumber:
+          description: Número do anexo do Contrato.
+          type: integer
+          example: 1
+        contractNumber:
+          description: Número do contrato.
+          example: '1234'
+          type: string
+        description:
+          description: Descrição do anexo do Contrato.
+          type: string
+          example: Anexo contendo um contrato de serviços.
+        documentId:
+          description: Código do documento.
+          example: CT
+          type: string
+        name:
+          description: Nome do arquivo de anexo do Contrato.
+          type: string
+          example: contrato_servico.pdf
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/attachmentmetadata/ContractAttachmentMetadataDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.attachmentmetadata.ContractAttachmentMetadataDTO
+    BuildingDTO:
+      description: Objeto contendo os dados de uma obra
+      type: object
+      properties:
+        buildingId:
+          description: Código da obra
+          example: 100
+          format: int32
+          minimum: 0
+          type: integer
+        buildingIdView:
+          description: Código da Obra no Sienge
+          type: integer
+          format: int32
+          example: 123
+        buildingName:
+          description: Nome da obra
+          example: Obra Exemplo
+          type: string
+        constructUnits:
+          description: Lista de unidades contrutiva
+          type: array
+          items:
+            $ref: '#/components/schemas/ConstructUnitDTO'
+        costCenterId:
+          description: Identificador (código interno) do Centro de Custo
+          type: integer
+          format: int32
+          example: 77
+        costCenterIdView:
+          description: Código do Centro de Custo no Sienge
+          type: integer
+          format: int32
+          example: 1001
+        departmentId:
+          description: código do Departamento
+          type: integer
+          format: int32
+          example: 5
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/building/BuildingDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.building.BuildingDTO
+    AddendumDTO:
+      description: Dados de um aditivo de obra do contrato
+      type: object
+      properties:
+        priceAgreementId:
+          description: Identificador do acordo de preço
+          type: integer
+          format: int32
+          example: 12345
+        priceAgreementVersion:
+          description: Versão do acordo de preço
+          type: integer
+          format: int32
+          example: 1
+        registrationDate:
+          description: Data de cadastro do aditivo
+          type: string
+          example: '2024-01-01T14:20:00.000-03:00'
+        registrationUserId:
+          description: Identificador do usuário que cadastrou o aditivo
+          type: string
+          example: A123
+        registrationUserName:
+          description: Nome do usuário que cadastrou o aditivo
+          type: string
+          example: João Silva
+        lastModificationDate:
+          description: Data da última modificação
+          type: string
+          example: '2024-01-01T14:20:00.000-03:00'
+        lastModificationUserId:
+          description: Identificador do usuário que fez a última modificação
+          type: string
+          example: M123
+        lastModificationUserName:
+          description: Nome do usuário que fez a última modificação
+          type: string
+          example: Maria Santos
+        addendumDate:
+          description: Data do aditivo
+          type: string
+          format: date
+          example: '2024-01-01'
+        addendumDescription:
+          description: Descrição do aditivo
+          type: string
+          example: Aditivo de prazo - 30 dias
+        totalLaborValue:
+          description: Valor total de mão de obra
+          type: number
+          format: double
+          example: 15000.5
+        totalMaterialValue:
+          description: Valor total de material
+          type: number
+          format: double
+          example: 25000.75
+        documentId:
+          description: Identificador do documento
+          type: string
+          example: CT
+        contractNumber:
+          description: Número do contrato
+          type: string
+          example: '1234'
+        buildingId:
+          description: Identificador da obra
+          type: integer
+          format: int32
+          example: 100
+        addendumNumber:
+          description: Número do aditivo
+          type: integer
+          format: int32
+          example: 1
+      x-implementation:
+        source: >-
+          sienge/SiengeEJB-MED/src/main/java/br/com/softplan/sienge/med/infrastructure/web/api/aditivo/v1/AditivoResponseDto.java
+        name: >-
+          br.com.softplan.sienge.med.infrastructure.web.api.aditivo.v1.AditivoResponseDto
+    AddendumItemDTO:
+      description: Dados de itens de um aditivo específico de uma obra do contrato
+      type: object
+      properties:
+        buildingUnitId:
+          description: Código da unidade construtiva
+          type: integer
+          format: int32
+          example: 123
+        id:
+          description: Identificador do item
+          type: integer
+          format: int32
+          example: 205
+        buildingUnitName:
+          description: Nome da unidade construtiva
+          type: string
+          example: Unidade 123
+        level:
+          description: Nível do item na planilha
+          type: integer
+          format: int32
+          example: 4
+        wbsCode:
+          description: Referência do item
+          type: string
+          example: 01.001.000.001
+        auxiliaryCode:
+          description: Código auxiliar do item
+          type: string
+          example: I205B
+        resourceId:
+          description: >-
+            Identificador do insumo. Preenchido apenas se o tipo de item do
+            contrato for insumo.
+          type: integer
+          format: int32
+          example: 1001
+        workItemId:
+          description: >-
+            Identificador do serviço. Preenchido apenas se o tipo de item do
+            contrato for serviço.
+          type: integer
+          format: int32
+          example: 100
+        description:
+          description: Descrição do item
+          type: string
+          example: Descrição do item
+        detailId:
+          description: Identificador do detalhe
+          type: integer
+          format: int32
+          example: 1
+        detailDescription:
+          description: Descrição do detalhe
+          type: string
+          example: Detalhe x
+        trademarkId:
+          description: Identificador da marca
+          type: integer
+          format: int32
+          example: 1
+        trademarkDescription:
+          description: Descrição da marca
+          type: string
+          example: Marca y
+        additionalInformation:
+          description: Informações adicionais do item
+          type: string
+          example: Informações adicionais
+        unitOfMeasure:
+          description: Unidade de medida
+          type: string
+          example: vb
+        initialQuantity:
+          description: Quantidade inicial, com precisão de até 2 casas decimais.
+          type: number
+          format: double
+          example: 50
+        quantityChange:
+          description: Alteração de quantidade, com precisão de até 2 casas decimais.
+          type: number
+          format: double
+          example: 5.5
+        initialMeasuredQuantity:
+          description: Quantidade medida inicial, com precisão de até 2 casas decimais.
+          type: number
+          format: double
+          example: 30
+        initialMaterialPrice:
+          description: Preço inicial de material, com precisão de até 4 casas decimais.
+          type: number
+          format: double
+          example: 450
+        newMaterialPrice:
+          description: Novo preço de material, com precisão de até 4 casas decimais.
+          type: number
+          format: double
+          example: 455
+        initialLaborPrice:
+          description: Preço inicial de mão de obra, com precisão de até 4 casas decimais.
+          type: number
+          format: double
+          example: 85
+        newLaborPrice:
+          description: Novo preço de mão de obra, com precisão de até 4 casas decimais.
+          type: number
+          format: double
+          example: 90
+        materialCostChange:
+          description: >-
+            Alteração no custo de material, com precisão de até 2 casas
+            decimais.
+          type: number
+          format: double
+          example: 2502.5
+        laborCostChange:
+          description: >-
+            Alteração no custo de mão de obra, com precisão de até 2 casas
+            decimais.
+          type: number
+          format: double
+          example: 495
+        totalCostChange:
+          description: Alteração no custo total, com precisão de até 2 casas decimais.
+          type: number
+          format: double
+          example: 2997.5
+      x-implementation:
+        source: >-
+          sienge/SiengeEJB-MED/src/main/java/br/com/softplan/sienge/med/infrastructure/web/api/aditivo/v1/ItemAditivoResponseDTO.java
+        name: >-
+          br.com.softplan.sienge.med.infrastructure.web.api.aditivo.v1.ItemAditivoResponseDTO
+    GetContractItemDto:
+      description: Objeto contendo informações sobre um item do contrato
+      type: object
+      properties:
+        additionalInformation:
+          description: >-
+            Complemento do contrato. Esse valor só estará presente em itens de
+            contrato do tipo serviço.
+          oneOf:
+            - type: string
+            - type: 'null'
+          example: null
+        auxiliaryCode:
+          description: Código auxiliar do item de contrato.
+          type: string
+          example: M1354
+        budgetCategories:
+          description: Apropriações financeiras do item de contrato.
+          type: array
+          items:
+            $ref: '#/components/schemas/BudgetCategories'
+        buildingAppropriations:
+          description: >-
+            Apropriações de obra do item de contrato. Esse conjunto de itens
+            representa um rateio da quantidade contratada do item de contrato,
+            entre um ou  mais itens do orçamento da obra do centro de custo do
+            contrato. Os itens de orçamento referenciados em cada item de
+            apropriação devem  ser do nível (na estrutura analítica do
+            orçamento) correspondente  ao nível de apropriação definido na
+            respectiva obra  (por exemplo: etapa, subetapa, serviço etc.). 
+            Importante: se a obra do contrato possuir nível de apropriação
+            definido como "obra" o array estará vazio.
+          type: array
+          items:
+            $ref: '#/components/schemas/BuildingAppropriation'
+        description:
+          description: Descrição do item de contrato.
+          type: string
+          example: Contratação de serviços de pavimentação.
+        detailDescription:
+          description: Descrição do detalhe do item de contrato.
+          type: string
+          example: CP II E 32
+        detailId:
+          description: Código do detalhe do insumo no item de contrato.
+          type: integer
+          format: int32
+          example: 321
+        hasAddendum:
+          description: Indica se o item de contrato possui aditivo.
+          type: boolean
+          example: true
+        id:
+          description: código do item de contrato.
+          type: integer
+          example: 555
+        laborPrice:
+          description: Preço unitário de mão de obra com precisão de 4 casas.
+          type: number
+          example: 9.0005
+        level:
+          description: >-
+            Nível hierárquico do item na planilha, partindo de 0 até o nível do
+            serviço.
+          type: integer
+          example: 4
+        materialPrice:
+          description: Preço unitário de material com precisão de 4 casas.
+          type: number
+          example: 16.2314
+        quantity:
+          description: Quantidade do item de contrato com precisão de 4 casas
+          type: number
+          example: 3000.2348
+        resourceId:
+          description: Código do insumo. Null quando for um item de contrato de serviço.
+          type: integer
+          example: 1001
+        trademarkDescription:
+          description: Descrição da marca do insumo no item de contrato.
+          type: string
+          example: ACME
+        trademarkId:
+          description: Código da marca do insumo no item de contrato.
+          type: integer
+          format: int32
+          example: 0
+        unitOfMeasure:
+          description: Símbolo da unidade de medida.
+          type: string
+          example: kg
+        wbsCode:
+          description: >-
+            Código de referência do item representando sua posição na planilha
+            de contrato.
+          type: string
+          example: 01.001.000.001
+        workItemId:
+          description: Código do serviço. Null quando for um item de contrato de insumo.
+          type: integer
+          example: 100
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/getcontractitems/GetContractItemDto.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.getcontractitems.GetContractItemDto
+    Reference:
+      description: Objeto contendo o nome do recurso associado e a URL deste
+      type: object
+      properties:
+        href:
+          allOf:
+            - description: URL do recurso associado
+              example: https://../v1/purchase-..
+              type: string
+            - examples:
+                - https://<tenant>.sienge.com.br/v1/customers/<costumerId>
+                - https://<tenant>.sienge.com.br/v1/creditors/<creditorId>
+                - https://<tenant>.sienge.com.br/v1/companies/<companyId>
+              example: https://<tenant>.sienge.com.br/v1/customers/<costumerId>
+        rel:
+          allOf:
+            - description: Nome da recurso associado
+              example: Recurso
+              type: string
+            - enum:
+                - customer
+                - creditor
+                - company
+              example: customer
+      x-implementation:
+        source: >-
+          sienge/SiengeEJB/src/main/java/br/com/softplan/sienge/sie/common/Reference.java
+        name: br.com.softplan.sienge.sie.common.Reference
+    ContractStatus:
+      description: |
+        Situação do contrato.
+        - `PENDING` - Pendente
+        - `PARTIALLY_MEASURED` - Parcialmente Medido
+        - `FULLY_MEASURED` - Totalmente Medido
+        - `RESCINDED` - Revogado
+        - `COMPLETED` - Concluído
+      type: string
+      enum:
+        - PENDING
+        - PARTIALLY_MEASURED
+        - FULLY_MEASURED
+        - RESCINDED
+        - COMPLETED
+      example: PENDING
+      x-implementation:
+        source: >-
+          sienge/SiengeEJB-MED/src/main/java/br/com/softplan/unic/med/contract/domain/ContractStatus.java
+        name: br.com.softplan.unic.med.contract.domain.ContractStatus
+    ContractBuildingDTO:
+      description: Objeto contendo dados resumidos de uma obra (buildingId & name)
+      type: object
+      properties:
+        buildingId:
+          description: Código da obra
+          example: 100
+          format: int32
+          minimum: 0
+          type: integer
+        name:
+          description: Nome da obra
+          example: Obra Exemplo
+          type: string
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/getcontract/BuildingDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.getcontract.BuildingDTO
+    ContractStatusNumeric:
+      description: |
+        Situação do contrato.
+        - `1` - Pendente
+        - `2` - Parcialmente Medido
+        - `3` - Totalmente Medido
+        - `4` - Revogado
+        - `5` - Concluído
+      type: string
+      enum:
+        - '1'
+        - '2'
+        - '3'
+        - '4'
+        - '5'
+      example: '1'
+    ConstructUnitDTO:
+      description: Objeto contendo os dados da Unidade Construtiva
+      type: object
+      properties:
+        areaQuantity:
+          description: Quantidade da Área, com precisão de até 4 casas decimais.
+          type: number
+          example: 484.7895
+        id:
+          description: Identificador da Unidade Construtiva.
+          type: integer
+          format: int32
+          example: 10
+        name:
+          description: Nome da Unidade Construtiva.
+          type: string
+          example: Torre A
+        status:
+          description: |
+            Código situação da Unidade Construtiva.
+            - `L` - Liberada
+            - `B` - Bloqueada
+          type: string
+          enum:
+            - L
+            - B
+          example: L
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/building/ConstructUnitDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.building.ConstructUnitDTO
+    BudgetCategories:
+      description: Objeto contendo apropriações financeiras do item de um contrato
+      type: object
+      properties:
+        paymentCategoryId:
+          description: Código do plano financeiro (sem máscara)
+          type: string
+          example: '2010101'
+        percentage:
+          description: >-
+            Percentual apropriado do item do contrato, com precisão de até 12
+            casas decimais.
+          type: number
+          format: double
+          example: 100
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/getcontractitems/GetContractItemDto.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.getcontractitems.GetContractItemDto.BudgetCategories
+    BuildingAppropriation:
+      description: Objeto contendo apropriações de obra do item de contrato
+      type: object
+      properties:
+        buildingUnitId:
+          description: Código da unidade construtiva
+          example: 123
+          format: int32
+          type: integer
+        measuredQuantity:
+          description: >-
+            Quantidade medida do Item de Contrato que foi apropriada para o
+            respectivo item de orçamento nas apropriações de obra, sendo um
+            número com precisão de até 4 casas decimais.
+          type: number
+          example: 932.2534
+        percentage:
+          description: >-
+            Percentual de rateio do respectivo item de orçamento nas
+            apropriações de obra sendo um número maior que zero, menor ou igual
+            a 100, com precisão de até 12 casas decimais.
+          type: number
+          example: 100
+        quantity:
+          description: >-
+            Quantidade do respectivo item de orçamento nas apropriações de obra,
+            sendo um número com precisão de até 4 casas decimais.
+          type: number
+          example: 1340.8374
+        sheetItemId:
+          description: Identificador do item de orçamento.
+          type: integer
+          example: 42
+        wbsCode:
+          description: Código de referência do item do orçamento.
+          type: string
+          example: 01.001.001.001
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/getcontractitems/GetContractItemDto.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.getcontractitems.GetContractItemDto.BuildingAppropriation
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    RequiredDocumentId:
+      description: Código do documento (obrigatório).
+      in: query
+      name: documentId
+      required: true
+      schema:
+        description: Código do documento.
+        example: CT
+        type: string
+    RequiredContractNumber:
+      description: Número do contrato (obrigatório).
+      in: query
+      name: contractNumber
+      required: true
+      schema:
+        description: Número do contrato.
+        example: '1234'
+        type: string
+    companyId:
+      name: companyId
+      in: query
+      description: Código da empresa
+      schema:
+        description: Código da empresa
+        example: 123
+        format: int32
+        type: integer
+    BuildingId:
+      description: Identificador (interno) da obra.
+      in: query
+      name: buildingId
+      schema:
+        example: 100
+        format: int32
+        minimum: 0
+        type: integer
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    statusApproval:
+      name: statusApproval
+      in: query
+      description: |
+        Código da situação de aprovação do contrato:
+        - `D` - Desaprovado
+        - `A` - Aprovado
+      schema:
+        type: string
+        enum:
+          - D
+          - A
+        example: A
+    authorization:
+      name: authorization
+      in: query
+      description: |
+        Status de autorização do contrato:
+        - `T` - Todos
+        - `S` - Reprovados
+        - `A` - Aprovados
+        - `N` - Aguardando autorização
+      schema:
+        type: string
+        enum:
+          - T
+          - S
+          - A
+          - 'N'
+        example: T
+    consistency:
+      name: consistency
+      in: query
+      description: |
+        Status da situação de consistência do contrato:
+        - `T` - Todos
+        - `S` - Consistente
+        - `N` - Inconsistente
+        - `I` - Inclusão
+      schema:
+        type: string
+        enum:
+          - T
+          - S
+          - 'N'
+          - I
+        example: T
+    contractAttachmentNumber:
+      name: contractAttachmentNumber
+      in: query
+      description: Número do anexo do contrato sendo especificado.
+      required: true
+      schema:
+        type: integer
+        format: int32
+    description:
+      name: description
+      in: query
+      description: Descrição do anexo
+      required: true
+      schema:
+        type: string
+        maxLength: 500
+    DocumentId:
+      description: Identificador do documento.
+      in: query
+      name: documentId
+      schema:
+        description: Código do documento.
+        example: CT
+        type: string
+    ContractNumber:
+      description: Identificador do contrato.
+      in: query
+      name: contractNumber
+      schema:
+        description: Número do contrato.
+        example: '1234'
+        type: string
+    AddendumNumber:
+      name: addendumNumber
+      in: query
+      description: Número do aditivo para filtro opcional
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 1
+    AddendumStartDate:
+      name: addendumStartDate
+      in: query
+      description: 'Data inicial do período de pesquisa dos aditivos, formato: yyyy-MM-dd'
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2024-01-01'
+    AddendumEndDate:
+      name: addendumEndDate
+      in: query
+      description: 'Data final do período de pesquisa dos aditivos, formato: yyyy-MM-dd'
+      required: false
+      schema:
+        type: string
+        format: date
+        example: '2024-12-31'
+    RequiredBuildingId:
+      description: Código (interno) da obra (obrigatório).
+      in: query
+      name: buildingId
+      required: true
+      schema:
+        example: 100
+        format: int32
+        minimum: 0
+        type: integer
+    RequiredAddendumNumber:
+      name: addendumNumber
+      in: query
+      description: Número do aditivo (obrigatório)
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 1
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1
+webhooks:
+  CONTRACT_AUTHORIZED:
+    post:
+      tags:
+        - Webhooks - Contratos de Suprimentos
+      operationId: webhookContractAuthorized
+      summary: Webhook de contrato autorizado
+      description: >-
+        Disparado quando um contrato é totalmente autorizado (sem autorizações
+        pendentes).
+      requestBody:
+        description: JSON com os identificadores do contrato autorizado
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - documentId
+                - contractNumber
+                - consistent
+              properties:
+                documentId:
+                  description: Código do documento.
+                  example: CT
+                  type: string
+                contractNumber:
+                  description: Número do contrato.
+                  example: '1234'
+                  type: string
+                consistent:
+                  description: Flag de consistência do contrato
+                  type: boolean
+                  example: true
+      responses:
+        2XX:
+          description: O evento CONTRACT_AUTHORIZED foi recebido com sucesso
+      x-audience:
+        - public
+  CONTRACT_UNAUTHORIZED:
+    post:
+      tags:
+        - Webhooks - Contratos de Suprimentos
+      operationId: webhookContractUnauthorized
+      summary: Webhook de contrato desautorizado
+      description: >-
+        Disparado quando um contrato é desautorizado ou tem sua consistência
+        alterada enquanto estiver desautorizado.
+      requestBody:
+        description: JSON com os identificadores do contrato desautorizado
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - documentId
+                - contractNumber
+                - consistent
+                - disapproved
+              properties:
+                documentId:
+                  description: Código do documento.
+                  example: CT
+                  type: string
+                contractNumber:
+                  description: Número do contrato.
+                  example: '1234'
+                  type: string
+                consistent:
+                  description: Indica se o contrato está consistente
+                  type: boolean
+                  example: false
+                disapproved:
+                  description: Indica se o contrato está reprovado
+                  type: boolean
+                  example: false
+      responses:
+        2XX:
+          description: O evento CONTRACT_UNAUTHORIZED foi recebido com sucesso
+      x-audience:
+        - public

@@ -1,0 +1,25 @@
+/* Fontes auto-hospedadas (Open Sans, Source Code Pro) */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("./fonts/open-sans-latin-400-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Source Code Pro";
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url("./fonts/source-code-pro-latin-300-600.woff2") format("woff2");
+}
+
+/* Identidade visual do menu/páginas gerais (ver docs internos de oferta/branding Sienge Plataforma). */
+@font-face {
+  font-family: "Sora";
+  font-style: normal;
+  font-weight: 200 600;
+  font-display: swap;
+  src: url("./fonts/sora-latin-200-600.woff2") format("woff2");
+}

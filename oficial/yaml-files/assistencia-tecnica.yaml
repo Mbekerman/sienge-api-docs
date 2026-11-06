@@ -1,0 +1,222 @@
+openapi: 3.1.1
+info:
+  title: Assistência Técnica
+  version: 1.24.0
+paths: {}
+components:
+  schemas:
+    TechnicalAssistanceWebhookPayload:
+      description: Payload do webhook de assistência técnica
+      type: object
+      required:
+        - enterpriseId
+        - unitId
+        - solicitationId
+      properties:
+        enterpriseId:
+          type: integer
+          description: Código do empreendimento
+          format: int32
+          example: 1
+        unitId:
+          type: integer
+          description: Código da unidade
+          format: int32
+          example: 1
+        solicitationId:
+          type: integer
+          description: Código da solicitação
+          format: int32
+          example: 1
+      example:
+        enterpriseId: 1
+        unitId: 1
+        solicitationId: 1
+    ServiceOrderWebhookPayload:
+      description: Payload do webhook de ordem de serviço
+      type: object
+      required:
+        - enterpriseId
+        - unitId
+        - solicitationId
+        - serviceOrderId
+      properties:
+        enterpriseId:
+          type: integer
+          description: Código do empreendimento da ordem de serviço
+          format: int32
+          example: 1
+        unitId:
+          type: integer
+          description: Código da unidade da ordem de serviço
+          format: int32
+          example: 1
+        solicitationId:
+          type: integer
+          description: Código da solicitação da ordem de serviço
+          format: int32
+          example: 1
+        serviceOrderId:
+          type: integer
+          description: Código da ordem de serviço
+          format: int32
+          example: 1
+      example:
+        enterpriseId: 1
+        unitId: 1
+        solicitationId: 1
+        serviceOrderId: 1
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags:
+  - name: Assistência Técnica
+security:
+  - basicAuth: []
+webhooks:
+  TECHNICAL_ASSISTANCE_ANALYSIS:
+    post:
+      tags:
+        - Webhooks - Assistência Técnica
+      operationId: webhookTechnicalAssistanceAnalysis
+      summary: Webhook de assistência técnica em análise
+      description: Webhook disparado sempre que uma assistência técnica entra em análise
+      requestBody:
+        description: JSON com os dados da assistência técnica em análise
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TechnicalAssistanceWebhookPayload'
+      responses:
+        2XX:
+          description: O evento TECHNICAL_ASSISTANCE_ANALYSIS foi recebido com sucesso
+      x-audience:
+        - public
+  TECHNICAL_ASSISTANCE_CANCELED:
+    post:
+      tags:
+        - Webhooks - Assistência Técnica
+      operationId: webhookTechnicalAssistanceCanceled
+      summary: Webhook de assistência técnica cancelada
+      description: Webhook disparado sempre que uma assistência técnica é cancelada
+      requestBody:
+        description: JSON com os dados da assistência técnica cancelada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TechnicalAssistanceWebhookPayload'
+      responses:
+        2XX:
+          description: O evento TECHNICAL_ASSISTANCE_CANCELED foi recebido com sucesso
+      x-audience:
+        - public
+  TECHNICAL_ASSISTANCE_CLOSED:
+    post:
+      tags:
+        - Webhooks - Assistência Técnica
+      operationId: webhookTechnicalAssistanceClosed
+      summary: Webhook de assistência técnica encerrada
+      description: Webhook disparado sempre que uma assistência técnica é encerrada
+      requestBody:
+        description: JSON com os dados da assistência técnica encerrada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TechnicalAssistanceWebhookPayload'
+      responses:
+        2XX:
+          description: O evento TECHNICAL_ASSISTANCE_CLOSED foi recebido com sucesso
+      x-audience:
+        - public
+  TECHNICAL_ASSISTANCE_CREATED:
+    post:
+      tags:
+        - Webhooks - Assistência Técnica
+      operationId: webhookTechnicalAssistanceCreated
+      summary: Webhook de assistência técnica criada
+      description: Webhook disparado sempre que uma assistência técnica é criada
+      requestBody:
+        description: JSON com os dados da assistência técnica criada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TechnicalAssistanceWebhookPayload'
+      responses:
+        2XX:
+          description: O evento TECHNICAL_ASSISTANCE_CREATED foi recebido com sucesso
+      x-audience:
+        - public
+  TECHNICAL_ASSISTANCE_EXCLUDED:
+    post:
+      tags:
+        - Webhooks - Assistência Técnica
+      operationId: webhookTechnicalAssistanceExcluded
+      summary: Webhook de assistência técnica excluída
+      description: Webhook disparado sempre que uma assistência técnica é excluída
+      requestBody:
+        description: JSON com os dados da assistência técnica excluída
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TechnicalAssistanceWebhookPayload'
+      responses:
+        2XX:
+          description: O evento TECHNICAL_ASSISTANCE_EXCLUDED foi recebido com sucesso
+      x-audience:
+        - public
+  SERVICE_ORDER_CREATED:
+    post:
+      tags:
+        - Webhooks - Assistência Técnica
+      operationId: webhookServiceOrderCreated
+      summary: Webhook de ordem de serviço criada
+      description: Webhook disparado sempre que uma ordem de serviço é criada
+      requestBody:
+        description: JSON com os dados da ordem de serviço criada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceOrderWebhookPayload'
+      responses:
+        2XX:
+          description: O evento SERVICE_ORDER_CREATED foi recebido com sucesso
+      x-audience:
+        - public
+  SERVICE_ORDER_REMOVED:
+    post:
+      tags:
+        - Webhooks - Assistência Técnica
+      operationId: webhookServiceOrderRemoved
+      summary: Webhook de ordem de serviço removida
+      description: Webhook disparado sempre que uma ordem de serviço é removida
+      requestBody:
+        description: JSON com os dados da ordem de serviço removida
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceOrderWebhookPayload'
+      responses:
+        2XX:
+          description: O evento SERVICE_ORDER_REMOVED foi recebido com sucesso
+      x-audience:
+        - public
+  SERVICE_ORDER_UPDATED:
+    post:
+      tags:
+        - Webhooks - Assistência Técnica
+      operationId: webhookServiceOrderUpdated
+      summary: Webhook de ordem de serviço atualizada
+      description: Webhook disparado sempre que uma ordem de serviço é atualizada
+      requestBody:
+        description: JSON com os dados da ordem de serviço atualizada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceOrderWebhookPayload'
+      responses:
+        2XX:
+          description: O evento SERVICE_ORDER_UPDATED foi recebido com sucesso
+      x-audience:
+        - public

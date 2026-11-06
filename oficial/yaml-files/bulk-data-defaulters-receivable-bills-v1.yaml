@@ -1,0 +1,729 @@
+openapi: 3.1.1
+info:
+  title: Bulk-data Títulos Inadimplentes
+  version: 1.24.0
+  description: API de Títulos Inadimplentes.
+paths:
+  /defaulters-receivable-bills:
+    get:
+      x-original-file: bulk-data-defaulters-receivable-bills-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Bulk-data Títulos Inadimplentes
+      summary: Retorna os títulos inadimplentes com as parcelas em atraso.
+      operationId: defaultersReceivableBills
+      parameters:
+        - $ref: '#/components/parameters/RequiredCompanyId'
+        - $ref: '#/components/parameters/EnterpriseIdList'
+        - $ref: '#/components/parameters/DueDateLimit'
+        - $ref: '#/components/parameters/BearerId'
+        - $ref: '#/components/parameters/DocumentsId'
+        - $ref: '#/components/parameters/BillingOperationId'
+        - name: receivableBillId
+          in: query
+          description: Código do título.
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/OptionalCustomerId'
+        - name: cityId
+          in: query
+          description: Código do município.
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/CorrectionDate'
+        - name: normalReceivableBills
+          in: query
+          description: >-
+            Filtro para títulos com situação "Normal" no controle de cobrança.
+            <b>Exemplo</b>: true ou false.
+          schema:
+            type: boolean
+            default: false
+        - name: inBillingReceivableBills
+          in: query
+          description: >-
+            Filtro para títulos com situação "Em Cobrança" no controle de
+            cobrança. <b>Exemplo</b>:  true ou false.
+          schema:
+            type: boolean
+            default: false
+        - $ref: '#/components/parameters/DefaultersReceivableBills'
+        - $ref: '#/components/parameters/UnderJudgmentReceivableBills'
+        - name: normalActivities
+          in: query
+          description: >-
+            Filtro para atividades com situação "Normal" no controle de
+            cobrança. <b>Exemplo</b>: true ou false.
+          schema:
+            type: boolean
+            default: false
+        - name: inBillingActivities
+          in: query
+          description: >-
+            Filtro para atividades com situação "Em Cobrança" no controle de
+            cobrança. <b>Exemplo</b>: true ou false.
+          schema:
+            type: boolean
+            default: false
+        - $ref: '#/components/parameters/DefaultersActivities'
+        - $ref: '#/components/parameters/UnderJudgmentActivities'
+        - $ref: '#/components/parameters/SituationBillingControlInfo'
+        - $ref: '#/components/parameters/IncludeResidueInstallment'
+        - $ref: '#/components/parameters/IncludePartiallyPaidInstallments'
+        - $ref: '#/components/parameters/ShowOnlyDefaulters'
+        - $ref: '#/components/parameters/IncludeUnderJudgment'
+        - $ref: '#/components/parameters/ShowSentToSPCSerasa'
+        - $ref: '#/components/parameters/PositionDate'
+      responses:
+        '200':
+          $ref: '#/components/responses/GetDefaultersReceivableBillsResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna os títulos inadimplentes juntamente com as parcelas em atraso.
+        (BULK)
+  /defaulters-receivable-bills/by-aging:
+    get:
+      x-original-file: bulk-data-defaulters-receivable-bills-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Bulk-data Títulos Inadimplentes
+      summary: Retorna títulos inadimplentes com parcela com maior atraso.
+      description: >-
+        Retorna os títulos inadimplentes somente com a parcela com maior atraso
+        (aging), agrupados por cliente e unidade. Ex.: caso tenham dois títulos
+        de um mesmo cliente, na mesma unidade, será retornado apenas o título
+        que possui a parcela mais antiga. (BULK)
+      operationId: defaultersReceivableBillsByAging
+      parameters:
+        - $ref: '#/components/parameters/RequiredCompanyId'
+        - $ref: '#/components/parameters/EnterpriseIdList'
+        - $ref: '#/components/parameters/DueDateLimit'
+        - $ref: '#/components/parameters/BearerId'
+        - $ref: '#/components/parameters/DocumentsId'
+        - $ref: '#/components/parameters/BillingOperationId'
+        - $ref: '#/components/parameters/OptionalCustomerId'
+        - $ref: '#/components/parameters/CorrectionDate'
+        - $ref: '#/components/parameters/DefaultersReceivableBills'
+        - $ref: '#/components/parameters/UnderJudgmentReceivableBills'
+        - $ref: '#/components/parameters/DefaultersActivities'
+        - $ref: '#/components/parameters/UnderJudgmentActivities'
+        - $ref: '#/components/parameters/SituationBillingControlInfo'
+        - $ref: '#/components/parameters/IncludeResidueInstallment'
+        - $ref: '#/components/parameters/IncludePartiallyPaidInstallments'
+        - $ref: '#/components/parameters/ShowOnlyDefaulters'
+        - $ref: '#/components/parameters/IncludeUnderJudgment'
+        - $ref: '#/components/parameters/ShowSentToSPCSerasa'
+        - $ref: '#/components/parameters/PositionDate'
+      responses:
+        '200':
+          $ref: '#/components/responses/GetDefaultersReceivableBillsResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+    GetDefaultersReceivableBillsResponse:
+      description: Resultado da pesquisa retornado com sucesso.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetDefaultersReceivableBills'
+          example:
+            data:
+              - companyId: 1
+                clientId: 123
+                clientName: Cliente Exemplo
+                receivableBillId: 456
+                issueDate: '2024-01-01'
+                documentNumber: CT.12345
+                costCentersId:
+                  - 10
+                  - 20
+                units: Unidade 1
+                receivableBillValue: 1000.5
+                defaulterInstallments:
+                  - installmentId: 1
+                    conditionType: PM
+                    dueDate: '2024-02-01'
+                    daysOfDelay: 0
+                    correctedValueWithoutAdditions: 1000.5
+                    proRata: 0
+                    interest: 0
+                    fine: 0
+                    totalAdditions: 0
+                    correctedValueWithAdditions: 1000.5
+                    installmentNumber: '1'
+                    installmentSentToSPCSerasa: 'N'
+                defaulterJudicialActivities:
+                  - recordDate: 21/03/2025
+                    situation: 'N'
+                    concluded: OK
+                    observation: Observação
+  schemas:
+    GetDefaultersReceivableBills:
+      required:
+        - data
+      type: object
+      description: Lista de títulos inadimplentes retornados como resultado da pesquisa.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DefaulterReceivableBill'
+          example:
+            - companyId: 1
+              clientId: 123
+              clientName: Cliente Exemplo
+              receivableBillId: 456
+              issueDate: '2024-01-01'
+              documentNumber: CT.12345
+              costCentersId:
+                - 10
+                - 20
+              units: Unidade 1
+              receivableBillValue: 1000.5
+              defaulterInstallments:
+                - installmentId: 1
+                  conditionType: PM
+                  dueDate: '2024-02-01'
+                  daysOfDelay: 0
+                  correctedValueWithoutAdditions: 1000.5
+                  proRata: 0
+                  interest: 0
+                  fine: 0
+                  totalAdditions: 0
+                  correctedValueWithAdditions: 1000.5
+                  installmentNumber: '1'
+                  installmentSentToSPCSerasa: 'N'
+              defaulterJudicialActivities:
+                - recordDate: 21/03/2025
+                  situation: 'N'
+                  concluded: OK
+                  observation: Observação
+    DefaulterReceivableBill:
+      type: object
+      description: Dados de um título inadimplente com suas parcelas
+      properties:
+        companyId:
+          description: Código da empresa
+          example: 123
+          format: int32
+          type: integer
+        clientId:
+          description: Código do cliente
+          example: 123
+          format: int32
+          type: integer
+        clientName:
+          description: Nome do cliente
+          example: Nome do cliente
+          type: string
+        receivableBillId:
+          description: Identificador do título a receber
+          example: 10
+          format: int32
+          type: integer
+        issueDate:
+          description: Data de emissão do título. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2024-01-01T00:00:00.000Z
+          format: date
+          type: string
+        documentNumber:
+          description: Número do documento
+          example: NF-001
+          type: string
+        costCentersId:
+          $ref: '#/components/schemas/CostCentersIdArray'
+        units:
+          description: Unidades do título.
+          type: string
+        receivableBillValue:
+          type: number
+          description: Valor total do título.
+          example: 1000.5
+        defaulterInstallments:
+          type: array
+          description: Lista de parcelas inadimplentes.
+          items:
+            $ref: '#/components/schemas/DefaulterInstallment'
+        defaulterJudicialActivities:
+          type: array
+          description: Lista de atividades judiciais.
+          items:
+            $ref: '#/components/schemas/DefaulterJudicialActivity'
+    CostCentersIdArray:
+      type: array
+      description: >-
+        Lista dos Centros de Custo ordenados pelo percentual de participação em
+        ordem decrescente.
+      items:
+        type: integer
+        format: int32
+    DefaulterInstallment:
+      type: object
+      properties:
+        installmentId:
+          description: Identificador da parcela do título
+          example: 1
+          format: int32
+          type: integer
+        conditionType:
+          type: string
+          description: Tipo de condição.
+        dueDate:
+          description: Data de vencimento. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        daysOfDelay:
+          description: Dias de atraso.
+          example: 0
+          type: integer
+        correctedValueWithoutAdditions:
+          type: number
+          description: Valor corrigido sem acréscimos.
+        proRata:
+          type: number
+          description: Valor do pro-rata.
+        interest:
+          description: Valor dos juros.
+          example: 100.05
+          type: number
+        fine:
+          description: Valor da multa.
+          example: 0
+          type: number
+        totalAdditions:
+          description: Valor total dos acréscimos.
+          type: number
+        correctedValueWithAdditions:
+          type: number
+          description: Valor corrigido com acréscimos.
+        installmentNumber:
+          description: >-
+            Numero "sequencial" das parcelas 1, 2, 3, ou por "Condição de
+            Pagamento" 1/2, 2/2... (Resultado será apresentado conforme
+            Parâmetro 651).
+          example: 1/2
+          type: string
+        installmentSentToSPCSerasa:
+          type: string
+          description: >-
+            Indica se a parcela foi enviada ou não para o Serasa ou para o SPC:
+            S - Sim, foi enviada, N - Não foi enviada
+          enum:
+            - S
+            - 'N'
+      description: Parcela
+    DefaulterJudicialActivity:
+      type: object
+      properties:
+        recordDate:
+          type: string
+          description: 'Data de gravação. Formato esperado: yyyy-MM-dd.'
+          format: date
+        situation:
+          type: string
+          description: >-
+            Situação da atividade: N - Normal, C - Em cobrança, J - Sub-judice,
+            I - Inadimplente
+          enum:
+            - 'N'
+            - C
+            - J
+            - I
+        concluded:
+          type: string
+          description: Situação da conclusão.
+        observation:
+          type: string
+          description: Observação.
+      description: Atividade judicial
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  parameters:
+    RequiredCompanyId:
+      description: Código da empresa (obrigatório)
+      in: query
+      name: companyId
+      required: true
+      schema:
+        example: 101
+        type: integer
+    EnterpriseIdList:
+      description: Lista de códigos de empreendimentos.
+      in: query
+      name: enterpriseId
+      schema:
+        example:
+          - 1
+          - 2
+        items:
+          example: 1
+          type: integer
+        type: array
+    DueDateLimit:
+      description: >-
+        Data de vencimento limite. Se o parâmetro não for fornecido, será
+        considerada a data atual. Formato ISO 8601 (yyyy-MM-dd). <b>Exemplo</b>:
+        2019-12-30
+      in: query
+      name: dueDateLimit
+      schema:
+        default: Data Atual
+        format: date
+        type: string
+    BearerId:
+      description: Código do portador.
+      in: query
+      name: bearerId
+      schema:
+        example: 1
+        type: integer
+    DocumentsId:
+      description: >-
+        Lista de códigos de documentos (separados por vírgula). <b>Exemplo</b>:
+        CT, AT, CM
+      in: query
+      name: documentsId
+      schema:
+        example:
+          - CT
+          - AT
+          - CM
+        items:
+          example: CT
+          type: string
+        type: array
+    BillingOperationId:
+      description: Código da operação de cobrança.
+      in: query
+      name: billingOperationId
+      schema:
+        example: 1
+        type: integer
+    OptionalCustomerId:
+      description: Código do cliente (opcional)
+      in: query
+      name: customerId
+      schema:
+        example: 1001
+        type: integer
+    CorrectionDate:
+      description: >-
+        Data para correção do indexador. Se o parâmetro não for fornecido, será
+        considerada a data atual. Formato ISO 8601 (yyyy-MM-dd).
+      in: query
+      name: correctionDate
+      schema:
+        format: date
+        type: string
+    DefaultersReceivableBills:
+      name: defaultersReceivableBills
+      in: query
+      description: >-
+        Filtro para títulos com situação "Inadimplente" no controle de cobrança.
+        <b>Exemplo</b>: true ou false.
+      schema:
+        type: boolean
+        default: false
+    UnderJudgmentReceivableBills:
+      name: underJudgmentReceivableBills
+      in: query
+      description: >-
+        Filtro para títulos com situação "Sub judice" no controle de cobrança.
+        <b>Exemplo</b>: true ou false.
+      schema:
+        type: boolean
+        default: false
+    DefaultersActivities:
+      name: defaultersActivities
+      in: query
+      description: >-
+        Filtro para atividades com situação "Inadimplente" no controle de
+        cobrança. <b>Exemplo</b>: true ou false.
+      schema:
+        type: boolean
+        default: false
+    UnderJudgmentActivities:
+      name: underJudgmentActivities
+      in: query
+      description: >-
+        Filtro para atividades com situação "Sub judice" no controle de
+        cobrança. <b>Exemplo</b>: true ou false.
+      schema:
+        type: boolean
+        default: false
+    SituationBillingControlInfo:
+      name: situationBillingControlInfo
+      in: query
+      description: >-
+        Filtro para situação no controle de cobrança: C - Concluídas, P -
+        Pendentes
+      schema:
+        type: string
+        enum:
+          - C
+          - P
+    IncludeResidueInstallment:
+      name: includeResidueInstallment
+      in: query
+      description: 'Incluir parcelas de resíduo. <b>Exemplo</b>: true ou false.'
+      schema:
+        type: boolean
+        default: false
+    IncludePartiallyPaidInstallments:
+      name: includePartiallyPaidInstallments
+      in: query
+      description: 'Incluir parcelas parcialmente pagas. <b>Exemplo</b>: true ou false.'
+      schema:
+        type: boolean
+        default: false
+    ShowOnlyDefaulters:
+      name: showOnlyDefaulters
+      in: query
+      description: >-
+        Exibir somente títulos marcados como inadimplentes. <b>Exemplo</b>: true
+        ou false.
+      schema:
+        type: boolean
+        default: false
+    IncludeUnderJudgment:
+      name: includeUnderJudgment
+      in: query
+      description: 'Incluir títulos sub judice. <b>Exemplo</b>: true ou false.'
+      schema:
+        type: boolean
+        default: false
+    ShowSentToSPCSerasa:
+      name: showSentToSPCSerasa
+      in: query
+      description: 'Incluir parcelas enviadas ao SPC/Serasa. <b>Exemplo</b>: true ou false.'
+      schema:
+        type: boolean
+        default: false
+    PositionDate:
+      description: >-
+        Data de posição do histórico. Se o parâmetro não for fornecido, será
+        considerada a data atual. Formato ISO 8601 (yyyy-MM-dd). <b>Exemplo</b>:
+        2019-12-20
+      in: query
+      name: positionDate
+      schema:
+        default: Data Atual
+        format: date
+        type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/bulk-data/v1

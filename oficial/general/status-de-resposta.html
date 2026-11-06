@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Status de Resposta · Documentação de APIs</title>
+    <link href="../fonts.css" rel="stylesheet" />
+    <link href="../general-page.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>Status de Resposta</h1>
+    <p>Toda resposta da API traz um status HTTP, indicando se a requisição teve sucesso ou não.</p>
+<h4>Sucesso</h4>
+<ul>
+<li><code>200</code> <code>OK</code> — requisição processada com sucesso (uso geral, como em consultas e atualizações).</li>
+<li><code>201</code> <code>Created</code> — recurso criado com sucesso.</li>
+<li><code>204</code> <code>No Content</code> — requisição processada com sucesso, sem corpo de resposta (comum em exclusões).</li>
+</ul>
+<h4>Erro</h4>
+<ul>
+<li><code>400</code> <code>Bad Request</code> — dados inválidos ou incompletos na requisição.</li>
+<li><code>401</code> <code>Unauthorized</code> — credenciais ausentes ou inválidas. Veja <a href="./autenticacao.html">Autenticação</a>.</li>
+<li><code>403</code> <code>Forbidden</code> — sem permissão para realizar a operação.</li>
+<li><code>404</code> <code>Not Found</code> — recurso não encontrado.</li>
+<li><code>415</code> <code>Unsupported Media Type</code> — tipo de conteúdo enviado não é suportado.</li>
+<li><code>422</code> <code>Unprocessable Entity</code> — o conteúdo enviado tem um tipo aceito, mas há algum problema na estrutura dos dados.</li>
+<li><code>429</code> <code>Too Many Requests</code> — limite de requisições excedido. Veja <a href="./limites-de-requisicoes-rate-limits.html">Limites de Requisições - Rate-Limits</a>.</li>
+<li><code>500</code> <code>Internal Server Error</code> / <code>503</code> <code>Service Unavailable</code> — erro temporário no servidor; tente novamente em seguida.</li>
+</ul>
+<p>Toda resposta de erro segue o mesmo formato de corpo, descrito em &quot;Tratamento de erros&quot; na página <a href="./apis-rest.html">APIs REST</a>.</p>
+<blockquote>
+<p>Alguns desses status (como <code>401</code>, <code>403</code> e <code>429</code>) não aparecem listados em cada operação da documentação de referência, mas podem ocorrer em qualquer chamada.</p>
+<p>Eles continuam declarados no arquivo OpenAPI de cada recurso, disponível para download na página do recurso — baixe-o se precisar consultar o contrato completo de respostas de uma operação.</p>
+</blockquote>
+
+  </body>
+</html>

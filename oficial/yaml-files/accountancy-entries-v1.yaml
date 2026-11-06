@@ -1,0 +1,767 @@
+openapi: 3.1.1
+info:
+  title: Lançamentos Contábeis (Contabilidade)
+  version: 1.24.0
+  description: API de lançamentos contábeis
+paths:
+  /accountancy/entries:
+    post:
+      tags:
+        - Lançamentos Contábeis (Contabilidade)
+      x-original-file: accountancy-entries-v1.yaml
+      summary: Salva lançamentos contábeis
+      x-audience:
+        - public
+      description: Criação de lançamentos contábeis (REST)
+      operationId: postEntries
+      requestBody:
+        description: Lista de lançamentos a serem criados
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountacyEntry'
+            example:
+              - companyId: 1
+                eventId: 10
+                date: '2017-12-20'
+                debitAccountId: 1.2.03.13.00043
+                creditAccountId: 4.4.02.10.00002
+                descriptionId: '123'
+                description: Provisão do pagamento de...
+                amount: 1034.94
+                creditorCode: 1
+                clientCode: 2
+                entryBatchId: 3
+                entryType: NORMAL
+                costCenterDebitList:
+                  - costCenterId: 1
+                    amount: 1034.94
+                costCenterCreditList:
+                  - costCenterId: 1
+                    amount: 1034.94
+        required: true
+      responses:
+        '201':
+          description: Lançamentos criados com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountacyEntryApiSuccess'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+    get:
+      x-original-file: accountancy-entries-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Lançamentos Contábeis (Contabilidade)
+      summary: Busca lançamentos contábeis
+      description: Busca lançamentos contábeis já cadastrados (REST)
+      operationId: getEntries
+      parameters:
+        - $ref: '#/components/parameters/CompanyIdQueryRequired'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+        - name: entryBatchId
+          in: query
+          description: Código do lote - (Lançamentos Contábeis (Contabilidade))
+          schema:
+            type: integer
+            format: int32
+        - name: entryType
+          in: query
+          description: Tipo do lançamento, podendo ser (N)ormal, (S)ocietário ou (F)iscal.
+          schema:
+            $ref: '#/components/schemas/EntryTypeEnum'
+        - name: costCenter
+          in: query
+          description: Centro de custo - (Lançamentos Contábeis (Contabilidade))
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/StartDateQuery'
+          description: Data inicial do lançamento
+        - $ref: '#/components/parameters/EndDateQuery'
+          description: Data final do lançamento
+        - name: account
+          in: query
+          description: Conta contábil, podendo ser débito ou crédito
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lançamentos encontrados - (Lançamentos Contábeis (Contabilidade))
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountacyEntryPaginationResult'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /accountancy/entries/async:
+    post:
+      tags:
+        - Lançamentos Contábeis (Contabilidade)
+      summary: Salva lançamentos contábeis assíncronos
+      description: Inicia o processamento assíncrono de lançamentos contábeis (REST)
+      operationId: postEntriesAsync
+      requestBody:
+        description: Lista de lançamentos a serem criados de forma assíncrona
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountacyEntry'
+            example:
+              - companyId: 1
+                eventId: 10
+                date: '2017-12-20'
+                debitAccountId: 1.2.03.13.00043
+                creditAccountId: 4.4.02.10.00002
+                descriptionId: '123'
+                description: Provisão do pagamento de...
+                amount: 1034.94
+                creditorCode: 1
+                clientCode: 2
+                entryBatchId: 3
+                entryType: NORMAL
+                costCenterDebitList:
+                  - costCenterId: 1
+                    amount: 1034.94
+                costCenterCreditList:
+                  - costCenterId: 1
+                    amount: 1034.94
+        required: true
+      responses:
+        '201':
+          description: Operação bem sucedida - (Lançamento Contábil)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-audience:
+        - public
+  /accountancy/entries/async/status:
+    get:
+      tags:
+        - Lançamentos Contábeis (Contabilidade)
+      summary: Retorna o status do processamento dos lançamentos
+      description: >-
+        Consulta o status da fila de processamento assíncrono de lançamentos. O
+        status é único para a fila, não havendo identificador por inclusão: o
+        retorno acumula os lotes criados, as inconsistências e os lançamentos
+        ainda pendentes de todas as inclusões realizadas via POST
+        /accountancy/entries/async. (REST)
+      operationId: getAsyncStatus
+      responses:
+        '201':
+          description: Status da fila de processamento retornado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncStatusResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-audience:
+        - public
+components:
+  schemas:
+    AccountacyEntry:
+      description: Estrutura de um lançamento contábil
+      type: object
+      example:
+        companyId: 1
+        eventId: 10
+        date: '2017-12-20'
+      properties:
+        companyId:
+          type: integer
+          description: Código empresa para consulta de status de processamento
+          example: 1
+        eventId:
+          type: integer
+          description: Código do evento contábil
+          example: 10
+        date:
+          type: string
+          format: date
+          description: Data do lançamento
+          example: '2017-12-20'
+        debitAccountId:
+          type: string
+          description: Conta contábil de débito
+          example: 1.2.03.13.00043
+        creditAccountId:
+          type: string
+          description: Conta contábil de crédito
+          example: 4.4.02.10.00002
+        descriptionId:
+          type: string
+          description: Código do histórico contábil
+          example: '123'
+        description:
+          type: string
+          description: Descrição do lançamento
+          example: Provisão do pagamento de...
+        amount:
+          type: number
+          description: Valor do lançamento
+          example: 1034.94
+        creditorCode:
+          description: Código do credor
+          example: 123
+          format: int32
+          type: integer
+        clientCode:
+          description: Código do cliente
+          example: 123
+          format: int32
+          type: integer
+        entryBatchId:
+          type: integer
+          description: Código do lote - (Lançamentos Contábeis)
+          example: 3
+        entryType:
+          $ref: '#/components/schemas/EntryTypeEnum'
+          description: Tipo do lançamento (Normal, Societário ou Fiscal)
+        costCenterDebitList:
+          type: array
+          description: Lista de centros de custo relacionados ao débito
+          items:
+            type: object
+            properties:
+              costCenterId:
+                type: integer
+                description: Código do centro de custo (Lançamentos Contabeis)
+                example: 1
+              amount:
+                type: number
+                description: Valor atribuído ao centro de custo
+                example: 1034.94
+          example:
+            - costCenterId: 1
+              amount: 1034.94
+        costCenterCreditList:
+          type: array
+          description: Lista de centros de custo relacionados ao crédito
+          items:
+            type: object
+            properties:
+              costCenterId:
+                type: integer
+                description: Código centro de custo - (Lançamentos Contábeis)
+                example: 1
+              amount:
+                type: number
+                description: Valor atribuído centro de custo
+                example: 1034.94
+          example:
+            - costCenterId: 1
+              amount: 1034.94
+    AccountacyEntryApiSuccess:
+      description: >-
+        Estrutura de resposta ao consultar o status de um processamento
+        assíncrono
+      type: object
+      properties:
+        successMessage:
+          type: string
+          description: Mensagem de Sucesso (Lançamentos Contabeis)
+          example: Lote 10 criado com sucesso
+        status:
+          type: integer
+          description: Status atual do processamento
+          example: 201
+    AccountacyEntryPaginationResult:
+      description: Estrutura de resposta paginada contendo lançamentos contábeis
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de lançamentos retornados
+          items:
+            $ref: '#/components/schemas/AccountacyEntryResponse'
+          example:
+            - id: 1
+              companyId: 1
+              eventId: 10
+              date: '2017-12-20'
+              debitAccountId: 1.2.03.13.00043
+              creditAccountId: 4.4.02.10.00002
+              descriptionId: '123'
+              description: Provisão do pagamento de...
+              amount: 1034.94
+              creditorCode: 1
+              clientCode: 2
+              entryBatchId: 3
+              entryBatchType: Normal
+              entryType: NORMAL
+              documentId: NF
+              conciliated: false
+              origin: Contas a pagar
+              originDescription: Título 123
+              costCenterDebitList:
+                - costCenterId: 1
+                  amount: 1034.94
+              costCenterCreditList:
+                - costCenterId: 1
+                  amount: 1034.94
+    AsyncResponse:
+      description: >-
+        Estrutura de resposta quando lançamentos são incluídos na fila de
+        processamento assíncrono
+      type: object
+      properties:
+        status:
+          type: integer
+          description: Status da inclusão na fila de processamento
+          example: 201
+        successMessage:
+          type: string
+          description: Mensagem de sucesso da inclusão na fila de processamento
+          example: Em processamento
+        lancamentosPendentes:
+          type: integer
+          description: Quantidade de lançamentos pendentes de processamento na fila
+          example: 15
+    AsyncStatusResponse:
+      description: >-
+        Estrutura de resposta da consulta de status da fila de processamento
+        assíncrono
+      type: object
+      properties:
+        status:
+          type: integer
+          description: Status da consulta
+          example: 201
+        successMessage:
+          type: string
+          description: >-
+            Situação da fila de processamento. "Em processamento" enquanto
+            houver lançamentos pendentes, "Lançamentos processados com sucesso"
+            quando a fila estiver vazia
+          example: Em processamento
+        resultado:
+          $ref: '#/components/schemas/AsyncProcessingResult'
+    EntryTypeEnum:
+      type: string
+      description: Tipo de lançamento contábil
+      enum:
+        - NORMAL
+        - SOCIETARIO
+        - FISCAL
+      example: NORMAL
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    AccountacyEntryResponse:
+      description: Estrutura de um lançamento contábil retornado na consulta
+      allOf:
+        - $ref: '#/components/schemas/AccountacyEntry'
+        - type: object
+          properties:
+            id:
+              type: integer
+              description: Código do lançamento
+              example: 1
+            entryBatchType:
+              type: string
+              description: Tipo do lote do lançamento
+              example: Normal
+            documentId:
+              type: string
+              description: Código do documento do lançamento
+              example: NF
+            conciliated:
+              type: boolean
+              description: Indica se o lançamento está conciliado
+              example: false
+            origin:
+              type: string
+              description: Sistema de origem do lançamento
+              example: Contas a pagar
+            originDescription:
+              type: string
+              description: Descrição da origem do lançamento
+              example: Título 123
+    AsyncProcessingResult:
+      description: Resultado acumulado do processamento da fila de lançamentos
+      type: object
+      properties:
+        lotesCriados:
+          type: array
+          description: Códigos dos lotes contábeis criados pelo processamento
+          items:
+            type: integer
+          example:
+            - 3
+            - 4
+        inconsistencias:
+          type: array
+          description: Inconsistências encontradas no processamento dos lançamentos
+          items:
+            $ref: '#/components/schemas/AsyncProcessingInconsistency'
+        totalRegistrosPendentes:
+          type: integer
+          description: Quantidade de lançamentos pendentes de processamento na fila
+          example: 15
+    AsyncProcessingInconsistency:
+      description: Inconsistência encontrada no processamento de um lançamento
+      type: object
+      properties:
+        linha:
+          type: string
+          description: Identificação do lançamento com inconsistência
+          example: '1'
+        mensagem:
+          type: string
+          description: Descrição da inconsistência
+          example: Conta contábil não encontrada
+        informado:
+          type: string
+          description: Valor informado que gerou a inconsistência
+          example: 1.2.03.13.00043
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    CompanyIdQueryRequired:
+      description: Código da empresa
+      in: query
+      name: companyId
+      required: true
+      schema:
+        example: 1
+        type: integer
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    StartDateQuery:
+      description: Data inicial para filtro de período (opcional)
+      in: query
+      name: startDate
+      required: false
+      schema:
+        example: '2023-01-01'
+        format: date
+        type: string
+    EndDateQuery:
+      description: Data final para filtro de período (opcional)
+      in: query
+      name: endDate
+      required: false
+      schema:
+        example: '2023-01-31'
+        format: date
+        type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

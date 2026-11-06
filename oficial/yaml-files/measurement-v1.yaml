@@ -1,0 +1,1813 @@
+openapi: 3.1.1
+info:
+  title: Medições de Contratos de Suprimentos
+  version: 1.24.0
+  description: API para Medições de Contratos de Suprimentos
+paths:
+  /supply-contracts/measurements:
+    get:
+      operationId: getMeasurements
+      x-section: Medição de Contrato
+      summary: Consulta medições
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/MeasurementController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.MeasurementController
+        method: getById
+      x-original-file: measurement-v1.yaml
+      x-audience:
+        - public
+      description: Retorna os dados da medição informada. (REST)
+      tags:
+        - Medição de Contrato
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/RequiredBuildingId'
+        - $ref: '#/components/parameters/requiredMeasurementNumber'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeasurementDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+    post:
+      operationId: postSupplyContractsMeasurementsAttachments
+      x-section: Medição de Contrato
+      summary: Cria uma nova medição para o respectivo contrato e obra.
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/PostMeasurementController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.PostMeasurementController
+        method: post
+      x-original-file: measurement-v1.yaml
+      x-audience:
+        - public
+      description: Cadastra uma nova medição para o contrato e a obra informados. (REST)
+      tags:
+        - Medição de Contrato
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/RequiredBuildingId'
+      requestBody:
+        description: Informações da medição a ser cadastrada.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostMeasurementDto'
+      responses:
+        '201':
+          description: A medição foi criada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeasurementCreatedDto'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/measurements/all:
+    get:
+      operationId: listMeasurements
+      x-section: Medições de Contratos
+      summary: Consulta medições de contratos
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/allmeasurements/MeasurementsController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.allmeasurements.MeasurementsController
+        method: get
+      x-original-file: measurement-v1.yaml
+      x-audience:
+        - public
+      description: Lista medições de contratos conforme os filtros informados. (REST)
+      tags:
+        - Medições de Contratos
+      parameters:
+        - $ref: '#/components/parameters/DocumentId'
+        - $ref: '#/components/parameters/ContractNumber'
+        - $ref: '#/components/parameters/BuildingId'
+        - $ref: '#/components/parameters/measurementNumber'
+        - name: contractSupplierId
+          in: query
+          description: Id do Fornecedor do Contrato (Contratante)
+          schema:
+            type: integer
+            format: int32
+        - name: contractCustomerId
+          in: query
+          description: Id do Cliente do Contrato (Contratada)
+          schema:
+            type: integer
+            format: int32
+        - $ref: '#/components/parameters/measurementDate'
+        - name: measurementStartDate
+          in: query
+          description: >
+            Limite inferior para o valor de "data da medição" das medições a
+            serem retornadas. Medições cuja "data da medição" seja menor que o
+            limite inferior não serão retornadas.
+
+
+            Formato: `yyyy-MM-dd`
+          schema:
+            description: |
+              Data da medição
+
+              Formato: `yyyy-MM-dd`
+            type: string
+            format: date
+            example: '2021-04-18'
+          example: '2022-01-01'
+        - name: measurementEndDate
+          in: query
+          description: >
+            Limite superior para o valor de "data da medição" das medições a
+            serem retornadas. Medições cuja "data da medição" seja maior que o
+            limite superior não serão retornadas.
+
+
+            Formato: `yyyy-MM-dd`
+          schema:
+            description: |
+              Data da medição
+
+              Formato: `yyyy-MM-dd`
+            type: string
+            format: date
+            example: '2021-04-18'
+          example: '2022-01-31'
+        - name: statusApproval
+          in: query
+          description: |
+            Código da situação de aprovação da medição.
+            - `D` - DISAPPROVED
+            - `A` - APPROVED
+          schema:
+            type: string
+            enum:
+              - D
+              - A
+        - name: authorization
+          in: query
+          description: |
+            Status de autorização da medição.
+            - `T` - Todos
+            - `S` - Reprovados
+            - `A` - Aprovados
+            - `N` - Aguardando autorização
+          schema:
+            type: string
+            enum:
+              - T
+              - S
+              - A
+              - 'N'
+        - name: consistency
+          in: query
+          description: |
+            Status da situação de consistência da medição.
+            - `T` - Todos
+            - `S` - Consistente
+            - `N` - Inconsistente
+            - `I` - Inclusão
+          schema:
+            type: string
+            enum:
+              - T
+              - S
+              - 'N'
+              - I
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Requisição executada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResultMeasurementsResultDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/measurements/attachments:
+    get:
+      operationId: getSupplyContractsMeasurementsAttachments
+      x-section: Anexos de Medição de Contrato
+      summary: Download anexos de medição de contrato
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/attachmentdownload/MeasurementAttachmentContentFileController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.attachmentdownload.MeasurementAttachmentContentFileController
+        method: download
+      x-original-file: measurement-v1.yaml
+      x-audience:
+        - public
+      description: Realiza o download dos anexos de uma medição de contrato. (REST)
+      tags:
+        - Anexos de Medição de Contrato
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/RequiredBuildingId'
+        - $ref: '#/components/parameters/requiredMeasurementNumber'
+        - name: attachmentNumber
+          in: query
+          description: Número do anexo
+          required: true
+          schema:
+            description: Identificador numérico do anexo
+            type: integer
+            example: 3
+      responses:
+        '200':
+          description: Operação bem sucedida
+          content:
+            application/json:
+              schema:
+                type: string
+                format: binary
+            file:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+    post:
+      operationId: postSupplyContractsMeasurementsAttachmentsAll
+      x-section: Anexos de Medição de Contrato
+      summary: Inclui anexos de medição de contrato
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/attachment/MeasurementAttachmentController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.attachment.MeasurementAttachmentController
+        method: insertAttachment
+      x-original-file: measurement-v1.yaml
+      x-audience:
+        - public
+      description: Insere novos anexos em uma medição de contrato. (REST)
+      tags:
+        - Anexos de Medição de Contrato
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/RequiredBuildingId'
+        - $ref: '#/components/parameters/requiredMeasurementNumber'
+        - name: description
+          in: query
+          description: Descrição do anexo de medição
+          required: true
+          schema:
+            type: string
+            maxLength: 500
+      requestBody:
+        description: Deve enviar no body da requisição o arquivo a ser anexado na medição
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  description: >-
+                    Arquivo para inserção em anexo da medição | Tipo:
+                    multipart/form-data | Tamanho máximo: 70 MB | Tamanho máximo
+                    do nome do arquivo: 100 caracteres | Somente 1 Anexo por
+                    requisição.  Caso seja enviado mais de 1 Anexo, o Sienge vai
+                    aceitar somente o primeiro selecionado.
+                  type: string
+                  format: binary
+                  example: <binary>
+      responses:
+        '201':
+          description: Anexo de medição inserido com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/measurements/attachments/all:
+    get:
+      operationId: getSupplyContractsMeasurementsAttachmentsItemsAll
+      x-section: Anexos de Medição de Contrato
+      summary: Consulta anexos de medição de contrato
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/attachmentmetadata/MeasurementAttachmentMetadataController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.attachmentmetadata.MeasurementAttachmentMetadataController
+        method: findByDate
+      x-original-file: measurement-v1.yaml
+      x-audience:
+        - public
+      description: Lista anexos de medições de contrato conforme o período. (REST)
+      tags:
+        - Anexos de Medição de Contrato
+      parameters:
+        - name: measurementStartDate
+          in: query
+          description: >
+            Data inicial (inclusive) para filtrar as medições pelo campo "data
+            da medição". Registros com data anterior ao limite não serão
+            retornados.
+
+
+            Formato: `yyyy-MM-dd`
+          required: true
+          schema:
+            description: |
+              Data da medição
+
+              Formato: `yyyy-MM-dd`
+            type: string
+            format: date
+            example: '2021-04-18'
+          example: '2022-01-01'
+        - name: measurementEndDate
+          in: query
+          description: >
+            Data final (inclusive) para filtrar as medições pelo campo "data da
+            medição". Registros com data posterior ao limite não serão
+            retornados.
+
+
+            Formato: `yyyy-MM-dd`
+          required: true
+          schema:
+            description: |
+              Data da medição
+
+              Formato: `yyyy-MM-dd`
+            type: string
+            format: date
+            example: '2021-04-18'
+          example: '2022-01-31'
+        - $ref: '#/components/parameters/DocumentId'
+        - $ref: '#/components/parameters/ContractNumber'
+        - $ref: '#/components/parameters/BuildingId'
+        - $ref: '#/components/parameters/measurementNumber'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Listagem concluída com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginationResultMeasurementAttachmentMetadataDTO
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/measurements/authorize:
+    patch:
+      operationId: patchSupplyContractsMeasurementsAuthorize
+      x-section: Autorização da Medição
+      summary: Autoriza uma Medição que está aguardando autorização
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/authorize/AuthorizeMeasurementController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.authorize.AuthorizeMeasurementController
+        method: authorize
+      x-original-file: measurement-v1.yaml
+      x-audience:
+        - public
+      description: >-
+        Somente notificará caso esteja configurado para "Sempre enviar aviso ao
+        responsável" (REST)
+      tags:
+        - Autorização da Medição
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/RequiredBuildingId'
+        - $ref: '#/components/parameters/requiredMeasurementNumber'
+      requestBody:
+        description: Observação sobre a autorização do contrato
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObservationDTO'
+      responses:
+        '204':
+          description: Medição autorizada com sucesso.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/measurements/clearing:
+    get:
+      operationId: getSupplyContractsMeasurementsAttachmentsClearing
+      x-section: Liberação da Medição
+      summary: Retorna a liberação de uma medição.
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/MeasurementClearingController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.MeasurementClearingController
+        method: get
+      x-original-file: measurement-v1.yaml
+      x-audience:
+        - public
+      description: Obtém as informações de liberação da medição. (REST)
+      tags:
+        - Liberação da Medição
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/RequiredBuildingId'
+        - $ref: '#/components/parameters/requiredMeasurementNumber'
+      responses:
+        '200':
+          description: Consulta realizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClearingDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/measurements/disapprove:
+    patch:
+      operationId: patchSupplyContractsMeasurementsDisapprove
+      x-section: Reprovação da Medição
+      summary: Reprova uma Medição que está aguardando autorização.
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/authorize/AuthorizeMeasurementController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.authorize.AuthorizeMeasurementController
+        method: disapprove
+      x-original-file: measurement-v1.yaml
+      x-audience:
+        - public
+      description: >-
+        Efetua a reprovação da medição; notificações serão enviadas conforme a
+        configuração de avisos. (REST)
+      tags:
+        - Reprovação da Medição
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/RequiredBuildingId'
+        - $ref: '#/components/parameters/requiredMeasurementNumber'
+      requestBody:
+        description: Observação sobre a reprovação do contrato
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObservationDTO'
+      responses:
+        '204':
+          description: Medição reprovada com sucesso.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /supply-contracts/measurements/items:
+    get:
+      operationId: postSupplyContractsMeasurementsAttachmentsItems
+      x-section: Itens da Medição de Contrato
+      summary: Retorna um array com os itens medidos nesta medição.
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/MeasurementItemsController.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.MeasurementItemsController
+        method: get
+      x-original-file: measurement-v1.yaml
+      x-audience:
+        - public
+      description: Lista os itens medidos na medição solicitada. (REST)
+      tags:
+        - Itens da Medição de Contrato
+      parameters:
+        - $ref: '#/components/parameters/RequiredDocumentId'
+        - $ref: '#/components/parameters/RequiredContractNumber'
+        - $ref: '#/components/parameters/RequiredBuildingId'
+        - $ref: '#/components/parameters/requiredMeasurementNumber'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: >-
+            Retorna um array com os itens medidos nesta medição. Caso não
+            existam, retorna um array vazio.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginationResultMeasurementItemDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    MeasurementDTO:
+      description: Objeto contendo dados da medição
+      type: object
+      properties:
+        authorized:
+          description: >-
+            Retornará verdadeiro se medição estiver autorizada, caso contrário
+            retornará falso.
+          type: boolean
+          example: true
+        buildingId:
+          description: Código da obra
+          example: 100
+          format: int32
+          minimum: 0
+          type: integer
+        consistent:
+          description: >-
+            Retornará verdadeiro se medição estiver consistente, caso contrário
+            retornará falso.
+          type: boolean
+          example: false
+        contractNumber:
+          description: Número do contrato.
+          example: '1234'
+          type: string
+        directBillingValue:
+          description: Total em descontos do faturamento direto
+          type: number
+          format: double
+          example: 200
+        discountsValue:
+          description: Total em Descontos nesta medição
+          type: number
+          format: double
+          example: 50
+        documentId:
+          description: Código do documento.
+          example: CT
+          type: string
+        dueDate:
+          description: Data de vencimento. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        earnestMoneyValue:
+          description: Total em Sinal nesta medição
+          type: number
+          format: double
+          example: 50
+        exchangeValue:
+          description: Total em Permuta nesta medição
+          type: number
+          format: double
+          example: 50
+        indexesPriceChange:
+          description: Reajuste por índices
+          type: number
+          format: double
+          example: 30
+        laborCost:
+          description: Total medido de mão de obra
+          type: number
+          format: double
+          example: 1000
+        materialCost:
+          description: Total medido de material
+          type: number
+          format: double
+          example: 500
+        measuredTotal:
+          description: >-
+            Total Medido = Total Medido de Material + Total Medido de Mão de
+            Obra
+          type: number
+          format: double
+          example: 1500
+        measurementDate:
+          description: |
+            Data da medição
+
+            Formato: `yyyy-MM-dd`
+          type: string
+          format: date
+          example: '2021-04-18'
+        measurementNumber:
+          description: Número da Medição
+          type: integer
+          format: int32
+          example: 1
+        netValue:
+          description: >-
+            Total Líquido = Subtotal - (Caução + Permuta + Sinal + Descontos +
+            Impostos)
+          type: number
+          format: double
+          example: 997
+        notes:
+          description: Observação da medição.
+          type: string
+          example: Uma observação da medição
+        responsibleId:
+          description: Id do responsável pela medição.
+          type: string
+          example: NOME
+        responsibleName:
+          description: Nome do responsável pela medição.
+          type: string
+          example: NOME SOBRENOME
+        securityDepositValue:
+          description: Valor retido para a caução
+          type: number
+          format: double
+          example: 133
+        statusApproval:
+          description: >-
+            Código da situação de aprovação da medição. Toda medição nasce com
+            situação *APPROVED* e somente será alterada para *DISAPPROVED* se
+            for reprovada. [DISAPPROVED, APPROVED]
+          type: string
+          example: APPROVED
+        subtotal:
+          description: >-
+            Subtotal = Total Medido + Reajuste por Índices - Desconto de
+            Faturamento Direto
+          type: number
+          format: double
+          example: 1330
+        taxValue:
+          description: Total em Impostos nesta medição
+          type: number
+          format: double
+          example: 50
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/MeasurementDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.MeasurementDTO
+    PostMeasurementDto:
+      description: Informações para inclusão de uma medição de contrato.
+      type: object
+      required:
+        - dueDate
+        - measurementDate
+      properties:
+        dueDate:
+          description: Data de vencimento. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        items:
+          description: Array com os itens (do contrato) que estão sendo medidos.
+          type: array
+          items:
+            $ref: '#/components/schemas/PostMeasurementItemDto'
+        makeUnauthorized:
+          description: >-
+            Se for informado *true*, a medição que for criada ficará
+            desautorizada, como se o usuário que a cadastrou não tivesse
+            autorização para geração de medições autorizadas. Se for informado
+            *false* ou se o campo não for informado, o estado de autorização da
+            medição será determinado pelo Sienge seguindo as regras normais do
+            sistema para autorização de medições, considerando o usuário
+            utilizado pela API no Sienge. Campo opcional.
+          default: false
+          type: boolean
+          example: true
+        measurementDate:
+          description: |
+            Data da medição
+
+            Formato: `yyyy-MM-dd`
+          type: string
+          format: date
+          example: '2021-04-18'
+        notes:
+          description: Observação da medição.
+          type: string
+          example: Uma observação da medição
+      example:
+        dueDate: '2021-06-22'
+        items:
+          - buildingUnitId: 2
+            itemId: 25
+            measuredQuantity: 45.4918
+        makeUnauthorized: false
+        measurementDate: '2021-04-18'
+        notes: Uma observação da medição
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/PostMeasurementDto.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.PostMeasurementDto
+    MeasurementCreatedDto:
+      description: Informações da medição que foi criada.
+      type: object
+      properties:
+        measurementNumber:
+          description: Número da Medição
+          type: integer
+          format: int32
+          example: 1
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/MeasurementCreatedDto.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.MeasurementCreatedDto
+    PaginationResultMeasurementsResultDTO:
+      description: >-
+        Objeto contendo metadados e resultados paginados da consulta de obtenção
+        de medições
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          description: >-
+            Lista de Medições de Contratos retornadas como resultado da
+            Requisição
+          type: array
+          items:
+            $ref: '#/components/schemas/MeasurementsResultDTO'
+      example:
+        resultSetMetadata:
+          count: 200
+          offset: 0
+          limit: 100
+        results:
+          - authorized: true
+            buildingId: 101
+            consistent: false
+            contractCustomerId: 1
+            contractNumber: '1234'
+            contractSupplierId: 1
+            documentId: CT
+            dueDate: '2021-06-22'
+            finalized: false
+            measurementDate: '2022-01-31'
+            measurementNumber: 1
+            netValue: 1285.47
+            notes: Uma observação da medição
+            released: false
+            responsibleId: NOME
+            responsibleName: NOME SOBRENOME
+            statusApproval: APPROVED
+            totalLaborValue: 750
+            totalMaterialValue: 535.47
+            valueToRelease: 375.45
+    PaginationResultMeasurementAttachmentMetadataDTO:
+      description: >-
+        Objeto contendo metadados e resultados da consulta de anexos de medição
+        de contrato
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          description: >-
+            Lista de anexos de medição de contrato retornadas como resultado da
+            Requisição
+          type: array
+          items:
+            $ref: '#/components/schemas/MeasurementAttachmentMetadataDTO'
+      example:
+        resultSetMetadata:
+          count: 200
+          offset: 0
+          limit: 100
+        results:
+          - attachmentNumber: 3
+            buildingId: 101
+            contractNumber: '1234'
+            description: Foto da medição 3
+            documentId: CT
+            measurementNumber: 1
+            name: anexo.png
+    ObservationDTO:
+      description: >-
+        Objeto contendo a observação relacionada a aprovação ou reprovação do
+        contrato
+      properties:
+        observation:
+          description: >-
+            Observação que será concatenada as observações de autorização e
+            desautorização.
+          example: Texto enviado via Api
+          maxLength: 300
+          type: string
+      type: object
+      x-implementation:
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.authorization.ObservationDTO
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/authorization/ObservationDTO.java
+    ClearingDTO:
+      description: Objeto de retorno contendo dados relacionados à liberação de uma medição
+      type: object
+      properties:
+        bills:
+          type: array
+          items:
+            $ref: '#/components/schemas/BillDTO'
+        buildingId:
+          description: Código da obra
+          example: 100
+          format: int32
+          minimum: 0
+          type: integer
+        contractNumber:
+          description: Número do contrato.
+          example: '1234'
+          type: string
+        documentId:
+          description: Código do documento.
+          example: CT
+          type: string
+        downPaymentValue:
+          description: Valor do adiantamento
+          type: number
+          format: double
+          example: 12.47
+        exchangeBillId:
+          description: Número do título da Permuta
+          type: integer
+          format: int64
+          example: 12345
+        isFinished:
+          description: Indica se a liberação está ou não finalizada
+          type: boolean
+          example: true
+        measurementNumber:
+          description: Número da Medição
+          type: integer
+          format: int32
+          example: 1
+        securityDepositBillId:
+          description: Número do título da Caução
+          type: integer
+          format: int64
+          example: 12345
+      example:
+        bills:
+          - billId: 1
+        buildingId: 101
+        contractNumber: '1234'
+        documentId: CT
+        downPaymentValue: 12.47
+        exchangeBillId: 12345
+        isFinished: true
+        measurementNumber: 1
+        securityDepositBillId: 12345
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/ClearingDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.ClearingDTO
+    PaginationResultMeasurementItemDTO:
+      description: >-
+        Objeto de resposta de itens de uma medição, contendo metadados e
+        resultados relacionados ao contexto
+      type: object
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeasurementItemDTO'
+      example:
+        resultSetMetadata:
+          count: 200
+          offset: 0
+          limit: 100
+        results:
+          - additionalMeasurementItemInformation: Observação
+            buildingAppropriations:
+              - buildingUnitId: 2
+                percentage: 100
+                sheetItemId: 42
+            buildingUnitId: 2
+            cumulativeMeasuredQuantity: 3000.2348
+            itemId: 55
+            laborPrice: 9.0005
+            materialPrice: 16.2314
+            measuredLaborValue: 12.5
+            measuredMaterialValue: 300.45
+            measuredPercentage: 72.521664310737
+            measuredQuantity: 3000.2348
+            preMeasurement: 'N'
+            quantity: 1234.3502
+    MeasurementWebhookEvent:
+      description: Payload enviado nos webhooks de medições e liberações de medição
+      type: object
+      required:
+        - documentId
+        - contractNumber
+        - measurementNumber
+        - buildingId
+      properties:
+        documentId:
+          description: Código do documento.
+          example: CT
+          type: string
+        contractNumber:
+          description: Número do contrato.
+          example: '1234'
+          type: string
+        measurementNumber:
+          description: Número da Medição
+          type: integer
+          format: int32
+          example: 1
+        buildingId:
+          description: Código da obra
+          example: 100
+          format: int32
+          minimum: 0
+          type: integer
+    PostMeasurementItemDto:
+      description: Informações para inclusão de um item de medição de contrato.
+      type: object
+      properties:
+        buildingUnitId:
+          description: Código da unidade construtiva
+          example: 123
+          format: int32
+          type: integer
+        itemId:
+          description: >-
+            Código do item de contrato que está sendo medido. Deve referenciar
+            um item que já está cadastrado no contrato, na respectiva unidade
+            construtiva. Este item deve ser de último nível, ou seja, deve ser
+            um insumo ou serviço e não um item agrupador. Campo obrigatório.
+          type: integer
+          example: 25
+        measuredQuantity:
+          description: >-
+            Quantidade medida do item, com precisão de 4 casas decimais. Deve
+            ser um número maior que zero. Campo obrigatório.
+          type: number
+          example: 45.4918
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/PostMeasurementDto.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.PostMeasurementDto.MeasurementItemDto
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    MeasurementsResultDTO:
+      description: Objeto contendo dados resumidos de medições de contratos
+      type: object
+      properties:
+        authorized:
+          description: >-
+            Retornará verdadeiro se medição estiver autorizado, caso contrário
+            retornará falso.
+          type: boolean
+          example: true
+        buildingId:
+          description: Código da obra
+          example: 100
+          format: int32
+          minimum: 0
+          type: integer
+        consistent:
+          description: >-
+            Indica se a medição está consistente; verdadeiro para consistente,
+            falso caso contrário.
+          type: boolean
+          example: false
+        contractCustomerId:
+          description: Id do Cliente do Contrato
+          type: number
+          format: int64
+          example: 1
+        contractNumber:
+          description: Número do contrato.
+          example: '1234'
+          type: string
+        contractSupplierId:
+          description: Id do Fornecedor do Contrato
+          type: number
+          format: int64
+          example: 1
+        documentId:
+          description: Código do documento.
+          example: CT
+          type: string
+        dueDate:
+          description: Data de vencimento. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        finalized:
+          description: >-
+            Retornará verdadeiro se medição estiver finalizada, caso contrário
+            retornará falso
+          type: boolean
+          example: false
+        measurementDate:
+          description: |
+            Data da medição
+
+            Formato: `yyyy-MM-dd`
+          type: string
+          format: date
+          example: '2021-04-18'
+        measurementNumber:
+          description: Número da Medição
+          type: integer
+          format: int32
+          example: 1
+        netValue:
+          description: Total Líquido
+          type: number
+          format: double
+          example: 1285.47
+        notes:
+          description: Observação da medição.
+          type: string
+          example: Uma observação da medição
+        released:
+          description: >-
+            Retornará verdadeiro se medição estiver liberada, caso contrário
+            retornará falso
+          type: boolean
+          example: false
+        responsibleId:
+          description: Id do responsável pela medição.
+          type: string
+          example: NOME
+        responsibleName:
+          description: Nome do responsável pela medição.
+          type: string
+          example: NOME SOBRENOME
+        statusApproval:
+          description: >-
+            Código da situação de aprovação da medição. Toda medição nasce com
+            situação *APPROVED* e somente será alterada para *DISAPPROVED* se
+            for reprovada.
+          type: string
+          enum:
+            - APPROVED
+            - DISAPPROVED
+          example: APPROVED
+        totalLaborValue:
+          description: Total medido de Mão de Obra
+          type: number
+          format: double
+          example: 750
+        totalMaterialValue:
+          description: Total medido de Material
+          type: number
+          format: double
+          example: 535.47
+        valueToRelease:
+          description: Total a liberar da medição
+          type: number
+          format: double
+          example: 375.45
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/allmeasurements/MeasurementsResultDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.allmeasurements.MeasurementsResultDTO
+    MeasurementAttachmentMetadataDTO:
+      description: Objeto contendo a lista de anexos de medição
+      type: object
+      properties:
+        attachmentNumber:
+          description: Identificador numérico do anexo
+          type: integer
+          example: 3
+        buildingId:
+          description: Código da obra
+          example: 100
+          format: int32
+          minimum: 0
+          type: integer
+        contractNumber:
+          description: Número do contrato.
+          example: '1234'
+          type: string
+        description:
+          description: Descrição do arquivo em anexo
+          type: string
+          example: Foto da medição 3
+        documentId:
+          description: Código do documento.
+          example: CT
+          type: string
+        measurementNumber:
+          description: Número da Medição
+          type: integer
+          format: int32
+          example: 1
+        name:
+          description: Nome do arquivo em anexo
+          type: string
+          example: anexo.png
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/attachmentmetadata/MeasurementAttachmentMetadataDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.attachmentmetadata.MeasurementAttachmentMetadataDTO
+    BillDTO:
+      description: Objeto contendo o número do título de liberação de medição
+      type: object
+      properties:
+        billId:
+          description: >-
+            Número do título (dependendo do tipo de contrato, o título poderá
+            ser de contas a pagar ou contas a receber)
+          type: integer
+          format: int64
+          example: 1
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/BillDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.BillDTO
+    MeasurementItemDTO:
+      description: Objeto contendo o item da medição do contrato
+      type: object
+      properties:
+        additionalMeasurementItemInformation:
+          description: Observação preenchida no item de medição.
+          type: string
+          example: Observação
+        buildingAppropriations:
+          description: >
+            Apropriações de obra do item de contrato. Esse conjunto de itens
+            representa um rateio da quantidade contratada do item de contrato,
+            entre um ou mais itens do orçamento da obra do centro de custo do
+            contrato. Os itens de orçamento referenciados em cada item de
+            apropriação devem ser do nível (na estrutura analítica do orçamento)
+            correspondente ao nível de apropriação definido na respectiva obra
+            (por exemplo: etapa, subetapa, serviço etc.). Importante: se a obra
+            do contrato possuir nível de apropriação definido como "obra" o
+            array estará vazio.
+          type: array
+          items:
+            $ref: '#/components/schemas/BuildingApropriationDTO'
+        buildingUnitId:
+          description: Código da unidade construtiva
+          example: 123
+          format: int32
+          type: integer
+        cumulativeMeasuredQuantity:
+          description: >-
+            Quantidade total acumulada nas medições anteriores a esta para o
+            item de contrato, com precisão de 4 casas.
+          type: number
+          example: 3000.2348
+        itemId:
+          description: código do item no contrato.
+          type: integer
+          example: 55
+        laborPrice:
+          description: >-
+            Preço unitário de mão de obra no momento da medição (com precisão de
+            4 casas).
+          type: number
+          example: 9.0005
+        materialPrice:
+          description: >-
+            Preço unitário de material no momento da medição (com precisão de 4
+            casas).
+          type: number
+          example: 16.2314
+        measuredLaborValue:
+          description: >-
+            Valor monetário medido de mão de obra nesta medição para o item de
+            contrato, com precisão de 2 casas.
+          type: number
+          example: 12.5
+        measuredMaterialValue:
+          description: >-
+            Valor monetário medido de material nesta medição para o item de
+            contrato, com precisão de 2 casas.
+          type: number
+          example: 300.45
+        measuredPercentage:
+          description: >-
+            Percentual medido nesta medição para o item de contrato, com
+            precisão de 12 casas.
+          type: number
+          example: 72.521664310737
+        measuredQuantity:
+          description: >-
+            Quantidade medida nesta medição para o item de contrato, com
+            precisão de 4 casas.
+          type: number
+          example: 3000.2348
+        preMeasurement:
+          description: >-
+            Indica se o item de medição foi marcado na pré-medição, caso tenha
+            ocorrido.
+          type: string
+          example: 'N'
+        quantity:
+          description: Quantidade contratada do item de contrato, com precisão de 4 casas
+          type: number
+          format: double
+          example: 1234.3502
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/MeasurementItemDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.MeasurementItemDTO
+    BuildingApropriationDTO:
+      description: Objeto contendo dados de apropriação de obra do item de contrato
+      type: object
+      properties:
+        buildingUnitId:
+          description: Código da unidade construtiva
+          example: 123
+          format: int32
+          type: integer
+        percentage:
+          description: >-
+            Percentual de rateio do respectivo item de orçamento nas
+            apropriações de obra deve ser um número maior que zero, menor ou
+            igual a 100, com precisão de até 12 casas decimais.
+          type: number
+          example: 100
+        sheetItemId:
+          description: Identificador do item de orçamento na planilha.
+          type: integer
+          example: 42
+      x-implementation:
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/measurement/BuildingApropriationDTO.java
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.measurement.BuildingApropriationDTO
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    RequiredDocumentId:
+      description: Código do documento (obrigatório).
+      in: query
+      name: documentId
+      required: true
+      schema:
+        description: Código do documento.
+        example: CT
+        type: string
+    RequiredContractNumber:
+      description: Número do contrato (obrigatório).
+      in: query
+      name: contractNumber
+      required: true
+      schema:
+        description: Número do contrato.
+        example: '1234'
+        type: string
+    RequiredBuildingId:
+      description: Código (interno) da obra (obrigatório).
+      in: query
+      name: buildingId
+      required: true
+      schema:
+        example: 100
+        format: int32
+        minimum: 0
+        type: integer
+    requiredMeasurementNumber:
+      name: measurementNumber
+      in: query
+      description: Número identificador da medição
+      required: true
+      schema:
+        description: Número da Medição
+        type: integer
+        format: int32
+        example: 1
+    DocumentId:
+      description: Identificador do documento.
+      in: query
+      name: documentId
+      schema:
+        description: Código do documento.
+        example: CT
+        type: string
+    ContractNumber:
+      description: Identificador do contrato.
+      in: query
+      name: contractNumber
+      schema:
+        description: Número do contrato.
+        example: '1234'
+        type: string
+    BuildingId:
+      description: Identificador (interno) da obra.
+      in: query
+      name: buildingId
+      schema:
+        example: 100
+        format: int32
+        minimum: 0
+        type: integer
+    measurementNumber:
+      name: measurementNumber
+      in: query
+      description: Número da medição
+      schema:
+        description: Número da Medição
+        type: integer
+        format: int32
+        example: 1
+    measurementDate:
+      name: measurementDate
+      in: query
+      description: |
+        Data utilizada para filtro da medição
+
+        Formato: `yyyy-MM-dd`
+      schema:
+        description: |
+          Data da medição
+
+          Formato: `yyyy-MM-dd`
+        type: string
+        format: date
+        example: '2021-04-18'
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1
+webhooks:
+  MEASUREMENT_AUTHORIZED:
+    post:
+      tags:
+        - Webhooks - Medições de Contratos de Suprimentos
+      operationId: webhookMeasurementAuthorized
+      summary: Webhook de medição autorizada
+      description: Disparado quando uma medição consistente é totalmente autorizada.
+      requestBody:
+        description: JSON com os identificadores da medição autorizada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasurementWebhookEvent'
+      responses:
+        2XX:
+          description: O evento MEASUREMENT_AUTHORIZED foi recebido com sucesso
+      x-audience:
+        - public
+  MEASUREMENT_UNAUTHORIZED:
+    post:
+      tags:
+        - Webhooks - Medições de Contratos de Suprimentos
+      operationId: webhookMeasurementUnauthorized
+      summary: Webhook de medição desautorizada
+      description: Disparado quando uma medição consistente é desautorizada.
+      requestBody:
+        description: JSON com os identificadores da medição desautorizada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasurementWebhookEvent'
+      responses:
+        2XX:
+          description: O evento MEASUREMENT_UNAUTHORIZED foi recebido com sucesso
+      x-audience:
+        - public
+  CLEARING_FINISHED:
+    post:
+      tags:
+        - Webhooks - Medições de Contratos de Suprimentos
+      operationId: webhookClearingFinished
+      summary: Webhook de liberação de medição finalizada
+      description: Disparado quando uma liberação de medição é finalizada.
+      requestBody:
+        description: JSON com os identificadores da liberação finalizada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasurementWebhookEvent'
+      responses:
+        2XX:
+          description: O evento CLEARING_FINISHED foi recebido com sucesso
+      x-audience:
+        - public
+  CLEARING_DELETED:
+    post:
+      tags:
+        - Webhooks - Medições de Contratos de Suprimentos
+      operationId: webhookClearingDeleted
+      summary: Webhook de liberação de medição deletada
+      description: Disparado quando uma liberação de medição finalizada é deletada.
+      requestBody:
+        description: JSON com os identificadores da liberação deletada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasurementWebhookEvent'
+      responses:
+        2XX:
+          description: O evento CLEARING_DELETED foi recebido com sucesso
+      x-audience:
+        - public

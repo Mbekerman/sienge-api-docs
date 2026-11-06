@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>APIs Bulk Data · Documentação de APIs</title>
+    <link href="../fonts.css" rel="stylesheet" />
+    <link href="../general-page.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>APIs Bulk Data</h1>
+    <p>As APIs Bulk Data são ofertadas em todos os pacotes de API, com cotas diárias mais atrativas nos pacotes <strong>Ultimate</strong> e <strong>Infinity</strong> (veja <a href="./pacotes-de-apis.html">Pacotes de APIs</a>). Seu objetivo é a <strong>extração de dados em massa</strong> do Sienge, de forma contínua e sem paginação, e têm um funcionamento diferente das APIs REST convencionais.</p>
+<p>Devido ao volume de dados envolvido e visando a segurança da infraestrutura, as APIs Bulk Data possuem um limite de <strong>20 requisições por minuto</strong>.</p>
+<p>Por esse motivo, recomenda-se analisar com atenção os filtros da requisição para garantir que todos os dados necessários sejam obtidos logo na primeira chamada.</p>
+<h4>Requisição Síncrona</h4>
+<p>Na requisição síncrona, todos os dados são retornados imediatamente em stream no formato JSON assim que a requisição é processada.</p>
+<pre><code>GET https://api.sienge.com.br/{subdominio}/public/api/bulk-data/v1/customer-extract-history?startDueDate=2019-01-01&amp;endDueDate=2019-01-02
+</code></pre>
+<p>Formato da resposta:</p>
+<pre><code class="language-json">{ &quot;data&quot;: [ {...}, {...} ] }
+</code></pre>
+<h4>Requisição Assíncrona</h4>
+<p>Ao passar o parâmetro <code>_async=true</code>, a requisição é processada em segundo plano. A resposta imediata retorna apenas um <strong>identificador</strong> para acompanhar o andamento.</p>
+<p>Parâmetros opcionais para requisições assíncronas:</p>
+<ul>
+<li><code>_asyncChunkMaxSize</code> — tamanho máximo de cada chunk em kilobytes. Se não informado, o resultado é retornado em um único chunk.</li>
+<li><code>_asyncWebHookUrl</code> — URL para notificação via webhook quando o processamento for concluído.</li>
+<li><code>_asyncWebHookToken</code> — token enviado junto à notificação webhook.</li>
+</ul>
+<pre><code>GET https://api.sienge.com.br/{subdominio}/public/api/bulk-data/v1/customer-extract-history?_async=true&amp;_asyncChunkMaxSize=4096&amp;startDueDate=2019-01-01&amp;endDueDate=2019-01-02
+</code></pre>
+<p>Formato da resposta:</p>
+<pre><code class="language-json">{ &quot;identifier&quot;: &quot;oq21gl467hj69na77nbugmee&quot; }
+</code></pre>
+<h4>Consultando o status de uma requisição assíncrona</h4>
+<pre><code>GET https://api.sienge.com.br/{subdominio}/public/api/bulk-data/v1/async/{identifier}
+</code></pre>
+<p>Possíveis respostas:</p>
+<pre><code class="language-json">{ &quot;status&quot;: &quot;Waiting&quot; }
+{ &quot;status&quot;: &quot;Processing&quot; }
+{ &quot;status&quot;: &quot;Finished&quot;, &quot;chunks&quot;: 5 }
+{ &quot;status&quot;: &quot;Failed&quot;, &quot;error&quot;: &quot;...&quot; }
+</code></pre>
+<h4>Obtendo o resultado de uma requisição assíncrona</h4>
+<p>Após o status <code>Finished</code>, obtenha cada chunk individualmente. Se o total de chunks for 5, chame o endpoint 5 vezes passando os valores de 1 a 5.</p>
+<pre><code>GET https://api.sienge.com.br/{subdominio}/public/api/bulk-data/v1/async/{identifier}/result/{chunk}
+</code></pre>
+<p>Formato da resposta:</p>
+<pre><code class="language-json">{ &quot;data&quot;: [ {...}, {...} ] }
+</code></pre>
+<blockquote>
+<p>Os resultados ficam disponíveis por <strong>24 horas</strong> após o processamento. Após esse período, o identificador expira.</p>
+</blockquote>
+
+  </body>
+</html>

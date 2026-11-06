@@ -1,0 +1,2402 @@
+openapi: 3.1.1
+info:
+  title: Nota Fiscal de Compra
+  version: 1.24.0
+  description: Operações relacionadas a uma Nota Fiscal de Compra.
+paths:
+  /purchase-invoices/{sequentialNumber}:
+    get:
+      description: Retorna uma nota fiscal de compra a partir do número sequencial. (REST)
+      operationId: getPurchaseInvoicesId
+      x-original-file: purchase-invoices-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Nota Fiscal de Compra
+      summary: Consulta nota fiscal de compra
+      parameters:
+        - $ref: '#/components/parameters/SequentialNumber'
+      responses:
+        '200':
+          description: Nota fiscal de compra
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseInvoiceRequest'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-invoices/{sequentialNumber}/items:
+    get:
+      description: >-
+        Retorna os itens de uma nota fiscal de compra a partir do número
+        sequencial. (REST)
+      operationId: getPurchaseInvoicesIdItems
+      x-original-file: purchase-invoices-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Nota Fiscal de Compra
+      summary: Retorna os itens da nota fiscal de compra
+      parameters:
+        - $ref: '#/components/parameters/SequentialNumber'
+      responses:
+        '200':
+          description: Lista de itens da nota fiscal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseInvoiceItemsRequest'
+              example:
+                links:
+                  - href: string
+                    rel: string
+                resultSetMetadata:
+                  limit: 100
+                  offset: 0
+                  count: 3
+                results:
+                  - invoiceItemNumber: 1
+                    buildingId: 7
+                    buildingIdView: 7
+                    buildingCostDatabaseId: 53001
+                    resourceId: 1
+                    detailId: 5
+                    trademarkId: 42
+                    unitOfMovementId: 42
+                    costCenterId: 100
+                    detailItemDescription: Cimento CP II
+                    detailDescription: Cimento Portland Composto
+                    detailTrademarkDescription: CP
+                    quantityDelivery: 84
+                    unitPrice: 25.75
+                    netPrice: 2588.88
+                    imcsTaxPercentage: 0
+                    issTaxPercentage: 0
+                    ipiTaxPercentage: 0
+                    discountPercentage: 0
+                    increasePercentage: 0
+                    discount: 0
+                    freightUnitPrice: 0
+                    flagStockMovement: 'N'
+                    notes: Observações do item.
+                    stockMovementNumber: 1
+                    patrimonyType: P
+                    patrimonyQuantity: 0
+                    sequentialNumber: 190
+                    addedValueMarginPercentage: 0
+                    icmsTaxSubstitutionPercentage: 0
+                    icmsCalculationBasisAmount: 0
+                    subtotal: 0
+                    additionAmount: 0
+                    ipiTax: 0
+                    issTax: 0
+                    icmsTax: 0
+                    icmsStTax: 0
+                    icmsStTaxPercentage: 0
+                    invoiceEletronicItemNumber: 1
+                    insuranceAmount: 0
+                    icmsStCalculationBasis: 0
+                    ibsTax:
+                      ibsCbsCalculationBasis: 1000
+                      cstId: '000'
+                      taxClassificationId: '000001'
+                      presumedCreditId: null
+                      stateIbsRate: 0.1
+                      stateIbsReducedRate: 0
+                      stateIbsEffectiveRate: 0.1
+                      percentageDeferralIbsState: 0
+                      stateIbsDeferralValue: 0
+                      stateIbsValue: 1
+                      municipalIbsRate: 0
+                      municipalIbsReducedRate: 0
+                      municipalIbsEffectiveRate: 0
+                      percentageDeferralIbsMunicipal: 0
+                      municipalIbsDeferralValue: 0
+                      municipalIbsValue: 0
+                      percentageIbsPresumedCredit: 0
+                      ibsPresumedCreditValue: 0
+                    cbsTax:
+                      presumedCreditId: null
+                      cbsRate: 0.9
+                      cbsReducedRate: 0
+                      cbsEffectiveRate: 0.9
+                      percentageDeferralCbs: 0
+                      cbsDeferralValue: 0
+                      cbsValue: 9
+                      percentageCbsPresumedCredit: 0
+                      cbsPresumedCreditValue: 0
+                    isTax:
+                      isCalculationBasis: 1000
+                      isRate: 0
+                      isSpecificRatePerMeasurementUnit: 0
+                      isValue: 0
+                    regularTax:
+                      cstId: '000'
+                      taxClassificationId: '000001'
+                      stateIbsEffectiveRate: 0.1
+                      stateIbsValue: 1
+                      municipalIbsEffectiveRate: 0
+                      municipalIbsValue: 0
+                      cbsEffectiveRate: 0.9
+                      cbsValue: 9
+                  - invoiceItemNumber: 2
+                    buildingId: 7
+                    buildingIdView: 7
+                    buildingCostDatabaseId: 53001
+                    resourceId: 1
+                    detailId: 5
+                    trademarkId: 42
+                    unitOfMovementId: 42
+                    costCenterId: 100
+                    detailItemDescription: Cimento CP II
+                    detailDescription: Cimento Portland Composto
+                    detailTrademarkDescription: CP
+                    quantityDelivery: 84
+                    unitPrice: 25.75
+                    netPrice: 2588.88
+                    imcsTaxPercentage: 0
+                    issTaxPercentage: 0
+                    ipiTaxPercentage: 0
+                    discountPercentage: 0
+                    increasePercentage: 0
+                    discount: 0
+                    freightUnitPrice: 0
+                    flagStockMovement: 'N'
+                    notes: Observações do item.
+                    stockMovementNumber: 1
+                    patrimonyType: P
+                    patrimonyQuantity: 0
+                    sequentialNumber: 190
+                    addedValueMarginPercentage: 0
+                    icmsTaxSubstitutionPercentage: 0
+                    icmsCalculationBasisAmount: 0
+                    subtotal: 0
+                    additionAmount: 0
+                    ipiTax: 0
+                    issTax: 0
+                    icmsTax: 0
+                    icmsStTax: 0
+                    icmsStTaxPercentage: 0
+                    invoiceEletronicItemNumber: 2
+                    insuranceAmount: 0
+                    icmsStCalculationBasis: 0
+                    ibsTax:
+                      ibsCbsCalculationBasis: 1000
+                      cstId: '000'
+                      taxClassificationId: '000001'
+                      presumedCreditId: null
+                      stateIbsRate: 0.1
+                      stateIbsReducedRate: 0
+                      stateIbsEffectiveRate: 0.1
+                      percentageDeferralIbsState: 0
+                      stateIbsDeferralValue: 0
+                      stateIbsValue: 1
+                      municipalIbsRate: 0
+                      municipalIbsReducedRate: 0
+                      municipalIbsEffectiveRate: 0
+                      percentageDeferralIbsMunicipal: 0
+                      municipalIbsDeferralValue: 0
+                      municipalIbsValue: 0
+                      percentageIbsPresumedCredit: 0
+                      ibsPresumedCreditValue: 0
+                    cbsTax:
+                      presumedCreditId: null
+                      cbsRate: 0.9
+                      cbsReducedRate: 0
+                      cbsEffectiveRate: 0.9
+                      percentageDeferralCbs: 0
+                      cbsDeferralValue: 0
+                      cbsValue: 9
+                      percentageCbsPresumedCredit: 0
+                      cbsPresumedCreditValue: 0
+                    isTax: null
+                    regularTax:
+                      cstId: '000'
+                      taxClassificationId: '000001'
+                      stateIbsEffectiveRate: 0.1
+                      stateIbsValue: 1
+                      municipalIbsEffectiveRate: 0
+                      municipalIbsValue: 0
+                      cbsEffectiveRate: 0.9
+                      cbsValue: 9
+                  - invoiceItemNumber: 3
+                    buildingId: 7
+                    buildingIdView: 7
+                    buildingCostDatabaseId: 53001
+                    resourceId: 1
+                    detailId: 5
+                    trademarkId: 42
+                    unitOfMovementId: 42
+                    costCenterId: 100
+                    detailItemDescription: Cimento CP II
+                    detailDescription: Cimento Portland Composto
+                    detailTrademarkDescription: CP
+                    quantityDelivery: 84
+                    unitPrice: 25.75
+                    netPrice: 2588.88
+                    imcsTaxPercentage: 0
+                    issTaxPercentage: 0
+                    ipiTaxPercentage: 0
+                    discountPercentage: 0
+                    increasePercentage: 0
+                    discount: 0
+                    freightUnitPrice: 0
+                    flagStockMovement: 'N'
+                    notes: Observações do item.
+                    stockMovementNumber: 1
+                    patrimonyType: P
+                    patrimonyQuantity: 0
+                    sequentialNumber: 190
+                    addedValueMarginPercentage: 0
+                    icmsTaxSubstitutionPercentage: 0
+                    icmsCalculationBasisAmount: 0
+                    subtotal: 0
+                    additionAmount: 0
+                    ipiTax: 0
+                    issTax: 0
+                    icmsTax: 0
+                    icmsStTax: 0
+                    icmsStTaxPercentage: 0
+                    invoiceEletronicItemNumber: 3
+                    insuranceAmount: 0
+                    icmsStCalculationBasis: 0
+                    ibsTax: null
+                    cbsTax: null
+                    isTax: null
+                    regularTax: null
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-invoices/{sequentialNumber}/items/{itemNumber}/buildings-appropriations:
+    get:
+      description: >-
+        Retorna as apropriações de obra de um item específico de uma nota fiscal
+        de compra. (REST)
+      operationId: getPurchaseInvoicesIdItemsIdBuildingsAppropriations
+      x-original-file: purchase-invoices-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Nota Fiscal de Compra
+      summary: Consulta apropriações de obra do item da nota fiscal
+      parameters:
+        - $ref: '#/components/parameters/SequentialNumber'
+        - name: itemNumber
+          in: path
+          description: Número do item da nota fiscal de compra
+          required: true
+          schema:
+            type: integer
+            format: int32
+          example: 1
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Lista de apropriações de obra do item
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PurchaseInvoiceItemBuildingsAppropriationsResponse
+              example:
+                resultSetMetadata:
+                  count: 8
+                  offset: 0
+                  limit: 100
+                results:
+                  - buildingUnitId: 1
+                    sheetItemId: 1
+                    percentage: 12.5
+                  - buildingUnitId: 1
+                    sheetItemId: 10
+                    percentage: 12.5
+                  - buildingUnitId: 1
+                    sheetItemId: 11
+                    percentage: 12.5
+                  - buildingUnitId: 1
+                    sheetItemId: 12
+                    percentage: 12.5
+                  - buildingUnitId: 1
+                    sheetItemId: 13
+                    percentage: 12.5
+                  - buildingUnitId: 1
+                    sheetItemId: 14
+                    percentage: 12.5
+                  - buildingUnitId: 1
+                    sheetItemId: 15
+                    percentage: 12.5
+                  - buildingUnitId: 1
+                    sheetItemId: 16
+                    percentage: 12.5
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-invoices:
+    get:
+      operationId: getPurchaseInvoices
+      x-original-file: purchase-invoices-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Nota Fiscal de Compra
+      summary: Lista notas fiscais de compra
+      description: Retorna uma lista paginada de notas fiscais de compra. (REST)
+      parameters:
+        - $ref: '#/components/parameters/StartDateQuery'
+        - $ref: '#/components/parameters/EndDateQuery'
+        - $ref: '#/components/parameters/CompanyIdQuery'
+        - name: supplierId
+          in: query
+          required: false
+          description: Código do fornecedor
+          schema:
+            description: Código do fornecedor
+            example: 236
+            format: int32
+            type: integer
+        - $ref: '#/components/parameters/DocumentId'
+        - name: series
+          in: query
+          required: false
+          description: Série da nota fiscal
+          schema:
+            type: string
+          examples:
+            value: {}
+        - name: number
+          in: query
+          required: false
+          description: Número da nota fiscal
+          schema:
+            type: string
+            example: '6546523'
+            description: Número da nota fiscal.
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Lista paginada de notas fiscais de compra
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseInvoicesListResponse'
+              example:
+                links:
+                  - href: /sienge/api/v1/purchase-invoices?limit=10&offset=10
+                    rel: next
+                resultSetMetadata:
+                  limit: 10
+                  offset: 0
+                  count: 1
+                results:
+                  - sequentialNumber: 5455
+                    documentId: NF
+                    number: '6546523'
+                    series: '123'
+                    supplierId: 236
+                    companyId: 29
+                    movementTypeId: 1
+                    movementDate: '2021-04-23'
+                    issueDate: '2021-04-23'
+                    consistency: I
+                    createdBy: USER
+                    modifiedBy: ANOTHERUSER
+                    createdAt: '2021-04-23T10:30:00.000-03:00'
+                    modifiedAt: '2021-04-24T15:20:00.000-03:00'
+                    billId: 2104
+                    evaluationId: 1515
+                    itemsTotalAmount: 1000
+                    discount: 50
+                    valueOtherExpenses: 20
+                    freightAmount: 100
+                    freightItemsAmount: 80
+                    freightIpiFlag: 'N'
+                    freightIpiTax: 0
+                    notes: Compra de materiais faltantes para a obra XPTO
+                    differenceIpiAmount: 0
+                    appropriationDiscountFlag: S
+                    consistencyRegistryFlag: S
+                    operationCtbId: 1
+                    payableFreightItemsFlag: S
+                    freightType: CIF
+                    billAttachmentSyncFlag: S
+                    simpleDeliveryFlag: 'N'
+                    invoiceDeliveryId: 1
+                    eletronicInvoiceId: 10
+                    eletronicInvoiceItemsFlag: S
+                    icmsStTax: 0
+                    ipiTax: 0
+                    eletronicInvoiceAmount: 0
+                    productsAmount: 50
+                    insuranceAmount: 0
+                    icmsStCalculatedFlag: S
+                    accountingDate: '2021-04-23'
+                    freightKnowledge:
+                      - knowledgeNumber: '123456789'
+                        knowledgeType: CTe
+                        knowledgeValue: 100
+                        knowledgeDate: '2021-04-23'
+                        freightType: CIF
+                        freightIpiFlag: 'N'
+                        freightIpiTax: 0
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+    post:
+      operationId: postPurchaseInvoices
+      x-original-file: purchase-invoices-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Nota Fiscal de Compra
+      summary: Cadastra uma nota fiscal de compra.
+      description: >-
+        Inserção dos dados que fazem parte das informações principais da nota
+        fiscal de compra. O primeiro passo para cadastrar uma nota é inserir
+        essas informações, que são compostos por dados essenciais como, por
+        exemplo, empresa, fornecedor e o número da nota fiscal. Com essas
+        informações inseridas, o próximo passo é incluir os demais dados da
+        nota, como, por exemplo, os seus itens. (REST)
+      requestBody:
+        description: Dados da nota fiscal de compra a ser inserida.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseInvoiceHeaderInsertInput'
+            example:
+              documentId: NF
+              number: '6546523'
+              series: '123'
+              supplierId: 10
+              companyId: 29
+              movementTypeId: 1
+              movementDate: '2021-04-23'
+              issueDate: '2021-04-23'
+              notes: Compra de materiais faltantes para a obra XPTO
+      responses:
+        '201':
+          description: Informações principais da nota fiscal inserida com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseInvoiceHeaderInsertOutput'
+              example:
+                sequentialNumber: 5455
+                documentId: NF
+                number: '6546523'
+                series: '123'
+                supplierId: 236
+                companyId: 29
+                movementTypeId: 1
+                movementDate: '2021-04-23'
+                issueDate: '2021-04-23'
+                consistency: I
+                notes: Compra de materiais faltantes para a obra XPTO
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-invoices/{sequentialNumber}/items/purchase-orders/delivery-schedules:
+    post:
+      operationId: postPurchaseInvoicesIdItemsPurchaseOrdersDeliverySchedules
+      x-section: Item da Nota Fiscal de compra
+      x-original-file: purchase-invoices-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Item da Nota Fiscal de compra
+      summary: Insere itens em uma nota fiscal já existente
+      description: >-
+        Inserção de itens em nota fiscal a partir de entregas de pedidos de
+        compra.
+
+
+        Permite vincular entregas de itens de pedidos de compra a uma nota
+        fiscal já existente.
+
+        Durante o processo, o sistema valida:
+
+
+        * A existência dos pedidos de compra informados;
+
+        * A existência das entregas vinculadas aos pedidos;
+
+        * Se as entregas não estão canceladas;
+
+        * Se há saldo disponível para faturamento. (REST)
+      parameters:
+        - $ref: '#/components/parameters/SequentialNumber'
+      requestBody:
+        description: Dados dos itens da nota fiscal de compra a serem inseridos
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseInvoiceItemOrderInsertInput'
+            example:
+              deliveriesOrder:
+                - purchaseOrderId: 457
+                  itemNumber: 2
+                  deliveryScheduleNumber: 1
+                  deliveredQuantity: 4.5
+                  keepBalance: true
+              copyNotesPurchaseOrders: true
+              copyNotesResources: false
+              copyAttachmentsPurchaseOrders: true
+      responses:
+        '201':
+          description: Itens da nota fiscal inseridos com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseInvoiceItemInsertOutput'
+              example:
+                sequentialNumber: 92
+                invoiceItemNumber: 2
+                deliveredQuantity: 15.3
+                unitPrice: 10.5
+                netPrice: 7.3
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-invoices/deliveries-attended:
+    get:
+      operationId: getPurchaseInvoicesDeliveriesAttended
+      x-section: Entregas Atendidas
+      x-original-file: purchase-invoices-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Entregas Atendidas
+      summary: Lista das entregas atendidas
+      description: >-
+        Retorna os itens atendidos entre o pedido de compra e a nota fiscal
+        (REST)
+      parameters:
+        - name: billId
+          in: query
+          description: >-
+            Id do título da Nota Fiscal.
+
+
+            Obs.: Se não for informado, é necessário informar o sequentialNumber
+            ou purchaseOrderId.
+          example: 2104
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: sequentialNumber
+          in: query
+          description: >-
+            Número sequencial da Nota Fiscal.
+
+
+            Obs.:  Se não for informado é necessário informar o billId ou
+            purchaseOrderId.
+          required: false
+          schema:
+            type: integer
+            format: int32
+          example: 190
+        - name: purchaseOrderId
+          in: query
+          description: >-
+            Id do Pedido de Compra.
+
+
+            Obs.: Se não for informado é necessário informar o sequentialNumber
+            ou billId.
+          required: false
+          schema:
+            type: integer
+            format: int32
+          example: 128
+        - $ref: '#/components/parameters/InvoiceItemNumber'
+        - $ref: '#/components/parameters/PurchaseOrderItemNumber'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Lista de entregas Atendidas
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedResponseOfDeliveryAttendedItemList
+              example:
+                links: []
+                resultSetMetadata:
+                  limit: 100
+                  offset: 0
+                  count: 1
+                results:
+                  - deliveryItemPurchaseOrderNumber: 1
+                    purchaseOrderItemAttendedNumber: 2
+                    sequentialNumber: 190
+                    invoiceItemNumber: 1
+                    deliveryDate: '2019-07-15'
+                    quantityDelivery: 84
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    PurchaseInvoiceRequest:
+      description: Representa uma nota fiscal de compra.
+      type: object
+      properties:
+        supplierId:
+          description: Código do fornecedor
+          example: 236
+          format: int32
+          type: integer
+        number:
+          type: string
+          example: '6546523'
+          description: Número da nota fiscal.
+        companyId:
+          type: integer
+          format: int32
+          example: 29
+          description: Código da empresa responsável pela emissão da nota fiscal de compra
+        documentId:
+          type: string
+          example: NF
+          description: Código do documento da nota fiscal
+        createdBy:
+          type: string
+          example: USER
+          description: >-
+            Usuário responsável pelo cadastro da nota fiscal de compra nas
+            informações de controle.
+        modifiedBy:
+          type: string
+          example: ANOTHERUSER
+          readOnly: true
+          description: >-
+            Usuário que modificou a nota fiscal de compra nas informações de
+            controle.
+        movementTypeId:
+          type: integer
+          format: int32
+          example: 1
+          description: Código do tipo de movimento.
+        billId:
+          type: integer
+          format: int32
+          description: Id do título vinculado à nota fiscal de compra
+          example: 2104
+        evaluationId:
+          type: integer
+          format: int32
+          description: Id da avaliação.
+          example: 1515
+        consistency:
+          $ref: '#/components/schemas/InvoiceConsistencyEnum'
+        createdAt:
+          type: string
+          example: '2018-03-11T14:20:00.000-03:00'
+          readOnly: true
+          description: >-
+            Data de criação da nota fiscal de compra nas informações de controle
+            no formato yyyy-MM-dd'T'HH:mm:ss.SSSXXX.
+        modifiedAt:
+          type: string
+          example: '2018-04-02T18:20:00.000-03:00'
+          readOnly: true
+          description: >-
+            Data de modificação da nota fiscal de compra nas informações de
+            controle no formato yyyy-MM-dd'T'HH:mm:ss.SSSXXX.
+        issueDate:
+          type: string
+          format: date
+          example: '2021-04-23'
+          description: Data de emissão.
+        movementDate:
+          type: string
+          format: date
+          example: '2021-04-23'
+          description: Data do movimento.
+        itemsTotalAmount:
+          type: number
+          format: double
+          description: Valor total dos itens da nota fiscal de compra.
+          example: 1000
+        discount:
+          type: number
+          format: double
+          description: Valor do desconto.
+          example: 50
+        valueOtherExpenses:
+          type: number
+          format: double
+          description: Valor das outras despesas.
+          example: 20
+        freightAmount:
+          type: number
+          format: double
+          description: Valor do frete da nota.
+          example: 100
+        freightItemsAmount:
+          type: number
+          format: double
+          description: Valor dos itens do frete.
+          example: 80
+        freightIpiFlag:
+          $ref: '#/components/schemas/FreightIpiFlagEnum'
+        freightIpiTax:
+          type: number
+          format: double
+          description: Valor do IPI no frete.
+          example: 0
+        notes:
+          type: string
+          example: Compra de materiais faltantes para a obra XPTO
+          description: Observações da nota fiscal.
+        differenceIpiAmount:
+          type: number
+          format: double
+          description: Valor da diferência do IPI.
+          example: 0
+        appropriationDiscountFlag:
+          $ref: '#/components/schemas/AppropriationDiscountFlagEnum'
+        consistencyRegistryFlag:
+          $ref: '#/components/schemas/ConsistencyRegistryFlagEnum'
+        operationCtbId:
+          type: integer
+          format: int32
+          description: Id da operação CTB.
+          example: 1
+        sequentialNumber:
+          type: integer
+          format: int32
+          example: 5455
+          description: >-
+            Número sequencial único da nota fiscal de compra. O número
+            sequencial é uma chave única e está disponível apenas para controle
+            interno do cadastro de nota fiscal.
+        payableFreightItemsFlag:
+          $ref: '#/components/schemas/PayableFreightItemsFlagEnum'
+        freightType:
+          $ref: '#/components/schemas/InvoiceFreightTypeEnum'
+        series:
+          type: string
+          description: Série da nota fiscal.
+          examples: &ref_0
+            - SU
+            - '123'
+        billAttachmentSyncFlag:
+          type: string
+          example: S
+          description: |
+            Sincroniza os anexos do título.
+
+
+
+
+              * `S` - Sim
+        simpleDeliveryFlag:
+          $ref: '#/components/schemas/SimpleDeliveryFlagEnum'
+        invoiceDeliveryId:
+          type: integer
+          format: int32
+          description: Código do remessa da fatura.
+          example: 1
+        eletronicInvoiceId:
+          type: integer
+          format: int32
+          description: Código da nota fiscal eletronica.
+          example: 10
+        eletronicInvoiceItemsFlag:
+          $ref: '#/components/schemas/EletronicInvoiceItemsFlagEnum'
+        icmsStTax:
+          type: number
+          format: double
+          description: Valor do ICMS-ST.
+          example: 0
+        ipiTax:
+          type: number
+          format: double
+          description: Valor do IPI.
+          example: 0
+        eletronicInvoiceAmount:
+          type: number
+          format: double
+          description: Valor do total da nota fiscal eletronica.
+          example: 0
+        productsAmount:
+          type: number
+          format: double
+          description: Valor do produto.
+          example: 50
+        insuranceAmount:
+          type: number
+          format: double
+          description: Valor do seguro.
+          example: 0
+        icmsStCalculatedFlag:
+          $ref: '#/components/schemas/IcmsStCalculatedFlagEnum'
+        accountingDate:
+          type: string
+          format: date
+          example: '2021-04-23'
+          description: Data de contabil.
+        freightKnowledge:
+          type: array
+          description: Lista dos Conhecimentos de Frete
+          items:
+            $ref: '#/components/schemas/freightKnowledge'
+          example:
+            - knowledgeNumber: '123456789'
+              knowledgeType: CTe
+              knowledgeValue: 100
+              knowledgeDate: '2021-04-23'
+              freightType: CIF
+              freightIpiFlag: 'N'
+              freightIpiTax: 0
+    PurchaseInvoiceItemsRequest:
+      description: Lista de itens da Nota Fiscal de Compra.
+      type: object
+      required:
+        - links
+        - resultSetMetadata
+        - results
+      properties:
+        results:
+          type: array
+          description: >-
+            Lista dos itens da Nota Fiscal de Compra retornadas como resultado
+            da requisição
+          items:
+            $ref: '#/components/schemas/PurchaseInvoiceItemListOutput'
+          example:
+            - invoiceItemNumber: 1
+              buildingId: 7
+              buildingIdView: 7
+              buildingCostDatabaseId: 53001
+              resourceId: 1
+              detailId: 5
+              trademarkId: 42
+              unitOfMovementId: 42
+              costCenterId: 100
+              detailItemDescription: Cimento CP II
+              detailDescription: Cimento Portland Composto
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        links:
+          $ref: '#/components/schemas/Links'
+    PurchaseInvoiceItemBuildingsAppropriationsResponse:
+      description: Lista de apropriações de obra de um item da nota fiscal de compra.
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        results:
+          type: array
+          description: >-
+            Lista das apropriações de obra retornadas como resultado da
+            requisição
+          items:
+            $ref: '#/components/schemas/PurchaseInvoiceItemBuildingAppropriation'
+          example:
+            - buildingUnitId: 1
+              sheetItemId: 1
+              percentage: 12.5
+            - buildingUnitId: 1
+              sheetItemId: 10
+              percentage: 12.5
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+    PurchaseInvoicesListResponse:
+      description: Lista de notas fiscais de compra.
+      type: object
+      required:
+        - links
+        - resultSetMetadata
+        - results
+      properties:
+        results:
+          type: array
+          description: >-
+            Lista das notas fiscais de compra retornadas como resultado da
+            requisição
+          items:
+            $ref: '#/components/schemas/PurchaseInvoiceRequest'
+          example:
+            - sequentialNumber: 5455
+              documentId: NF
+              number: '6546523'
+              series: '123'
+              supplierId: 236
+              companyId: 29
+              movementTypeId: 1
+              movementDate: '2021-04-23'
+              issueDate: '2021-04-23'
+              consistency: I
+              createdBy: USER
+              createdAt: '2021-04-23T10:30:00.000-03:00'
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        links:
+          $ref: '#/components/schemas/Links'
+    PurchaseInvoiceHeaderInsertInput:
+      description: >-
+        Representa as informações principais de uma nota fiscal de compra a
+        serem inseridas.
+      type: object
+      required:
+        - documentId
+        - number
+        - supplierId
+        - companyId
+      properties:
+        documentId:
+          type: string
+          example: NF
+          description: Código do documento da nota fiscal
+        number:
+          type: string
+          example: '6546523'
+          description: Número da nota fiscal.
+        series:
+          type: string
+          example: '123'
+          description: >-
+            Série da nota fiscal. Caso não seja informada, é utilizado a série
+            padrão definida no parâmetro de sistema 684.
+        supplierId:
+          description: Código do fornecedor
+          example: 236
+          format: int32
+          type: integer
+        companyId:
+          type: integer
+          format: int32
+          example: 29
+          description: Código da empresa responsável pela emissão da nota fiscal de compra
+        movementTypeId:
+          type: integer
+          format: int32
+          example: 1
+          description: >-
+            Código do tipo de movimento. Caso não seja informado, é utilizado o
+            tipo de movimento padrão definido no parâmetro de sistema 96.
+        movementDate:
+          type: string
+          format: date
+          example: '2021-04-23'
+          description: >-
+            Data do movimento. Caso não seja informada, é utilizada a data
+            atual.
+        issueDate:
+          type: string
+          format: date
+          example: '2021-04-23'
+          description: Data de emissão. Caso não seja informada, é utilizada a data atual.
+        notes:
+          type: string
+          example: Compra de materiais faltantes para a obra XPTO
+          description: Observações da nota fiscal.
+    PurchaseInvoiceHeaderInsertOutput:
+      description: Representa uma nota fiscal de compra inserida.
+      type: object
+      properties:
+        sequentialNumber:
+          type: integer
+          format: int32
+          example: 5455
+          description: >-
+            Número sequencial único da nota fiscal de compra. O número
+            sequencial é uma chave única e está disponível apenas para controle
+            interno do cadastro de nota fiscal.
+        documentId:
+          type: string
+          example: NF
+          description: Código do documento da nota fiscal
+        number:
+          type: string
+          example: '6546523'
+          description: Número da nota fiscal.
+        series:
+          type: string
+          description: Série da nota fiscal.
+          examples: *ref_0
+        supplierId:
+          description: Código do fornecedor
+          example: 236
+          format: int32
+          type: integer
+        companyId:
+          type: integer
+          format: int32
+          example: 29
+          description: Código da empresa responsável pela emissão da nota fiscal de compra
+        movementTypeId:
+          type: integer
+          format: int32
+          example: 1
+          description: Código do tipo de movimento.
+        movementDate:
+          type: string
+          format: date
+          example: '2021-04-23'
+          description: Data do movimento.
+        issueDate:
+          type: string
+          format: date
+          example: '2021-04-23'
+          description: Data de emissão.
+        consistency:
+          $ref: '#/components/schemas/InvoiceConsistencyEnum'
+        notes:
+          type: string
+          example: Compra de materiais faltantes para a obra XPTO
+          description: Observações da nota fiscal.
+    PurchaseInvoiceItemOrderInsertInput:
+      description: >-
+        Representa os itens da nota fiscal de compra a serem inseridos a partir
+        de entregas de itens de pedidos de compra.
+      type: object
+      required:
+        - deliveriesOrder
+      properties:
+        deliveriesOrder:
+          type: array
+          description: Entregas dos itens do pedido
+          items:
+            $ref: '#/components/schemas/PurchaseInvoiceItemOrderDeliveryInsertInput'
+          example:
+            - purchaseOrderId: 457
+              itemNumber: 2
+              deliveryScheduleNumber: 1
+              deliveredQuantity: 4.5
+              keepBalance: true
+        copyNotesPurchaseOrders:
+          type: boolean
+          example: true
+          description: Copiar observação interna dos pedidos informados
+        copyNotesResources:
+          type: boolean
+          example: false
+          description: Copiar observação interna dos insumos dos pedidos informados
+        copyAttachmentsPurchaseOrders:
+          type: boolean
+          example: true
+          description: Copiar anexos dos pedidos informados
+    PurchaseInvoiceItemInsertOutput:
+      description: Representa um item da nota fiscal de compra inserido.
+      type: object
+      properties:
+        sequentialNumber:
+          type: integer
+          format: int32
+          example: 92
+          description: Id interno da Nota Fiscal
+        invoiceItemNumber:
+          type: integer
+          format: int32
+          example: 2
+          description: Numero do item da Nota Fiscal
+        deliveredQuantity:
+          type: number
+          format: double
+          example: 15.3
+          description: Quantidade entregue do item da Nota
+        unitPrice:
+          type: number
+          format: double
+          example: 10.5
+          description: Preço unitário do item
+        netPrice:
+          type: number
+          format: double
+          example: 7.3
+          description: Preço líquido do item
+    PaginatedResponseOfDeliveryAttendedItemList:
+      description: Lista de Entregas Atendidas.
+      type: object
+      required:
+        - links
+        - resultSetMetadata
+        - results
+      properties:
+        results:
+          type: array
+          description: Lista das Entregas Atendidas retornadas como resultado da requisição
+          items:
+            $ref: '#/components/schemas/DeliveryAttendedItemListOutput'
+          example:
+            - purchaseOrderId: 128
+              purchaseOrderItemNumber: 1
+              deliveryItemPurchaseOrderNumber: 1
+              purchaseOrderItemAttendedNumber: 2
+              sequentialNumber: 190
+              invoiceItemNumber: 1
+              deliveryDate: '2019-07-15'
+              quantityDelivery: 84
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        links:
+          $ref: '#/components/schemas/Links'
+    InvoiceConsistencyEnum:
+      type: string
+      description: |-
+        Consistência da nota fiscal de compra. Os estados de consistência são:
+
+
+
+
+          - `I` - Em inclusão
+          - `S` - Consistente
+          - `N` - Inconsistente
+      enum:
+        - I
+        - S
+        - 'N'
+      example: I
+    FreightIpiFlagEnum:
+      description: |-
+        Considerar o valor do IPI no frete.
+          - `S` - Sim
+          - `N` - Não
+      enum:
+        - S
+        - 'N'
+      example: S
+      type: string
+    AppropriationDiscountFlagEnum:
+      type: string
+      description: |-
+        Considerar o desconto na apropriação.
+
+
+
+
+          - `S` - Sim
+          - `N` - Não
+      enum:
+        - S
+        - 'N'
+      example: S
+    ConsistencyRegistryFlagEnum:
+      type: string
+      description: |-
+        Consistência do faturamento direto.
+
+
+
+
+          - `S` - Consistente
+          - `N` - Inconsistente
+      enum:
+        - S
+        - 'N'
+      example: S
+    PayableFreightItemsFlagEnum:
+      type: string
+      description: |-
+        Frete dos itens a pagar.
+
+
+
+
+          - `S` - Sim
+          - `N` - Não
+      enum:
+        - S
+        - 'N'
+      example: S
+    InvoiceFreightTypeEnum:
+      type: string
+      description: |-
+        Modalidade do frete da nota fiscal.
+
+
+
+
+          - `CIF` - Incluso
+          - `FOB` - A pagar
+          - `NI` - Não incidente
+      enum:
+        - CIF
+        - FOB
+        - NI
+      example: CIF
+    SimpleDeliveryFlagEnum:
+      type: string
+      description: |-
+        Remessa simples.
+
+
+
+
+          - `S` - Sim
+          - `N` - Não
+      enum:
+        - S
+        - 'N'
+      example: S
+    EletronicInvoiceItemsFlagEnum:
+      type: string
+      description: |-
+        Itens incluídos através da nota fiscal eletronica.
+
+
+
+
+          - `S` - Sim
+          - `N` - Não
+      enum:
+        - S
+        - 'N'
+      example: S
+    IcmsStCalculatedFlagEnum:
+      type: string
+      description: |-
+        ICMS-ST calculado.
+
+
+
+
+          - `S` - Sim
+          - `N` - Não
+      enum:
+        - S
+        - 'N'
+      example: S
+    freightKnowledge:
+      description: Representa um Conhecimento de Frete.
+      type: object
+      properties:
+        billId:
+          type: integer
+          format: int32
+          description: Id do Título do Conhecimento de Frete.
+        documentId:
+          type: string
+          example: CF
+        documentNumber:
+          type: integer
+          example: 123456
+          description: Número do Conhecimento de Frete.
+        knowledgeAmount:
+          type: number
+          format: double
+          description: Valor do Conhecimento de Frete.
+        apportionmentBalance:
+          type: number
+          format: double
+          description: Valor do Saldo a Ratear.
+        apportionmentValue:
+          type: number
+          format: double
+          description: Valor do Rateio.
+        appropriationFlag:
+          $ref: '#/components/schemas/AppropriationFlagEnum'
+        directBillingFlag:
+          $ref: '#/components/schemas/DirectBillingFlagEnum'
+        transporterId:
+          type: integer
+          format: int32
+          example: 55
+          description: Id do Transportador
+        transporterName:
+          type: string
+          description: Descrição do Transportador
+        percentageFreightPurchaseInvoice:
+          type: number
+          format: double
+          description: Porcentagem do valor do Conhecimento de Frete sobre a Nota Fiscal.
+    PurchaseInvoiceItemListOutput:
+      description: Representa um item da nota fiscal de compra.
+      type: object
+      properties:
+        invoiceItemNumber:
+          type: integer
+          format: int32
+          example: 1
+          description: Número do item
+        buildingId:
+          type: integer
+          format: int32
+          description: Id (código interno) da Obra
+          example: 7
+        buildingIdView:
+          type: integer
+          format: int32
+          description: Código da Obra no Sienge
+        buildingCostDatabaseId:
+          type: integer
+          description: Identificador da tabela de custos unitários.
+          example: 53001
+        resourceId:
+          type: integer
+          example: 1
+          description: Id do insumo da nota fiscal de compra.
+        detailId:
+          type: integer
+          example: 5
+          description: Código do detalhe do item da nota fiscal de compra.
+        trademarkId:
+          type: integer
+          example: 42
+          description: Código da marca do item da nota fiscal de compra.
+        unitOfMovementId:
+          type: integer
+          example: 42
+          description: Código da unidade de movimento.
+        costCenterId:
+          type: integer
+          example: 100
+          description: Id do centro de custo da nota fiscal.
+        detailItemDescription:
+          description: Descrição do detalhe do item.
+          type: string
+        detailDescription:
+          description: Descrição do detalhe
+          type: string
+        detailTrademarkDescription:
+          description: Descrição do detalhe da marca.
+          type: string
+        quantityDelivery:
+          type: number
+          format: double
+          example: 84
+          description: Quantidade entregue
+        unitPrice:
+          type: number
+          format: double
+          example: 10.5
+          description: Preço unitário do item
+        netPrice:
+          type: number
+          format: double
+          example: 7.3
+          description: Preço líquido do item
+        imcsTaxPercentage:
+          type: number
+          format: double
+          example: 0
+          description: Percentual de ICMS
+        issTaxPercentage:
+          type: number
+          format: double
+          example: 0
+          description: Percentual de ISS
+        ipiTaxPercentage:
+          type: number
+          format: double
+          example: 0
+          description: Percentual de IPI
+        discountPercentage:
+          type: number
+          format: double
+          example: 0
+          description: Percentual de desconto
+        increasePercentage:
+          type: number
+          format: double
+          example: 0
+          description: Percentual de acréscimo
+        discount:
+          type: number
+          format: double
+          example: 0
+          description: Valor de desconto
+        freightUnitPrice:
+          type: number
+          format: double
+          example: 0
+          description: Preço unitário de frete
+        flagStockMovement:
+          $ref: '#/components/schemas/FlagStockMovementEnum'
+        notes:
+          type: string
+          description: Observações do item.
+        stockMovementNumber:
+          type: integer
+          example: 1
+          description: Número do movimento de estoque.
+        patrimonyType:
+          $ref: '#/components/schemas/PatrimonyTypeEnum'
+        patrimonyQuantity:
+          type: number
+          format: double
+          example: 0
+          description: Quantidade do patrimônio.
+        sequentialNumber:
+          type: integer
+          format: int32
+          example: 5455
+          description: >-
+            Número sequencial único da nota fiscal de compra. O número
+            sequencial é uma chave única e está disponível apenas para controle
+            interno do cadastro de nota fiscal.
+        addedValueMarginPercentage:
+          type: number
+          format: double
+          example: 0
+          description: Porcentagem da margem do valor agregado.
+        icmsTaxSubstitutionPercentage:
+          type: number
+          format: double
+          example: 0
+          description: Porcentagem da substituição tributária do ICMS.
+        icmsCalculationBasisAmount:
+          type: number
+          format: double
+          example: 0
+          description: Valor base do ICMS calculado.
+        subtotal:
+          type: number
+          format: double
+          example: 0
+          description: Valor total do item.
+        additionAmount:
+          type: number
+          format: double
+          description: Valor do acréscimo
+        ipiTax:
+          type: number
+          format: double
+          description: Valor do IPI.
+          example: 0
+        issTax:
+          type: number
+          format: double
+          description: Valor do ISS.
+        icmsTax:
+          type: number
+          format: double
+          description: Valor do ICMS.
+        icmsStTax:
+          type: number
+          format: double
+          description: Valor do ICMS-ST.
+          example: 0
+        icmsStTaxPercentage:
+          type: number
+          format: double
+          description: Porcentagem do ICMS-ST.
+        invoiceEletronicItemNumber:
+          type: integer
+          example: 1
+          description: Número do item da Nota Fiscal Eletronica.
+        insuranceAmount:
+          type: number
+          format: double
+          description: Valor do seguro.
+          example: 0
+        icmsStCalculationBasis:
+          type: number
+          format: double
+          example: 0
+          description: Valor base do ICMS-ST calculado.
+        ibsTax:
+          description: >-
+            Dados do IBS (Imposto sobre Bens e Serviços) do item. É null quando
+            o item não possui IBS; a ausência do IBS não afeta cbsTax, isTax e
+            regularTax.
+          oneOf:
+            - $ref: '#/components/schemas/PurchaseInvoiceItemIbsTaxOutput'
+            - type: 'null'
+        cbsTax:
+          description: >-
+            Dados do CBS (Contribuição sobre Bens e Serviços) do item. É null
+            quando o item não possui CBS; a ausência do CBS não afeta ibsTax,
+            isTax e regularTax.
+          oneOf:
+            - $ref: '#/components/schemas/PurchaseInvoiceItemCbsTaxOutput'
+            - type: 'null'
+        isTax:
+          description: >-
+            Dados do IS (Imposto Seletivo) do item. É null quando o item não
+            possui IS; a ausência do IS não afeta ibsTax, cbsTax e regularTax.
+          oneOf:
+            - $ref: '#/components/schemas/PurchaseInvoiceItemIsTaxOutput'
+            - type: 'null'
+        regularTax:
+          description: >-
+            Dados da tributação regular do IBS e do CBS do item. É null quando o
+            item não possui IBS nem CBS. Quando o item possui apenas um dos dois
+            impostos, o objeto é retornado e os campos do imposto ausente são
+            null.
+          oneOf:
+            - $ref: '#/components/schemas/PurchaseInvoiceItemRegularTaxOutput'
+            - type: 'null'
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    Links:
+      description: Links para acessar outros recursos
+      example:
+        - href: https://../v1/purchase-..
+          rel: Recurso
+      items:
+        $ref: '#/components/schemas/Link'
+      type: array
+    PurchaseInvoiceItemBuildingAppropriation:
+      description: Representa uma apropriação de obra de um item da nota fiscal.
+      type: object
+      properties:
+        buildingUnitId:
+          type: integer
+          format: int32
+          example: 1
+          description: Código da unidade construtiva
+        sheetItemId:
+          type: integer
+          example: 1
+          description: Identificador único do item de orçamento
+        percentage:
+          type: number
+          example: 12.5
+          description: >-
+            Percentual de rateio do respectivo item de orçamento nas
+            apropriações de obra do insumo.
+    PurchaseInvoiceItemOrderDeliveryInsertInput:
+      description: >-
+        Representa uma entrega de um item do pedido de compra a ser inserido na
+        nota fiscal.
+      type: object
+      required:
+        - purchaseOrderId
+        - itemNumber
+        - deliveryScheduleNumber
+        - deliveredQuantity
+      properties:
+        purchaseOrderId:
+          type: integer
+          format: int32
+          example: 457
+          description: Numero do pedido de compra
+        itemNumber:
+          type: integer
+          format: int32
+          example: 2
+          description: Numero do item do pedido
+        deliveryScheduleNumber:
+          type: integer
+          format: int32
+          example: 1
+          description: Numero da entrega do item do pedido
+        deliveredQuantity:
+          type: number
+          format: double
+          example: 4.5
+          description: Quantidade a ser entregue
+        keepBalance:
+          type: boolean
+          example: true
+          description: >-
+            Indica se o saldo restante do pedido deve ser mantido ou cancelado.
+            Caso não for informado, por default, o sistema irá considerar true
+            (manter o saldo)
+    DeliveryAttendedItemListOutput:
+      description: Representa um item de entrega atendida.
+      type: object
+      properties:
+        purchaseOrderId:
+          type: integer
+          format: int32
+          example: 128
+          description: Número do Pedido de Compra
+        purchaseOrderItemNumber:
+          type: integer
+          format: int32
+          example: 1
+          description: Número do item do Pedido.
+        deliveryItemPurchaseOrderNumber:
+          type: integer
+          format: int32
+          example: 1
+          description: Número do item do Pedido de Compra entregue
+        purchaseOrderItemAttendedNumber:
+          type: integer
+          format: int32
+          example: 2
+          description: Número do item do Pedido de Compra atendido
+        sequentialNumber:
+          type: integer
+          format: int32
+          example: 5455
+          description: >-
+            Número sequencial único da nota fiscal de compra. O número
+            sequencial é uma chave única e está disponível apenas para controle
+            interno do cadastro de nota fiscal.
+        invoiceItemNumber:
+          type: integer
+          format: int32
+          example: 1
+          description: Número do item
+        deliveryDate:
+          type: string
+          format: yyyy-MM-dd
+          example: '2019-07-15'
+          description: Data da entrega
+        quantityDelivery:
+          type: number
+          format: double
+          example: 84
+          description: Quantidade entregue
+    AppropriationFlagEnum:
+      type: string
+      description: |-
+        Utilizar apropriação de obra idêntica a da nota fiscal.
+
+
+
+
+          - `S` - Sim
+          - `N` - Não
+      enum:
+        - S
+        - 'N'
+      example: S
+    DirectBillingFlagEnum:
+      type: string
+      description: |-
+        Considerar no valor a vincular do faturamento direto.
+
+
+
+
+          - `S` - Sim
+          - `N` - Não
+      enum:
+        - S
+        - 'N'
+      example: S
+    FlagStockMovementEnum:
+      type: string
+      description: |-
+        Considerar o movimento de estoque.
+
+
+
+
+          - `S` - Sim
+          - `N` - Não
+      enum:
+        - S
+        - 'N'
+      example: 'N'
+    PatrimonyTypeEnum:
+      type: string
+      description: |-
+        Tipo do patrimônio.
+
+
+
+
+          - `P` - Pendente
+          - `C` - Cancelado
+      enum:
+        - P
+        - C
+      example: P
+    PurchaseInvoiceItemIbsTaxOutput:
+      description: >-
+        IBS (Imposto sobre Bens e Serviços) do item da nota fiscal de compra. A
+        base de cálculo, o CST e a classificação tributária (cClassTrib) são
+        compartilhados entre IBS e CBS e são informados somente neste objeto.
+        Alíquotas e percentuais são expressos em percentual (ex.: 0.10 = 0,10%)
+        e retornados como registrados, sem recálculo pela API. Os campos
+        presumedCreditId, cstId e taxClassificationId podem ser null
+        (presumedCreditId quando não há crédito presumido; cstId e
+        taxClassificationId quando o código não puder ser resolvido); os demais
+        campos são sempre preenchidos.
+      type: object
+      properties:
+        ibsCbsCalculationBasis:
+          type: number
+          format: double
+          description: Base de cálculo do IBS/CBS
+          example: 1000
+        cstId:
+          type:
+            - string
+            - 'null'
+          description: >-
+            Código da situação tributária (CST) do IBS/CBS. É o código textual
+            do CST, não um identificador numérico. É null quando o código não
+            puder ser resolvido.
+          example: '000'
+        taxClassificationId:
+          type:
+            - string
+            - 'null'
+          description: >-
+            Código da classificação tributária (cClassTrib) do IBS/CBS. É o
+            código textual da classificação, não um identificador numérico. É
+            null quando o código não puder ser resolvido.
+          example: '000001'
+        presumedCreditId:
+          type:
+            - string
+            - 'null'
+          description: >-
+            Código de crédito presumido do IBS. É o código textual do crédito
+            presumido, não um identificador numérico. É null quando não há
+            crédito presumido.
+          example: '1'
+        stateIbsRate:
+          type: number
+          format: double
+          description: Alíquota do IBS estadual (percentual)
+          example: 0.1
+        stateIbsReducedRate:
+          type: number
+          format: double
+          description: Alíquota de redução do IBS estadual (percentual)
+          example: 0
+        stateIbsEffectiveRate:
+          type: number
+          format: double
+          description: Alíquota efetiva do IBS estadual (percentual)
+          example: 0.1
+        percentageDeferralIbsState:
+          type: number
+          format: double
+          description: Percentual de diferimento do IBS estadual
+          example: 0
+        stateIbsDeferralValue:
+          type: number
+          format: double
+          description: Valor de diferimento do IBS estadual
+          example: 0
+        stateIbsValue:
+          type: number
+          format: double
+          description: Valor do IBS estadual tributado
+          example: 1
+        municipalIbsRate:
+          type: number
+          format: double
+          description: Alíquota do IBS municipal (percentual)
+          example: 0
+        municipalIbsReducedRate:
+          type: number
+          format: double
+          description: Alíquota de redução do IBS municipal (percentual)
+          example: 0
+        municipalIbsEffectiveRate:
+          type: number
+          format: double
+          description: Alíquota efetiva do IBS municipal (percentual)
+          example: 0
+        percentageDeferralIbsMunicipal:
+          type: number
+          format: double
+          description: Percentual de diferimento do IBS municipal
+          example: 0
+        municipalIbsDeferralValue:
+          type: number
+          format: double
+          description: Valor de diferimento do IBS municipal
+          example: 0
+        municipalIbsValue:
+          type: number
+          format: double
+          description: Valor do IBS municipal tributado
+          example: 0
+        percentageIbsPresumedCredit:
+          type: number
+          format: double
+          description: Percentual de crédito presumido do IBS
+          example: 0
+        ibsPresumedCreditValue:
+          type: number
+          format: double
+          description: Valor de crédito presumido do IBS
+          example: 0
+    PurchaseInvoiceItemCbsTaxOutput:
+      description: >-
+        CBS (Contribuição sobre Bens e Serviços) do item da nota fiscal de
+        compra. A base de cálculo, o CST e a classificação tributária
+        (cClassTrib) são compartilhados com o IBS e são informados somente em
+        ibsTax, por isso não se repetem neste objeto. Alíquotas e percentuais
+        são expressos em percentual (ex.: 0.90 = 0,90%) e retornados como
+        registrados, sem recálculo pela API. Se ibsTax vier null e cbsTax vier
+        preenchido, a base de cálculo, o CST e a classificação tributária não
+        são retornados, pois existem apenas em ibsTax. O campo presumedCreditId
+        é null quando não há crédito presumido; os demais campos são sempre
+        preenchidos.
+      type: object
+      properties:
+        presumedCreditId:
+          type:
+            - string
+            - 'null'
+          description: >-
+            Código de crédito presumido do CBS. É o código textual do crédito
+            presumido, não um identificador numérico. É null quando não há
+            crédito presumido.
+          example: '1'
+        cbsRate:
+          type: number
+          format: double
+          description: Alíquota do CBS (percentual)
+          example: 0.9
+        cbsReducedRate:
+          type: number
+          format: double
+          description: Alíquota de redução do CBS (percentual)
+          example: 0
+        cbsEffectiveRate:
+          type: number
+          format: double
+          description: Alíquota efetiva do CBS (percentual)
+          example: 0.9
+        percentageDeferralCbs:
+          type: number
+          format: double
+          description: Percentual de diferimento do CBS
+          example: 0
+        cbsDeferralValue:
+          type: number
+          format: double
+          description: Valor de diferimento do CBS
+          example: 0
+        cbsValue:
+          type: number
+          format: double
+          description: Valor do CBS tributado
+          example: 9
+        percentageCbsPresumedCredit:
+          type: number
+          format: double
+          description: Percentual de crédito presumido do CBS
+          example: 0
+        cbsPresumedCreditValue:
+          type: number
+          format: double
+          description: Valor de crédito presumido do CBS
+          example: 0
+    PurchaseInvoiceItemIsTaxOutput:
+      description: >-
+        IS (Imposto Seletivo) do item da nota fiscal de compra. Alíquotas são
+        expressas em percentual (ex.: 0.10 = 0,10%) e retornadas como
+        registradas, sem recálculo pela API. Todos os campos são sempre
+        preenchidos quando o objeto é retornado.
+      type: object
+      properties:
+        isCalculationBasis:
+          type: number
+          format: double
+          description: Base de cálculo do IS
+          example: 1000
+        isRate:
+          type: number
+          format: double
+          description: Alíquota do IS (percentual)
+          example: 0
+        isSpecificRatePerMeasurementUnit:
+          type: number
+          format: double
+          description: Alíquota específica do IS por unidade de medida apropriada
+          example: 0
+        isValue:
+          type: number
+          format: double
+          description: Valor do IS
+          example: 0
+    PurchaseInvoiceItemRegularTaxOutput:
+      description: >-
+        Tributação regular do IBS e do CBS do item da nota fiscal de compra. O
+        CST e a classificação tributária (cClassTrib) regulares são os do IBS; o
+        CBS não possui esses códigos na API. Quando o item possui apenas IBS, os
+        campos do CBS são null; quando possui apenas CBS, os campos do IBS são
+        null. Alíquotas são expressas em percentual (ex.: 0.10 = 0,10%) e
+        retornadas como registradas, sem recálculo pela API. O CST e a
+        classificação tributária (cClassTrib) regulares são null quando não
+        informados no item. Campos sem valor registrado são retornados como
+        null.
+      type: object
+      properties:
+        cstId:
+          type:
+            - string
+            - 'null'
+          description: >-
+            Código da situação tributária (CST) regular do IBS. É o código
+            textual do CST, não um identificador numérico.
+          example: '000'
+        taxClassificationId:
+          type:
+            - string
+            - 'null'
+          description: >-
+            Código da classificação tributária (cClassTrib) regular do IBS. É o
+            código textual da classificação, não um identificador numérico.
+          example: '000001'
+        stateIbsEffectiveRate:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Alíquota efetiva regular do IBS estadual (percentual)
+          example: 0.1
+        stateIbsValue:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Valor regular do IBS estadual
+          example: 1
+        municipalIbsEffectiveRate:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Alíquota efetiva regular do IBS municipal (percentual)
+          example: 0
+        municipalIbsValue:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Valor regular do IBS municipal
+          example: 0
+        cbsEffectiveRate:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Alíquota efetiva regular do CBS (percentual)
+          example: 0.9
+        cbsValue:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Valor regular do CBS
+          example: 9
+    Link:
+      description: Representa um link para outro recurso.
+      properties:
+        href:
+          description: URL do recurso associado
+          example: https://../v1/purchase-..
+          type: string
+        rel:
+          description: Nome da recurso associado
+          example: Recurso
+          type: string
+      type: object
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    SequentialNumber:
+      description: Número sequencial da nota fiscal
+      example: 1712
+      in: path
+      name: sequentialNumber
+      required: true
+      schema:
+        format: int32
+        type: integer
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    StartDateQuery:
+      description: Data inicial para filtro de período (opcional)
+      in: query
+      name: startDate
+      required: false
+      schema:
+        example: '2023-01-01'
+        format: date
+        type: string
+    EndDateQuery:
+      description: Data final para filtro de período (opcional)
+      in: query
+      name: endDate
+      required: false
+      schema:
+        example: '2023-01-31'
+        format: date
+        type: string
+    CompanyIdQuery:
+      description: Código da empresa (opcional)
+      in: query
+      name: companyId
+      required: false
+      schema:
+        example: 1
+        type: integer
+    DocumentId:
+      description: Identificador do documento.
+      in: query
+      name: documentId
+      schema:
+        description: Código do documento.
+        example: CT
+        type: string
+    InvoiceItemNumber:
+      description: Número do item da Nota Fiscal
+      example: 22
+      in: query
+      name: invoiceItemNumber
+      required: false
+      schema:
+        format: int32
+        type: integer
+    PurchaseOrderItemNumber:
+      description: Número do item do pedido de compra
+      example: 1
+      in: query
+      name: purchaseOrderItemNumber
+      required: false
+      schema:
+        format: int32
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

@@ -1,0 +1,2809 @@
+openapi: 3.1.1
+info:
+  title: Diário de Obra
+  version: 1.24.0
+  description: >-
+    Gerencia registros diários de atividades, equipes, equipamentos e eventos
+    ocorridos durante a execução da obra, permitindo documentação detalhada com
+    anexos e localização
+paths:
+  /construction-daily-report:
+    get:
+      x-original-file: construction-daily-report-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Diário de Obra
+      summary: Retorna os Diários das Obras paginados.
+      operationId: getConstructionDailyReport
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdQuery'
+        - $ref: '#/components/parameters/StartDateQuery'
+          description: >-
+            Data de início da busca (data do Diário de Obra) no formato:
+            yyyy-MM-dd. Exemplo: 2018-03-01
+        - $ref: '#/components/parameters/EndDateQuery'
+          description: >-
+            Data de fim da busca (data do Diário de Obra) no formato:
+            yyyy-MM-dd. Exemplo: 2018-03-11
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Consulta de Diários de Obra realizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionDailyReportsDtoPaginated'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Retorna os Diários das Obras paginados (REST)
+    post:
+      tags:
+        - Diário de Obra
+      summary: Cadastra novo diário de obra
+      operationId: postConstructionDailyReport
+      requestBody:
+        description: Dados para cadastro de um Diário de Obra
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionDailyReportDto'
+        required: true
+      responses:
+        '201':
+          description: um novo diário de obra cadastrado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionDailyReportsDtoForReponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: construction-daily-report-v1.yaml
+      description: >-
+        Cadastra um Diário de Obra, com informações de tarefas, ocorrências,
+        equipes e equipamentos. (REST)
+      x-audience:
+        - public
+  /construction-daily-report/{buildingId}/{constructionDailyId}:
+    get:
+      x-original-file: construction-daily-report-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Diário de Obra
+      summary: Consulta diário específico
+      operationId: getConstructionDailyReportIdId
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+          description: Identificador único da obra no qual o diário será vinculado
+        - name: constructionDailyId
+          in: path
+          description: Código do diário de obra
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Retorna detalhes do Diário de Obra requisitado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstructionDailyReportDtoGet'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Retorna todos os dados de um Diário de Obra específico (REST)
+    delete:
+      x-original-file: construction-daily-report-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Diário de Obra
+      summary: Remove diário de obra
+      operationId: deleteConstructionDailyReportIdId
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+          description: Identificador único da obra onde o diário está sendo registrado
+        - name: constructionDailyId
+          in: path
+          description: Identificador único do diário de obra que será excluído
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '204':
+          description: Sem conteúdo.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Deleta um Diário de Obra, exceto aqueles que tenham sido usados em uma
+        Integração. (REST)
+  /construction-daily-report/{buildingId}/{constructionDailyId}/attachments:
+    post:
+      x-original-file: construction-daily-report-v1.yaml
+      x-section: Anexos do Diário de Obra
+      x-audience:
+        - public
+      tags:
+        - Anexos do Diário de Obra
+      summary: Adiciona anexo ao diário
+      operationId: getConstructionDailyReportIdIdAttachments
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+          description: código da Obra
+        - name: constructionDailyId
+          in: path
+          description: código do Diário de Obra.
+          required: true
+          schema:
+            type: integer
+        - name: description
+          in: query
+          description: 'Descrição do anexo | Máximo: 500 caracteres '
+          required: true
+          schema:
+            maxLength: 500
+            type: string
+        - name: localId
+          in: query
+          description: 'Só é aceito para os arquivos do tipo imagem: JPG, JPEG e PNG'
+          schema:
+            type: integer
+        - name: showInReports
+          in: query
+          description: 'Somente aceitam true arquivos do tipo imagem: JPG, JPEG e PNG'
+          schema:
+            type: boolean
+      requestBody:
+        description: Arquivo a ser anexado ao Diário de Obra
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: >-
+                    Arquivo para inserção | Tipo: multipart/form-data | Tamanho
+                    máximo: 70 MB | Tamanho máximo do nome do arquivo: 100
+                    caracteres | Somente 1 Anexo por requisição.  Caso seja
+                    enviado mais de 1 Anexo, o Sienge vai aceitar somente o
+                    primeiro selecionado.
+                  format: binary
+                  example: example.pdf
+        required: true
+      responses:
+        '201':
+          description: Anexo inserido com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Inclui anexo em um Diário de Obra (REST)
+  /construction-daily-report/{buildingId}/{constructionDailyId}/attachments/{attachmentId}:
+    get:
+      x-original-file: construction-daily-report-v1.yaml
+      x-section: Anexos do Diário de Obra
+      x-audience:
+        - public
+      tags:
+        - Anexos do Diário de Obra
+      summary: Baixa anexo do diário
+      operationId: getConstructionDailyReportIdIdAttachmentsId
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+          description: Identificador único da obra associada ao Diário de Obra
+        - name: constructionDailyId
+          in: path
+          description: >-
+            Identificador único do Diário de Obra que contém os registros e
+            ocorrências do dia.
+          required: true
+          schema:
+            type: integer
+        - name: attachmentId
+          in: path
+          description: código do anexo do Diário de Obra.
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Anexo retornado com sucesso
+          content:
+            file:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Retorna o anexo de um Diário de Obra (REST)
+  /construction-daily-report/{buildingId}/{constructionDailyId}/events:
+    put:
+      tags:
+        - Ocorrências do Diário de Obra
+      summary: Atualiza ocorrências
+      operationId: putConstructionDailyReportIdIdEvents
+      x-section: Ocorrências do Diário de Obra
+      x-original-file: construction-daily-report-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+          description: >-
+            Identificador único da obra associada ao Diário de Obra, usado para
+            localizar o registro específico
+        - name: constructionDailyId
+          in: path
+          description: >-
+            Identificador único do Diário de Obra onde as ocorrências serão
+            registradas
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Ocorrências que serão atualizadas
+        content:
+          application/json:
+            example:
+              - id: 9
+                description: Ocorrência 1
+                eventTypeId: 1
+            schema:
+              $ref: '#/components/schemas/EventsDtoForPut'
+        required: true
+      responses:
+        '200':
+          description: Retorna um objeto JSON com as Ocorrências atualizadas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventsDtoForResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Atualiza Ocorrências em um Diário de Obra (REST)
+    post:
+      tags:
+        - Ocorrências do Diário de Obra
+      summary: Adiciona ocorrências
+      operationId: postConstructionDailyReportIdIdEvents
+      x-section: Ocorrências do Diário de Obra
+      x-original-file: construction-daily-report-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+          description: >-
+            Identificador único da obra associada ao Diário de Obra, necessário
+            para localizar o registro correto onde as ocorrências serão
+            adicionadas
+        - name: constructionDailyId
+          in: path
+          description: >-
+            Identificador único do Diário de Obra, utilizado para localizar o
+            registro específico que contém as ocorrências a serem adicionadas.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Ocorrências que serão adicionadas
+        content:
+          application/json:
+            example:
+              - description: Ocorrência 1
+                eventTypeId: 1
+            schema:
+              $ref: '#/components/schemas/EventsDtoForPost'
+        required: true
+      responses:
+        '201':
+          description: Ocorrências inseridas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventsDtoForResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Inclui ocorrências em um Diário de Obra (REST)
+  /construction-daily-report/{buildingId}/{constructionDailyId}/tasks:
+    put:
+      tags:
+        - Tarefas do Diário de Obra
+      summary: Atualiza tarefas
+      operationId: putConstructionDailyReportIdIdTasks
+      x-section: Tarefas do Diário de Obra
+      x-original-file: construction-daily-report-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+          description: >-
+            Identificador único da obra associada ao Diário de Obra, necessário
+            para localizar o registro correto
+        - name: constructionDailyId
+          in: path
+          description: >-
+            Identificador único do Diário de Obra onde as tarefas serão
+            atualizadas, permitindo a localização precisa do registro a ser
+            modificado.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Tarefas que serão atualizadas
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TasksDtoForPut'
+        required: true
+      responses:
+        '200':
+          description: Retorna um objeto JSON com as Tarefas atualizadas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDtoForResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Atualiza tarefas em um Diário de Obra (REST)
+    post:
+      tags:
+        - Tarefas do Diário de Obra
+      summary: Adiciona tarefas
+      operationId: postConstructionDailyReportIdIdTasks
+      x-section: Tarefas do Diário de Obra
+      x-original-file: construction-daily-report-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+          description: >-
+            Identificador único da obra associada ao Diário de Obra, necessário
+            para localizar o registro específico onde as tarefas serão
+            adicionadas
+        - name: constructionDailyId
+          in: path
+          description: >-
+            Identificador único do Diário de Obra que receberá as novas tarefas,
+            necessário para associar corretamente os registros
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Tarefas que serão adicionadas
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TasksDtoForPost'
+        required: true
+      responses:
+        '201':
+          description: Tarefas inseridas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDtoForResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Inclui tarefas em um Diário de Obra (REST)
+  /construction-daily-report/{buildingId}/{constructionDailyId}/crews:
+    put:
+      tags:
+        - Equipes do Diário de Obra
+      summary: Atualiza equipes
+      operationId: putConstructionDailyReportIdIdCrews
+      x-section: Equipes do Diário de Obra
+      x-original-file: construction-daily-report-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+          description: >-
+            Identificador único da obra associada ao Diário de Obra, necessário
+            para localizar o registro específico onde as equipes serão
+            atualizadas
+        - name: constructionDailyId
+          in: path
+          description: >-
+            Identificador único do Diário de Obra onde as equipes serão
+            adicionadas, necessário para associar corretamente os registros
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Equipes que serão atualizadas
+        content:
+          application/json:
+            example:
+              - buildingId: 1
+                constructionDailyId: 1
+                crews:
+                  - id: 5
+                    resourceId: null
+                    quantity: 10
+                    crewTypeId: 9
+                    origin: type
+                    assignment: INDIRECT_LABOR
+            schema:
+              $ref: '#/components/schemas/CrewsDtoForPut'
+        required: true
+      responses:
+        '200':
+          description: Retorna um objeto JSON com as Equipes atualizadas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrewsDtoForResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Atualiza Equipes em um Diário de Obra (REST)
+    post:
+      tags:
+        - Equipes do Diário de Obra
+      summary: Adiciona equipes
+      operationId: postConstructionDailyReportIdIdCrews
+      x-section: Equipes do Diário de Obra
+      x-original-file: construction-daily-report-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+          description: >-
+            Identificador único da obra associada ao Diário de Obra, necessário
+            para localizar o registro correto onde as equipes serão adicionadas
+        - name: constructionDailyId
+          in: path
+          description: >-
+            Identificador único do Diário de Obra onde as equipes serão
+            registradas, permitindo a associação correta entre as equipes de
+            trabalho e o registro diário específico.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Equipes que serão adicionadas
+        content:
+          application/json:
+            example:
+              - resourceId: 2
+                quantity: 10
+                assignment: INDIRECT_LABOR
+                crewTypeId: 5
+            schema:
+              $ref: '#/components/schemas/CrewsDtoForPost'
+        required: true
+      responses:
+        '201':
+          description: Equipes inseridas com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CrewsDtoForResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Inclui equipes em um Diário de Obra (REST)
+  /construction-daily-report/{buildingId}/{constructionDailyId}/equipments:
+    put:
+      tags:
+        - Equipamentos do Diário de Obra
+      summary: Atualiza equipamentos
+      operationId: putConstructionDailyReportIdIdEquipments
+      x-section: Equipamentos do Diário de Obra
+      x-original-file: construction-daily-report-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+          description: >-
+            Identificador único da obra associada ao Diário de Obra, necessário
+            para localizar o registro específico onde os equipamentos serão
+            atualizados
+        - name: constructionDailyId
+          in: path
+          description: >-
+            Identificador único do Diário de Obra onde os equipamentos serão
+            atualizados, permitindo a localização precisa do registro a ser
+            modificado
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Equipamentos que serão atualizados
+        content:
+          application/json:
+            example:
+              - id: 1
+                resourceId: 10
+                quantity: 2
+                equipmentTypeId: 1
+                origin: resource
+                status: OUT_OF_ORDER
+            schema:
+              $ref: '#/components/schemas/EquipmentsDtoForPut'
+        required: true
+      responses:
+        '200':
+          description: Retorna um objeto JSON com os Equipamentos atualizados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EquipmentsDtoForResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Atualiza Equipamentos em um Diário de Obra (REST)
+    post:
+      tags:
+        - Equipamentos do Diário de Obra
+      summary: Adiciona equipamentos
+      operationId: postConstructionDailyReportIdIdEquipments
+      x-section: Equipamentos do Diário de Obra
+      x-original-file: construction-daily-report-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+          description: >-
+            Identificador único da obra associada ao Diário de Obra, necessário
+            para localizar o registro específico onde os equipamentos serão
+            adicionados
+        - name: constructionDailyId
+          in: path
+          description: >-
+            Identificador único do Diário de Obra onde os equipamentos serão
+            adicionados, permitindo a associação correta entre os equipamentos
+            utilizados e o registro diário específico.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Equipamentos que serão adicionadas
+        content:
+          application/json:
+            example:
+              - resourceId: 10
+                quantity: 10
+                status: OUT_OF_ORDER
+                equipmentTypeId: 8
+            schema:
+              $ref: '#/components/schemas/EquipmentsDtoForPost'
+        required: true
+      responses:
+        '201':
+          description: Equipamentos inseridos com sucesso
+          content:
+            application/json:
+              example:
+                buildingId: 661
+                constructionDailyId: 1
+                equipments:
+                  - id: 1
+                    resourceId: 10
+                    quantity: 2
+                    equipmentTypeId: 1
+                    origin: resource
+                    status: OUT_OF_ORDER
+              schema:
+                $ref: '#/components/schemas/EquipmentsDtoForResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Inclui equipamentos em um Diário de Obra (REST)
+  /construction-daily-report/event-type:
+    get:
+      x-original-file: construction-daily-report-v1.yaml
+      x-section: Tipos de Ocorrência
+      x-audience:
+        - public
+      tags:
+        - Tipos de Ocorrência
+      summary: Lista tipos de ocorrência
+      operationId: getConstructionDailyReportEventType
+      parameters:
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
+        - name: sort
+          in: query
+          description: >-
+            Atributo para ordenação, permitidos são: id,description,isActive.
+            Obs: ordenação padrão pelo id
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: Posição para ordenação
+          schema:
+            $ref: '#/components/schemas/SortDirectionEnum'
+        - name: id
+          in: query
+          description: Filtro por id
+          schema:
+            type: number
+        - name: description
+          in: query
+          description: Filtro por descrição
+          schema:
+            type: string
+        - name: isActive
+          in: query
+          description: Filtro por status ativo
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: >-
+            Retorna os tipos de eventos que podem ser registrados em um diário
+            de obra, como alagamentos, acidentes, condições climáticas ou outros
+            incidentes relevantes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseEventType'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Retorna a lista de Tipos de Ocorrência. (REST)
+  /construction-daily-report/types:
+    get:
+      x-original-file: construction-daily-report-v1.yaml
+      x-section: Tipos
+      x-audience:
+        - public
+      tags:
+        - Tipos
+      summary: Lista tipos de diário
+      operationId: getConstructionDailyReportTypes
+      parameters:
+        - name: types
+          in: query
+          description: >-
+            Permite informar quais Tipos serão retornados pelo endpoint. É
+            possível informar mais de um valor, desde que sejam separados por
+            vírgula. Se este parâmetro não for informado, serão retornados todos
+            os registros.
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - Event
+                - Crew
+                - Equipment
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
+        - name: sort
+          in: query
+          description: Atributo para ordenação dos Tipos de Diário de Obra
+          schema:
+            $ref: '#/components/schemas/DailyReportTypeSortFieldEnum'
+        - name: order
+          in: query
+          description: Define a direção da ordenação dos resultados
+          schema:
+            $ref: '#/components/schemas/SortDirectionEnum'
+        - name: id
+          in: query
+          description: >-
+            Filtro para buscar tipos de diário de obra pelo seu identificador
+            único
+          schema:
+            type: number
+        - name: description
+          in: query
+          description: >-
+            Filtro para buscar tipos de diário de obra pela descrição textual do
+            tipo
+          schema:
+            type: string
+        - name: isActive
+          in: query
+          description: >-
+            Filtro para buscar tipos de diário de obra pelo status de atividade
+            (true para ativos, false para inativos)
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: >-
+            Retorna a lista paginada de tipos de eventos do diário de obra
+            conforme os filtros aplicados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseType'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna a lista de Tipos de Ocorrência, Equipe e Equipamento do Diário
+        de Obra. (REST)
+components:
+  schemas:
+    ConstructionDailyReportsDtoPaginated:
+      type: object
+      description: >-
+        Objeto que representa a lista paginada de diários de obra com seus
+        metadados
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de Diários de Obra
+          example:
+            - id: 1
+              buildingId: 10
+              date: '2023-07-15'
+              responsibleId: ADMIN
+              shifts:
+                - description: Morning
+          items:
+            $ref: '#/components/schemas/ConstructionDailyReportDtoForGetPaginated'
+    ConstructionDailyReportDto:
+      required:
+        - buildingId
+        - date
+        - shifts
+      type: object
+      description: >-
+        Lista de anexos associados ao Diário de Obra, incluindo documentos,
+        imagens ou outros arquivos relevantes ao registro do dia.
+      properties:
+        buildingId:
+          type: number
+          description: Identificador único da obra à qual o diário está associado
+          example: 1
+        date:
+          type: string
+          description: >-
+            Data em que o diário de obra foi registrado no sistema, seguindo o
+            formato yyyy-MM-dd
+          format: yyyy-MM-dd
+          example: {}
+        notes:
+          type: string
+          description: >-
+            Campo para anotações gerais sobre o andamento da obra, condições
+            específicas ou observações relevantes do dia, com limite de 4000
+            caracteres
+          example: Registro dos ocorridos no dia 15/07/2023...
+        responsibleId:
+          type: string
+          description: >-
+            Identificador único do responsável técnico que preencheu e validou o
+            diário de obra
+          example: ADMIN
+        rainfallIndex:
+          type: number
+          description: >-
+            Índice Pluviométrico, deve ser maior ou igual a zero e menor que
+            9999.99
+          example: 9999.99
+        shifts:
+          type: array
+          description: >-
+            Lista de Turnos do Diário de Obra. É obrigatório informar pelo menos
+            um turno com hora de inicio, hora de fim e condição climática.
+          example:
+            - description: Morning
+              startTime: '08:00'
+              finishTime: '12:00'
+              weatherCondition: Fine
+          items:
+            $ref: '#/components/schemas/ShiftDto'
+        plannedTasks:
+          type: array
+          description: >-
+            Lista de tarefas previamente programadas para execução na obra,
+            contendo informações como identificação, quantidade, unidade de
+            medida e observações relevantes para o acompanhamento do cronograma.
+          example:
+            - id: 7
+              buildingUnitId: 1
+              taskId: 109
+              notes: Tarefa será realizada pelos ajudantes...
+              quantity: 1234.5679
+              unitOfMeasure: m2
+              supplierId: 2
+              siteId: 3
+          items:
+            $ref: '#/components/schemas/PlannedTaskDto'
+        detachedTasks:
+          type: array
+          description: >-
+            Lista de tarefas não planejadas adicionadas ao Diário de Obra,
+            incluindo detalhes como descrição, quantidade e local de execução.
+          example:
+            - id: 8
+              description: Tarefa xyz
+              notes: Tarefa será realizada pelos ajudantes...
+              quantity: 9876.5432
+              unitOfMeasure: m2
+              siteId: 3
+          items:
+            $ref: '#/components/schemas/DetachedTaskDto'
+        events:
+          type: array
+          description: Lista de Ocorrências do Diário de Obra.
+          example:
+            - id: 9
+              description: Visita do fiscal da prefeitura
+              eventTypeId: 1
+              eventTypeDescription: Visitas
+          items:
+            $ref: '#/components/schemas/EventDto'
+        crews:
+          type: array
+          description: Lista de equipes
+          example:
+            - id: 5
+              resourceId: 1
+              description: Pedreiro
+              quantity: 10
+              crewTypeId: 9
+              origin: type
+              assignment: INDIRECT_LABOR
+          items:
+            $ref: '#/components/schemas/CrewDto'
+        equipments:
+          type: array
+          description: >-
+            Lista de equipamentos utilizados na obra durante o dia, incluindo
+            identificação, quantidade e condições de uso para registro e
+            controle de recursos.
+          example:
+            - id: 1
+              resourceId: 10
+              description: Betoneira
+              quantity: 2
+              equipmentTypeId: 1
+              origin: resource
+              status: OUT_OF_ORDER
+          items:
+            $ref: '#/components/schemas/EquipmentDto'
+    ConstructionDailyReportsDtoForReponse:
+      type: object
+      description: Lista de equipes envolvidas no Diário de Obra
+      properties:
+        id:
+          type: number
+          description: Código do Diário de Obras
+          example: 12
+        buildingId:
+          type: number
+          description: >-
+            Identificador único da obra associada ao registro do diário, usado
+            para vincular as informações ao projeto de construção específico
+          example: 1
+        date:
+          type: string
+          description: >-
+            Data de criação do registro diário das atividades, ocorrências e
+            recursos utilizados na obra, servindo como documentação oficial do
+            andamento da construção
+          format: yyyy-MM-dd
+          example: {}
+        notes:
+          type: string
+          description: >-
+            Campo para anotações gerais e observações relevantes sobre o
+            andamento diário da obra, limitado a 4000 caracteres
+          example: Registro dos ocorridos no dia 15/07/2023...
+        responsibleId:
+          type: string
+          description: >-
+            Identificador único do profissional responsável pelo preenchimento e
+            validação das informações registradas no diário de obra, permitindo
+            rastreabilidade das anotações técnicas
+          example: ADMIN
+        rainfallIndex:
+          type: number
+          description: >-
+            Medida quantitativa da precipitação pluvial em milímetros registrada
+            no dia, importante para avaliar impactos climáticos nas atividades
+            da construção
+          example: 9999.99
+        shifts:
+          type: array
+          description: >-
+            Lista de turnos de trabalho registrados no diário da obra, contendo
+            períodos (manhã, tarde, noite) com horários de início e fim, além
+            das condições climáticas observadas em cada um.
+          example:
+            - description: Morning
+              startTime: '08:00'
+              finishTime: '12:00'
+              weatherCondition: Fine
+          items:
+            $ref: '#/components/schemas/ShiftDto'
+        plannedTasks:
+          type: array
+          description: >-
+            Lista de tarefas previamente planejadas que foram executadas no dia,
+            contendo identificadores, quantidades realizadas e observações sobre
+            o progresso em relação ao cronograma da obra.
+          example:
+            - description: Morning
+              startTime: '08:00'
+              finishTime: '12:00'
+              weatherCondition: Fine
+          items:
+            $ref: '#/components/schemas/PlannedTaskDtoForResponse'
+        detachedTasks:
+          type: array
+          description: >-
+            Lista de tarefas não planejadas executadas durante o dia, incluindo
+            detalhes como identificadores, quantidades e localização, que foram
+            adicionadas ao registro diário da obra.
+          example:
+            - id: 8
+              description: Tarefa xyz
+              notes: Tarefa será realizada pelos ajudantes...
+              quantity: 9876.5432
+              unitOfMeasure: m2
+              siteId: 3
+          items:
+            $ref: '#/components/schemas/DetachedTaskDtoForResponse'
+        events:
+          type: array
+          description: >-
+            Lista de eventos significativos ocorridos durante o dia na obra,
+            como visitas técnicas, paralisações, acidentes ou outras situações
+            relevantes que impactam o andamento dos trabalhos.
+          example:
+            - id: 9
+              description: Visita do fiscal da prefeitura
+              eventTypeId: 1
+              eventTypeDescription: Visitas
+          items:
+            $ref: '#/components/schemas/EventDtoForResponse'
+        crews:
+          type: array
+          description: >-
+            Lista de equipes de trabalho envolvidas nas atividades do dia,
+            incluindo informações sobre mão de obra, funções e quantidade de
+            profissionais alocados no canteiro de obras.
+          example:
+            - id: 5
+              resourceId: 1
+              description: Pedreiro
+              quantity: 10
+              crewTypeId: 9
+              origin: type
+              assignment: INDIRECT_LABOR
+          items:
+            $ref: '#/components/schemas/CrewDtoForResponse'
+        equipments:
+          type: array
+          description: >-
+            Lista de equipamentos utilizados na obra durante o dia, incluindo
+            maquinários, ferramentas e veículos com suas respectivas quantidades
+            e horas de operação registradas no diário.
+          example:
+            - id: 1
+              resourceId: 10
+              description: Betoneira
+              quantity: 2
+              equipmentTypeId: 1
+              origin: resource
+              status: OUT_OF_ORDER
+          items:
+            $ref: '#/components/schemas/EquipmentDtoForResponse'
+    ConstructionDailyReportDtoGet:
+      type: object
+      description: Objeto que representa um diário de obra com suas informações detalhadas
+      properties:
+        id:
+          type: integer
+          description: >-
+            Identificador único numérico que representa um registro específico
+            de Diário de Obra no sistema
+          example: 10
+        buildingId:
+          type: integer
+          description: Código de obra.
+          example: 1
+        date:
+          type: string
+          description: Data do Registro do Diário de Obra
+          example: {}
+        responsibleId:
+          type: string
+          description: código do responsável pelo Diário de Obras
+          example: JOAO
+        rainfallIndex:
+          type: number
+          description: Índice Pluviométrico
+          example: 9999.99
+        weekDay:
+          type: string
+          description: Dia da semana
+          example: segunda-feira
+        notes:
+          type: string
+          description: Observação do Diário de Obra, limitado a 4000 caracteres
+          example: Registro dos ocorridos no dia 15/07/2023.
+        createdBy:
+          type: string
+          description: Nome do Usuário que cadastrou o diário
+          example: JOAO
+        createdAt:
+          type: string
+          description: Data e hora da criação do diário no formato yyyy-MM-ddTHH:mm:ss.
+          example: {}
+        modifiedBy:
+          type: string
+          description: Nome do último usuário que modificou o diário
+          example: MARIA
+        modifiedAt:
+          type: string
+          description: Data e hora da modificação do diário no formato yyyy-MM-ddTHH:mm:ss
+          example: {}
+        shifts:
+          type: array
+          description: >-
+            Lista de turnos (manhã, tarde, noite) associados ao registro diário
+            da obra, indicando os períodos de atividade no canteiro
+          example:
+            - description: Morning
+              startTime: '08:00'
+              finishTime: '12:00'
+              weatherCondition: Fine
+          items:
+            $ref: '#/components/schemas/ShiftDto'
+        plannedTasks:
+          type: array
+          description: Lista de Tarefas Planejadas do Diário de Obra.
+          example:
+            - id: 7
+              buildingUnitId: 1
+              taskId: 109
+              notes: Tarefa será realizada pelos ajudantes...
+              quantity: 1234.5679
+              unitOfMeasure: m2
+              supplierId: 2
+              siteId: 3
+          items:
+            $ref: '#/components/schemas/PlannedTaskDtoForGet'
+        detachedTasks:
+          type: array
+          description: Lista de Tarefas Avulsas do Diário de Obra.
+          example:
+            - id: 8
+              description: Tarefa xyz
+              notes: Tarefa será realizada pelos ajudantes...
+              quantity: 9876.5432
+              unitOfMeasure: m2
+              siteId: 3
+          items:
+            $ref: '#/components/schemas/DetachedTaskDtoForResponse'
+        events:
+          type: array
+          description: Lista de Ocorrências
+          example:
+            - id: 9
+              description: Visita do fiscal da prefeitura
+              eventTypeId: 1
+              eventTypeDescription: Visitas
+          items:
+            $ref: '#/components/schemas/EventDtoForGet'
+        crews:
+          type: array
+          description: Lista de Equipe Envolvida
+          example:
+            - id: 5
+              resourceId: 1
+              description: Pedreiro
+              quantity: 10
+              crewTypeId: 9
+              origin: type
+              assignment: INDIRECT_LABOR
+          items:
+            $ref: '#/components/schemas/CrewDtoForGet'
+        equipments:
+          type: array
+          description: Lista de equipamentos
+          example:
+            - id: 1
+              resourceId: 10
+              description: Betoneira
+              quantity: 2
+              equipmentTypeId: 1
+              origin: resource
+              status: OUT_OF_ORDER
+          items:
+            $ref: '#/components/schemas/EquipmentDtoForGet'
+        attachments:
+          type: array
+          description: Lista de anexos
+          example:
+            - attachmentNumber: 1
+              name: alvenaria.jpg
+              description: Foto da execução de alvenaria do subsolo
+              location: subsolo
+          items:
+            $ref: '#/components/schemas/AttachmentDtoForGet'
+    EventsDtoForPut:
+      type: array
+      description: >-
+        Registro de eventos significativos ocorridos na obra, como visitas
+        técnicas, interferências externas, acidentes de trabalho ou outras
+        situações relevantes que impactaram o andamento das atividades
+        construtivas.
+      items:
+        $ref: '#/components/schemas/EventDtoForResponse'
+    EventsDtoForResponse:
+      type: object
+      description: >-
+        Lista de Ocorrências registradas no Diário de Obra, representando
+        eventos ou fatos relevantes ocorridos durante o período do registro.
+      properties:
+        buildingId:
+          type: number
+          description: >-
+            Identificador único numérico que referencia a obra associada ao
+            diário, permitindo vincular os registros ao projeto específico
+          example: 661
+        constructionDailyId:
+          type: number
+          description: >-
+            Identificador único do diário de obra ao qual os eventos estão
+            associados, permitindo rastreabilidade dos registros no sistema
+          example: 1
+        events:
+          type: array
+          description: >-
+            Registro de eventos significativos ocorridos durante a execução
+            diária da obra, incluindo incidentes, visitas técnicas e outras
+            ocorrências que impactam o andamento dos trabalhos.
+          example:
+            - id: 9
+              description: Visita do fiscal da prefeitura
+              eventTypeId: 1
+              eventTypeDescription: Visitas
+          items:
+            $ref: '#/components/schemas/EventDtoForResponse'
+    EventsDtoForPost:
+      type: array
+      description: >-
+        Lista de Ocorrências do Diário de Obra. Deve conter pelo menos uma
+        Ocorrência.
+      items:
+        $ref: '#/components/schemas/EventDto'
+    TasksDtoForPut:
+      type: object
+      description: >-
+        Estrutura de dados utilizada para o registro e atualização das tarefas
+        planejadas e desvinculadas associadas a uma ocorrência do Diário de
+        Obra, permitindo o controle detalhado das atividades realizadas ou
+        previstas no período.
+      properties:
+        plannedTasks:
+          $ref: '#/components/schemas/plannedTasksForPut'
+        detachedTasks:
+          $ref: '#/components/schemas/detachedTasksForPut'
+    TaskDtoForResponse:
+      type: object
+      description: >-
+        Atualizar as tarefas planejadas e desvinculadas associadas a um registro
+        do Diário de Obra, permitindo modificar as atividades documentadas no
+        período de execução da obra.
+      properties:
+        buildingId:
+          type: number
+          description: >-
+            Identificador único da construção associada ao registro, utilizado
+            para vincular as informações ao projeto específico
+          example: 661
+        constructionDailyId:
+          type: number
+          description: >-
+            Identificador único do registro do Diário de Obra que contém as
+            tarefas documentadas
+          example: 1
+        plannedTasks:
+          type: array
+          description: >-
+            Lista de tarefas previamente planejadas no cronograma da obra que
+            foram executadas e registradas no diário, incluindo identificadores,
+            quantidades realizadas e observações sobre o andamento das
+            atividades.
+          example:
+            - description: Morning
+              startTime: '08:00'
+              finishTime: '12:00'
+              weatherCondition: Fine
+          items:
+            $ref: '#/components/schemas/PlannedTaskDtoForResponse'
+        detachedTasks:
+          type: array
+          description: >-
+            Conjunto de atividades não planejadas registradas no diário,
+            incluindo trabalhos adicionais ou emergenciais executados durante o
+            dia na obra, com seus respectivos detalhes técnicos e quantitativos.
+          example:
+            - id: 8
+              description: Tarefa xyz
+              notes: Tarefa será realizada pelos ajudantes...
+              quantity: 9876.5432
+              unitOfMeasure: m2
+              siteId: 3
+          items:
+            $ref: '#/components/schemas/DetachedTaskDtoForResponse'
+    TasksDtoForPost:
+      type: object
+      description: >-
+        Estrutura utilizada para detalhar uma ocorrência registrada no Diário de
+        Obra, incluindo informações sobre o tipo de evento e sua descrição
+        durante o período do registro.
+      properties:
+        plannedTasks:
+          $ref: '#/components/schemas/plannedTasks'
+        detachedTasks:
+          $ref: '#/components/schemas/detachedTasks'
+    CrewsDtoForPut:
+      type: array
+      description: >-
+        Código identificador do local onde a tarefa avulsa será executada,
+        permitindo o rastreamento geográfico dentro da obra
+      items:
+        $ref: '#/components/schemas/CrewDtoForResponse'
+    CrewsDtoForResponse:
+      type: object
+      description: >-
+        Lista de equipes associadas ao Diário de Obra, incluindo detalhes sobre
+        os trabalhadores e suas atividades para o registro diário.
+      properties:
+        buildingId:
+          type: number
+          description: >-
+            Identificador único da obra onde as equipes estão alocadas para
+            execução das atividades
+          example: 661
+        constructionDailyId:
+          type: number
+          description: >-
+            Identificador numérico único do registro diário que documenta todas
+            as atividades, equipes e ocorrências na obra
+          example: 1
+        crews:
+          type: array
+          description: Equipes do Diário de Obras
+          example:
+            - id: 5
+              resourceId: 1
+              description: Pedreiro
+              quantity: 10
+              crewTypeId: 9
+              origin: type
+              assignment: INDIRECT_LABOR
+          items:
+            $ref: '#/components/schemas/CrewDtoForResponse'
+    CrewsDtoForPost:
+      type: array
+      description: >-
+        Lista de Equipes que trabalharão no Diário de Obra, contendo informações
+        sobre os colaboradores, suas funções e horas trabalhadas no período
+        registrado.
+      items:
+        $ref: '#/components/schemas/CrewDto'
+    EquipmentsDtoForPut:
+      type: array
+      description: Lista de Equipamentos do Diário de Obra
+      items:
+        $ref: '#/components/schemas/EquipmentDtoForResponse'
+    EquipmentsDtoForResponse:
+      type: object
+      description: >-
+        Lista de equipamentos que serão utilizados no Diário de Obra, contendo
+        detalhes sobre tipo, quantidade e status operacional dos equipamentos
+        alocados para as atividades do período registrado.
+      properties:
+        buildingId:
+          type: number
+          description: Identificador único da obra onde os diários de obra são registrados
+          example: 661
+        constructionDailyId:
+          type: number
+          description: >-
+            Identificador único do registro diário que associa equipes,
+            equipamentos e atividades realizadas em um determinado dia na obra
+          example: 1
+        equipments:
+          type: array
+          description: Equipamentos do Diário de Obras
+          example:
+            - id: 1
+              resourceId: 10
+              description: Betoneira
+              quantity: 2
+              equipmentTypeId: 1
+              origin: resource
+              status: OUT_OF_ORDER
+          items:
+            $ref: '#/components/schemas/EquipmentDtoForResponse'
+    EquipmentsDtoForPost:
+      type: array
+      description: >-
+        Lista de Equipamentos que serão utilizados no Diário de Obra, contendo
+        informações sobre identificação, quantidade e status operacional dos
+        equipamentos alocados para o período registrado.
+      items:
+        $ref: '#/components/schemas/EquipmentDto'
+    GetResponseEventType:
+      type: object
+      description: >-
+        Retorna uma lista paginada dos tipos de ocorrência disponíveis para
+        registro em diários de obra, permitindo filtrar por id, descrição e
+        status de ativação.
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de tipos de Ocorrência
+          example:
+            - id: 1
+              description: alagamento no subsolo garagem
+              isActive: true
+          items:
+            $ref: '#/components/schemas/EventTypeDto'
+    GetResponseType:
+      type: object
+      description: Retorna a lista de Tipos de Ocorrência, Equipe e Equipamento
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de Tipos de Ocorrência, Equipe e Equipamento
+          example:
+            - id: 1
+              description: Recebimento de material
+              isActive: true
+              type: Event
+          items:
+            $ref: '#/components/schemas/TypeDto'
+    ConstructionDailyReportTypeWebhookPayload:
+      type: object
+      description: Payload do webhook para eventos de tipos de diário de obra
+      properties:
+        constructionDailyReportTypeId:
+          type: integer
+          description: Identificador único do tipo de diário de obra
+          example: 1
+      required:
+        - constructionDailyReportTypeId
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    ConstructionDailyReportDtoForGetPaginated:
+      type: object
+      description: >-
+        Lista de diários de obra retornados na consulta paginada com suas
+        informações básicas
+      properties:
+        id:
+          type: number
+          description: Código do Diário de Obra
+          example: 1
+        buildingId:
+          type: number
+          description: Código da Obra
+          example: 10
+        date:
+          type: string
+          description: Data do registro de Diário de Obra
+          format: yyyy-MM-dd
+          example: {}
+        responsibleId:
+          type: string
+          description: Código do Responsável pelo Diário de Obras
+          example: ADMIN
+        shifts:
+          type: array
+          description: Lista de Turnos do Diário de Obra.
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+                description: >-
+                  Descrição do turno (Morning, Afternoon ou Night) (Matutino,
+                  Vespertino ou Noturno)
+                example: Morning
+    ShiftDto:
+      required:
+        - description
+        - finishTime
+        - startTime
+        - weatherCondition
+      type: object
+      description: Detalhamento de um turno.
+      properties:
+        description:
+          type: string
+          description: >-
+            Identifica o período de trabalho do dia em que as atividades foram
+            realizadas, permitindo segmentar os registros por turno
+          example: Morning
+        startTime:
+          type: string
+          description: Hora de inicio do turno
+          example: '08:00'
+        finishTime:
+          type: string
+          description: Hora de fim do turno
+          example: '12:00'
+        weatherCondition:
+          type: string
+          description: >-
+            Informação climática para o turno (Fine, Light rain, Heavy rain,
+            Unworkable) (Aberto, Chuva leve, Chuva forte ou Impraticável)
+          example: Fine
+    PlannedTaskDto:
+      required:
+        - buildingUnitId
+        - taskId
+      type: object
+      description: >-
+        Representa uma tarefa planejada para registro no Diário de Obra,
+        contendo identificadores da unidade construtiva, da tarefa, além de
+        informações sobre quantidade, fornecedor e local de execução.
+      properties:
+        buildingUnitId:
+          type: integer
+          description: Código da Unidade Construtiva
+          example: 1
+        taskId:
+          type: number
+          description: >-
+            Identificador único que vincula a tarefa planejada ao catálogo de
+            tarefas da obra, permitindo rastrear as atividades executadas
+            conforme o planejamento
+          example: 109
+        notes:
+          type: string
+          description: Observação da Tarefa, limitado a 4000 caracteres
+          example: Tarefa será realizada pelos ajudantes...
+        quantity:
+          type: number
+          description: >-
+            Quantidade referente a medição da tarefa, com precisão máxima de 4
+            casas decimais (decimal(13,4)).
+          example: 1234567891234.5679
+        supplierId:
+          type: integer
+          description: >-
+            Identificador único do empreiteiro ou empresa terceirizada
+            responsável pela execução da tarefa no diário de obra
+          example: 2
+        siteId:
+          type: integer
+          description: >-
+            Identificador do local físico dentro da obra onde a tarefa será
+            executada, permitindo localização precisa das atividades
+          example: 3
+    DetachedTaskDto:
+      required:
+        - description
+      type: object
+      description: >-
+        Estrutura para criação de tarefas avulsas em um Diário de Obra, contendo
+        campos para descrição, observações, quantidade, unidade de medida e
+        localização da tarefa.
+      properties:
+        description:
+          type: string
+          description: Descrição da Tarefa, limitado a 200 caracteres.
+          example: Tarefa xyz
+        notes:
+          type: string
+          description: >-
+            Campo para registrar anotações complementares sobre a execução da
+            tarefa, como condições especiais ou ajustes necessários(limite de
+            4000 caracteres)
+          example: Tarefa será realizada pelos ajudantes...
+        quantity:
+          type: number
+          description: >-
+            Valor numérico que representa a quantidade de trabalho executado
+            para esta tarefa avulsa, permitindo registro preciso do progresso
+            realizado
+          example: 1234567891234.5679
+        unitOfMeasure:
+          type: string
+          description: >-
+            Identificador padronizado da unidade de medida (m², m³, kg, etc)
+            utilizada para quantificar a execução da tarefa avulsa
+          example: m2
+        siteId:
+          type: integer
+          description: >-
+            Identificador único do local físico onde a tarefa avulsa será
+            executada, auxiliando no controle e rastreamento das atividades
+          example: 3
+    EventDto:
+      required:
+        - description
+        - eventTypeId
+      type: object
+      description: >-
+        Estrutura para registro de ocorrências no Diário de Obra, contendo
+        informações sobre eventos relevantes como visitas, acidentes ou
+        condições especiais durante a execução da obra.
+      properties:
+        description:
+          type: string
+          description: >-
+            Campo que detalha a natureza e circunstâncias do evento ocorrido na
+            obra, como visitas técnicas, acidentes ou interferências no
+            andamento dos trabalhos
+          example: Visita do fiscal da prefeitura
+        eventTypeId:
+          type: number
+          description: >-
+            Identificador único do tipo de evento ou ocorrência cadastrado no
+            sistema, permitindo categorizar incidentes, visitas ou situações
+            relevantes no diário de obra
+          example: 1
+    CrewDto:
+      required:
+        - quantity
+      type: object
+      description: >-
+        Estrutura para registro de equipes de trabalho no Diário de Obra,
+        contendo informações sobre mão de obra utilizada, quantidade, tipo de
+        vínculo e classificação da equipe.
+      properties:
+        resourceId:
+          type: number
+          description: >-
+            Código do Insumo do tipo Mão de Obra (atributo category=LABOR na API
+            Insumos do Orçamento da Obra -
+            /building-cost-estimations/{building-id}/resources). Caso for
+            informado, o crewTypeId deve ser omitido.
+          example: 2
+        quantity:
+          type: number
+          description: >-
+            Número de profissionais alocados para a equipe no período do diário,
+            permitindo controle efetivo da força de trabalho
+          example: 10
+        assignment:
+          $ref: '#/components/schemas/LaborAssignmentEnum'
+        crewTypeId:
+          type: number
+          description: >-
+            Código de Tipo Equipe. Caso for informado, o resourceId deve ser
+            omitido.
+          example: 5
+    EquipmentDto:
+      required:
+        - quantity
+      type: object
+      description: >-
+        Estrutura para registro de equipamentos no Diário de Obra, contendo
+        informações sobre os equipamentos utilizados, quantidade, status
+        operacional e identificação do tipo de equipamento.
+      properties:
+        resourceId:
+          type: number
+          description: >-
+            Código do Insumo do tipo Equipamento (atributo category=EQUIPAMENT
+            na API Insumos do Orçamento da Obra -
+            /building-cost-estimations/{building-id}/resources). Caso for
+            informado, o equipmentTypeId deve ser omitido.
+          example: 10
+        quantity:
+          type: number
+          description: >-
+            Quantidade de equipamentos alocados para o período do diário,
+            permitindo controle efetivo dos recursos disponíveis
+          example: 10
+        status:
+          $ref: '#/components/schemas/EquipmentStatusEnum'
+        equipmentTypeId:
+          type: number
+          description: >-
+            Código de Tipo Equipamento. Caso for informado, o resourceId deve
+            ser omitido.
+          example: 8
+    PlannedTaskDtoForResponse:
+      type: object
+      description: >-
+        Lista de tarefas planejadas associadas ao Diário de Obra, contendo
+        detalhes sobre as atividades programadas para execução durante o período
+        registrado.
+      properties:
+        id:
+          type: number
+          description: Código da Tarefa.
+          example: 7
+        buildingUnitId:
+          type: integer
+          description: Código da Unidade Construtiva.
+          example: 1
+        taskId:
+          type: number
+          description: Código identificador da Tarefa.
+          example: 109
+        notes:
+          type: string
+          description: Observação da Tarefa.
+          example: Tarefa será realizada pelos ajudantes...
+        quantity:
+          type: number
+          description: Quantidade referente a medição da tarefa.
+          example: 1234567891234.5679
+        supplierId:
+          type: integer
+          description: Código identificador do fornecedor da tarefa
+          example: 2
+        siteId:
+          type: integer
+          description: Código identificador do local da tarefa
+          example: 3
+    DetachedTaskDtoForResponse:
+      type: object
+      description: >-
+        Tarefa avulsa no contexto de um Diário de Obra, contendo informações
+        detalhadas sobre a descrição, quantidade, unidade de medida e local da
+        tarefa registrada.
+      properties:
+        id:
+          type: number
+          description: >-
+            Identificador único da tarefa avulsa, usado para referência e
+            rastreamento desta atividade específica no diário de obra
+          example: 8
+        description:
+          type: string
+          description: Descrição da Tarefa.
+          example: Tarefa xyz
+        notes:
+          type: string
+          description: >-
+            Campo para registro de observações específicas sobre a execução da
+            tarefa, incluindo condições especiais, impedimentos ou ajustes
+            necessários durante o trabalho
+          example: Tarefa será realizada pelos ajudantes...
+        quantity:
+          type: number
+          description: Quantidade referente a medição da Tarefa.
+          example: 9876.5432
+        unitOfMeasure:
+          type: string
+          description: Unidade de medida usada para a Tarefa.
+          example: m2
+        siteId:
+          type: integer
+          description: >-
+            Referência ao local específico da obra onde a tarefa é realizada,
+            facilitando o controle e monitoramento das atividades
+          example: 3
+    EventDtoForResponse:
+      type: object
+      description: >-
+        Estrutura utilizada para retornar as ocorrências detalhadas registradas
+        em um Diário de Obra, incluindo informações sobre cada evento relevante
+        ocorrido durante o período do diário.
+      properties:
+        id:
+          type: number
+          description: Código da Ocorrência
+          example: 9
+        description:
+          type: string
+          description: Descrição da Ocorrência
+          example: Visita do fiscal da prefeitura
+        eventTypeId:
+          type: number
+          description: Código do tipo da Ocorrência
+          example: 1
+    CrewDtoForResponse:
+      type: object
+      description: >-
+        Contém informações sobre as equipes associadas a um Diário de Obra,
+        incluindo os identificadores da obra e do diário, bem como a lista
+        detalhada das equipes de trabalho registradas no período.
+      properties:
+        id:
+          type: number
+          description: Código da Equipe
+          example: 5
+        resourceId:
+          type: number
+          description: >-
+            Código do Insumo do tipo Mão de Obra (atributo category=LABOR na API
+            Insumos do Orçamento da Obra -
+            /building-cost-estimations/{building-id}/resources)
+        quantity:
+          type: number
+          description: >-
+            Quantidade utilizada do insumo Mão de Obra. Número inteiro, positivo
+            e maior que zero.
+          example: 10
+        crewTypeId:
+          type: number
+          description: Código de Tipo Equipe
+          example: 9
+        origin:
+          type: string
+          description: Informa se a Equipe é vinculada a Tipo ou Insumo
+          example: type
+        assignment:
+          $ref: '#/components/schemas/LaborAssignmentEnum'
+    EquipmentDtoForResponse:
+      type: object
+      description: >-
+        Contém informações sobre os equipamentos associados a um Diário de Obra,
+        incluindo os identificadores da obra e do diário, bem como a lista
+        detalhada dos equipamentos utilizados no período.
+      properties:
+        id:
+          type: number
+          description: Código do Equipamento
+          example: 1
+        resourceId:
+          type: number
+          description: >-
+            Código do Insumo do tipo Equipamento (atributo category=EQUIPAMENT
+            na API Insumos do Orçamento da Obra -
+            /building-cost-estimations/{building-id}/resources)
+          example: 10
+        quantity:
+          type: number
+          description: >-
+            Quantidade utilizada do insumo Equipamento. Número inteiro, positivo
+            e maior que zero.
+          example: 2
+        equipmentTypeId:
+          type: number
+          description: Código de Tipo Equipamento
+        origin:
+          type: string
+          description: >-
+            Indica a fonte do equipamento, podendo ser um tipo cadastrado ou um
+            insumo do orçamento
+          example: resource
+        status:
+          $ref: '#/components/schemas/EquipmentStatusEnum'
+    PlannedTaskDtoForGet:
+      type: object
+      description: >-
+        Quantidade referente à medição da tarefa, com precisão máxima de 4 casas
+        decimais (decimal(13,4)).
+      properties:
+        id:
+          type: number
+          description: Identificador único da tarefa planejada no sistema.
+          example: 7
+        buildingUnitId:
+          type: integer
+          description: >-
+            Identificador único que referencia a unidade específica dentro da
+            construção onde a tarefa será executada, permitindo localização
+            precisa do trabalho
+          example: 1
+        taskId:
+          type: number
+          description: >-
+            Identificador único da tarefa no cronograma, que vincula as
+            atividades executadas com o planejamento original da obra
+          example: 109
+        notes:
+          type: string
+          description: >-
+            Campo opcional para registrar informações adicionais ou detalhes
+            específicos sobre a execução da tarefa que não se enquadram nos
+            demais campos estruturados
+          example: Tarefa será realizada pelos ajudantes...
+        quantity:
+          type: number
+          description: >-
+            Valor numérico que representa o progresso ou volume da tarefa
+            executada, essencial para o acompanhamento do avanço físico da obra
+          example: 1234.5679
+        unitOfMeasure:
+          type: string
+          description: Unidade de medida usada para a tarefa
+          example: m2
+        supplierId:
+          type: integer
+          description: >-
+            Referência ao fornecedor responsável pela execução ou fornecimento
+            de materiais para esta tarefa específica
+          example: 2
+        siteId:
+          type: integer
+          description: >-
+            Referência ao local físico específico dentro da obra onde a tarefa
+            será executada, permitindo o rastreamento preciso das atividades
+          example: 3
+    EventDtoForGet:
+      type: object
+      description: >-
+        Detalhamento da ocorrência registrada no Diário de Obra, incluindo
+        informações relevantes sobre o evento ocorrido durante o período do
+        diário.
+      properties:
+        id:
+          type: number
+          description: >-
+            Identificador único numérico que representa a ocorrência específica
+            registrada no diário de obra
+          example: 9
+        description:
+          type: string
+          description: >-
+            Detalhamento textual do evento ou ocorrência registrada no diário de
+            obra, como visitas técnicas, paralisações ou situações
+            extraordinárias que impactaram as atividades do dia
+          example: Visita do fiscal da prefeitura
+        eventTypeId:
+          type: number
+          description: >-
+            Identificador único do tipo de ocorrência registrada no diário de
+            obra, utilizado para categorizar eventos como visitas técnicas,
+            paralisações, acidentes ou outras situações relevantes
+          example: 1
+        eventTypeDescription:
+          type: string
+          description: Descrição do tipo da Ocorrência
+          example: Visitas
+    CrewDtoForGet:
+      type: object
+      description: >-
+        Detalhamento das equipes associadas a um Diário de Obra, incluindo os
+        identificadores da obra e do diário, bem como a lista detalhada das
+        equipes de trabalho registradas no período.
+      properties:
+        id:
+          type: number
+          description: >-
+            Identificador único que representa uma equipe específica no diário
+            de obras
+          example: 5
+        resourceId:
+          type: number
+          description: >-
+            Código do Insumo do tipo Mão de Obra (atributo category = LABOR na
+            API Insumos do Orçamento da Obra -
+            /building-cost-estimations/{building-id}/resources)
+        description:
+          type: string
+          description: Descrição do insumo do tipo Mão de Obra (atributo category=LABOR)
+          example: Pedreiro
+        quantity:
+          type: number
+          description: >-
+            Indica o número de trabalhadores desta equipe alocados nas
+            atividades do diário de obra
+          example: 10
+        crewTypeId:
+          type: number
+          description: >-
+            Identificador do tipo de equipe que classifica o grupo de trabalho,
+            permitindo categorizar e organizar as equipes no diário de obra
+          example: 9
+        origin:
+          type: string
+          description: Informa se o Equipamento é vinculado a Tipo ou Insumo
+          example: type
+        assignment:
+          type: string
+          description: >-
+            Indica o vínculo empregatício da equipe na obra, classificando como
+            mão de obra direta, indireta ou terceirizada para fins de gestão e
+            controle de custos
+          example: INDIRECT_LABOR
+    EquipmentDtoForGet:
+      type: object
+      description: >-
+        Detalhamento dos equipamentos associados a um Diário de Obra, incluindo
+        identificação, descrição, quantidade e status operacional dos
+        equipamentos utilizados nas atividades do período.
+      properties:
+        id:
+          type: number
+          description: >-
+            Identificador único que representa um equipamento específico
+            registrado no diário de obras, permitindo seu rastreamento e
+            referência
+          example: 1
+        resourceId:
+          type: number
+          description: >-
+            Identificador único do equipamento no orçamento da obra, usado para
+            vincular registros no diário com os recursos planejados, permitindo
+            controle preciso da utilização
+          example: 10
+        description:
+          type: string
+          description: Descrição do insumo do Equipamento  (atributo category=LABOR)
+          example: Betoneira
+        quantity:
+          type: number
+          description: >-
+            Indica a quantidade de unidades deste equipamento específico
+            utilizadas na obra durante o período do diário, permitindo controle
+            do uso dos recursos alocados
+          example: 2
+        equipmentTypeId:
+          type: number
+          description: >-
+            Identificador único que classifica o tipo específico do equipamento
+            no sistema, permitindo agrupamento e categorização padronizada dos
+            recursos
+        origin:
+          type: string
+          description: >-
+            Indica se o equipamento registrado no diário foi definido através de
+            um tipo padrão ou provém de um insumo do orçamento da obra
+          example: resource
+        status:
+          type: string
+          description: >-
+            Indica o estado atual de funcionamento do equipamento na obra,
+            permitindo monitorar a disponibilidade e condições operacionais dos
+            recursos
+          example: OUT_OF_ORDER
+    AttachmentDtoForGet:
+      type: object
+      description: >-
+        Estrutura que representa um anexo recuperado do diário de obra, contendo
+        informações como número do anexo, nome do arquivo, descrição e
+        localização.
+      properties:
+        attachmentNumber:
+          type: integer
+          description: Número do anexo do diário de obra
+          example: 1
+        name:
+          type: string
+          description: Nome do arquivo em anexo
+          example: alvenaria.jpg
+        description:
+          type: string
+          description: Descrição do arquivo em anexo
+          example: Foto da execução de alvenaria do subsolo
+        location:
+          type: string
+          description: Local atribuído para a imagem. Retorna null se nada foi atribuído
+          example: subsolo
+    plannedTasksForPut:
+      type: array
+      description: >-
+        Lista de tarefas planejadas a serem atualizadas no Diário de Obra,
+        incluindo identificadores, quantidades e informações de localização para
+        cada tarefa modificada.
+      example:
+        - id: 1
+          buildingUnitId: 1
+          taskId: 109
+          notes: Tarefa realizada equipe A
+          quantity: 123.4567
+          supplierId: 2
+          siteId: 3
+      items:
+        $ref: '#/components/schemas/PlannedTaskDtoForPut'
+    detachedTasksForPut:
+      type: array
+      description: >-
+        Lista de tarefas avulsas a serem atualizadas no Diário de Obra,
+        incluindo identificadores, descrições, quantidades e informações de
+        localização para cada tarefa não planejada modificada.
+      example:
+        - id: 2
+          description: Revestimento parede quarto 1
+          notes: Tarefa realizada pela equipe B
+          quantity: 40.5
+          unitOfMeasure: m2
+          siteId: 3
+      items:
+        $ref: '#/components/schemas/DetachedTaskDtoForPut'
+    plannedTasks:
+      type: array
+      description: >-
+        Lista de tarefas planejadas para execução no período do Diário de Obra,
+        contendo informações sobre unidades construtivas, quantidades e
+        responsáveis.
+      example:
+        - buildingUnitId: 1
+          taskId: 109
+          notes: Tarefa realizada equipe A
+          quantity: 123.4567
+          supplierId: 2
+          siteId: 3
+      items:
+        $ref: '#/components/schemas/PlannedTaskDto'
+    detachedTasks:
+      type: array
+      description: >-
+        Lista de tarefas avulsas que serão registradas no Diário de Obra,
+        contendo informações sobre descrição, quantidade, unidade de medida e
+        local de execução das atividades não planejadas.
+      example:
+        - description: Revestimento parede quarto 1
+          notes: Tarefa realizada pela equipe B
+          quantity: 40.5
+          unitOfMeasure: m2
+          siteId: 3
+      items:
+        $ref: '#/components/schemas/DetachedTaskDto'
+    EventTypeDto:
+      type: object
+      description: >-
+        Objeto que representa os tipos de ocorrência encontrados no diário de
+        obra
+      properties:
+        id:
+          type: number
+          description: Código do tipo de Ocorrência
+          example: 1
+        description:
+          type: string
+          description: Descrição do tipo de Ocorrência
+          example: alagamento no subsolo garagem
+        isActive:
+          type: boolean
+          description: >-
+            Informa true se o Tipo de Ocorrência está ativo ou false se está
+            inativo.
+          example: true
+    TypeDto:
+      type: object
+      description: >-
+        Objeto que representa os tipos de ocorrência, equipe e equipamento do
+        diário de obra
+      properties:
+        id:
+          type: number
+          description: Código do Tipo
+          example: 1
+        description:
+          type: string
+          description: Descrição do Tipo
+          example: Recebimento de material
+        isActive:
+          type: boolean
+          description: Informa true se o Tipo está ativo ou false se está inativo.
+          example: true
+        type:
+          type: string
+          description: >-
+            Informa Event se o registro for um Tipo de Ocorrência, Crew se for
+            de Equipe e Equipment se for de Equipamento.
+          example: Event
+    LaborAssignmentEnum:
+      type: string
+      description: Classificação do vínculo trabalhista da mão de obra
+      enum:
+        - DIRECT_LABOR
+        - INDIRECT_LABOR
+        - THIRD_PARTY
+      example: INDIRECT_LABOR
+    EquipmentStatusEnum:
+      type: string
+      description: Status operacional do equipamento
+      enum:
+        - IN_USE
+        - IDLE
+        - OUT_OF_ORDER
+      example: OUT_OF_ORDER
+    PlannedTaskDtoForPut:
+      required:
+        - buildingUnitId
+        - id
+        - taskId
+      type: object
+      description: >-
+        Estrutura para atualização de tarefas planejadas em um Diário de Obra,
+        contendo identificadores obrigatórios e campos opcionais como
+        quantidade, observações e localização.
+      properties:
+        id:
+          type: integer
+          description: Id da tarefa do Diario de Obra a ser atualizada
+          example: 1
+        buildingUnitId:
+          type: integer
+          description: >-
+            Identificador único da unidade construtiva que representa uma parte
+            específica da obra onde a tarefa será executada
+          example: 1
+        taskId:
+          type: number
+          description: >-
+            Identificador único da tarefa no catálogo de tarefas da obra, usado
+            para vincular a execução aos serviços planejados
+          example: 109
+        notes:
+          type: string
+          description: >-
+            Campo para registrar detalhes adicionais sobre a execução da tarefa,
+            facilitando o acompanhamento e documentação do trabalho(limite de
+            4000 caracteres)
+          example: Tarefa será realizada pelos ajudantes...
+        quantity:
+          type: number
+          description: >-
+            Quantidade executada da tarefa durante o período do diário,
+            permitindo registro preciso do progresso com até 4 casas decimais
+          example: 1234567891234.5679
+        supplierId:
+          type: integer
+          description: >-
+            Identificador único do fornecedor ou prestador de serviços associado
+            à execução da tarefa, permitindo rastrear responsabilidades
+          example: 2
+        siteId:
+          type: integer
+          description: >-
+            Identificador único do local físico onde a tarefa será executada,
+            permitindo mapeamento específico dentro do canteiro de obras
+          example: 3
+    DetachedTaskDtoForPut:
+      required:
+        - description
+      type: object
+      description: >-
+        Estrutura para atualização de tarefas avulsas no Diário de Obra,
+        contendo campos editáveis como descrição, observações, quantidade,
+        unidade de medida e localização.
+      properties:
+        description:
+          type: string
+          description: >-
+            Campo obrigatório que identifica e descreve a atividade avulsa a ser
+            executada na obra, com limite de 200 caracteres
+          example: Tarefa xyz
+        notes:
+          type: string
+          description: >-
+            Campo para registrar observações específicas sobre a execução da
+            tarefa, como condições climáticas, recursos utilizados ou
+            imprevistos ocorridos(limite de 4000 caracteres)
+          example: Tarefa será realizada pelos ajudantes...
+        quantity:
+          type: number
+          description: >-
+            Quantidade atualizada da tarefa avulsa, permitindo registro com
+            precisão de até 4 casas decimais para medições detalhadas
+          example: 1234567891234.5679
+        unitOfMeasure:
+          type: string
+          description: >-
+            Especificação padronizada da unidade de medição (m², m³, etc)
+            utilizada para avaliar e registrar o progresso da tarefa
+          example: m2
+        siteId:
+          type: integer
+          description: >-
+            Identificador único do local físico na obra onde a tarefa será
+            realizada, permitindo mapeamento e controle das atividades por área
+          example: 3
+    SortDirectionEnum:
+      type: string
+      description: Direção da ordenação dos resultados
+      enum:
+        - ASC
+        - DESC
+      example: ASC
+    DailyReportTypeSortFieldEnum:
+      type: string
+      description: Campos disponíveis para ordenação dos tipos de diário de obra
+      enum:
+        - id
+        - description
+        - isActive
+      example: id
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    BuildingIdQuery:
+      description: Código da obra (opcional)
+      in: query
+      name: buildingId
+      required: false
+      schema:
+        example: 123
+        format: int32
+        type: integer
+    StartDateQuery:
+      description: Data inicial para filtro de período (opcional)
+      in: query
+      name: startDate
+      required: false
+      schema:
+        example: '2023-01-01'
+        format: date
+        type: string
+    EndDateQuery:
+      description: Data final para filtro de período (opcional)
+      in: query
+      name: endDate
+      required: false
+      schema:
+        example: '2023-01-31'
+        format: date
+        type: string
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    BuildingIdPath:
+      description: Identificador único da obra
+      in: path
+      name: buildingId
+      required: true
+      schema:
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1
+webhooks:
+  CONSTRUCTION_DAILY_REPORT_TYPE_CREATED:
+    post:
+      tags:
+        - Webhooks - Diário de Obra
+      summary: Tipo de diário de obra criado
+      description: Sempre que um tipo de diário de obra é criado no sistema
+      operationId: constructionDailyReportTypeCreated
+      requestBody:
+        description: Dados do tipo de diário de obra criado
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionDailyReportTypeWebhookPayload'
+            example:
+              constructionDailyReportTypeId: 1
+      responses:
+        '200':
+          description: Webhook de criação processado com sucesso
+      x-audience:
+        - public
+  CONSTRUCTION_DAILY_REPORT_TYPE_UPDATED:
+    post:
+      tags:
+        - Webhooks - Diário de Obra
+      summary: Tipo de diário de obra atualizado
+      description: Sempre que um tipo de diário de obra é atualizado no sistema
+      operationId: constructionDailyReportTypeUpdated
+      requestBody:
+        description: Dados do tipo de diário de obra atualizado
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionDailyReportTypeWebhookPayload'
+            example:
+              constructionDailyReportTypeId: 1
+      responses:
+        '200':
+          description: Webhook de atualização processado com sucesso
+      x-audience:
+        - public
+  CONSTRUCTION_DAILY_REPORT_TYPE_DELETED:
+    post:
+      tags:
+        - Webhooks - Diário de Obra
+      summary: Tipo de diário de obra excluído
+      description: Sempre que um tipo de diário de obra é excluído do sistema
+      operationId: constructionDailyReportTypeDeleted
+      requestBody:
+        description: Dados do tipo de diário de obra excluído
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstructionDailyReportTypeWebhookPayload'
+            example:
+              constructionDailyReportTypeId: 1
+      responses:
+        '200':
+          description: Webhook de exclusão processado com sucesso
+      x-audience:
+        - public

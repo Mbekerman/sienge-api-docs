@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Índice de Webhooks · Documentação de APIs</title>
+    <link href="./fonts.css" rel="stylesheet" />
+    <link href="./general-page.css" rel="stylesheet" />
+  </head>
+  <body data-testid="webhooks-index">
+    <h1 class="title">🔔 Webhooks disponíveis (por recurso)</h1>
+    <p>Clique em um evento para abrir a página do recurso correspondente, já na seção do webhook.</p>
+    <h4>Contas Contábeis</h4>
+    <ul>
+      <li><a href="./html-files/accountancy-accounts-v1.html#operations-webhooks-postwebhookAccountancyAccountUpdated" target="content">ACCOUNTANCY_ACCOUNT_UPDATED</a> — Webhook de conta contábil atualizada</li>
+      <li><a href="./html-files/accountancy-accounts-v1.html#operations-webhooks-postwebhookAccountancyAccountCreated" target="content">ACCOUNTANCY_ACCOUNT_CREATED</a> — Webhook de conta contábil criada</li>
+      <li><a href="./html-files/accountancy-accounts-v1.html#operations-webhooks-postwebhookAccountancyAccountDeleted" target="content">ACCOUNTANCY_ACCOUNT_DELETED</a> — Webhook de conta contábil deletada</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;companyId&quot;: int, &quot;accountId&quot;: int }</pre>
+    <h4>Fechamento Contábil (Contabilidade)</h4>
+    <ul>
+      <li><a href="./html-files/accountancy-closingaccountancy-v1.html#operations-webhooks-postwebhookAccountancyClosingCreated" target="content">ACCOUNTANCY_CLOSING_CREATED</a> — Webhook de fechamento contábil criado</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;companyId&quot;: int, &quot;closingAt&quot;: string }</pre>
+    <h4>Títulos do Contas a Receber</h4>
+    <ul>
+      <li><a href="./html-files/accounts-receivable-v1.html#operations-webhooks-postwebhookReceivableInstallmentCreated" target="content">RECEIVABLE_INSTALLMENT_CREATED</a> — Webhook de parcela criada no contas a receber</li>
+      <li><a href="./html-files/accounts-receivable-v1.html#operations-webhooks-postwebhookReceivableInstallmentUpdated" target="content">RECEIVABLE_INSTALLMENT_UPDATED</a> — Webhook de parcela atualizada no contas a receber</li>
+      <li><a href="./html-files/accounts-receivable-v1.html#operations-webhooks-postwebhookReceivableInstallmentRemoved" target="content">RECEIVABLE_INSTALLMENT_REMOVED</a> — Webhook de parcela removida no contas a receber</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;receivableBillId&quot;: int, &quot;installmentId&quot;: int }</pre>
+    <ul>
+      <li><a href="./html-files/accounts-receivable-v1.html#operations-webhooks-postwebhookAssignmentRightsAgreementUpdated" target="content">ASSIGNMENT_RIGHTS_AGREEMENT_UPDATED</a> — Webhook de cessão de direito atualizada</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;receivableBillId&quot;: int, &quot;dtRightAssignment&quot;: date, &quot;customersIdBefore&quot;: [integer], &quot;customersIdAfter&quot;: [integer] }</pre>
+    <ul>
+      <li><a href="./html-files/accounts-receivable-v1.html#operations-webhooks-postwebhookUpdateReceivableBillSituation" target="content">UPDATE_RECEIVABLE_BILL_SITUATION</a> — Webhook de alteração de situação do título</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;receivableBillId&quot;: [integer], &quot;situation&quot;: string }</pre>
+    <ul>
+      <li><a href="./html-files/accounts-receivable-v1.html#operations-webhooks-postwebhookReceiptProcessed" target="content">RECEIPT_PROCESSED</a> — Webhook de baixa/recebimento processado</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;billId&quot;: int, &quot;installmentId&quot;: int }</pre>
+    <ul>
+      <li><a href="./html-files/accounts-receivable-v1.html#operations-webhooks-postwebhookKeysHandoverCreated" target="content">KEYS_HANDOVER_CREATED</a> — Webhook de entrega de chaves criada</li>
+      <li><a href="./html-files/accounts-receivable-v1.html#operations-webhooks-postwebhookKeysHandoverExcluded" target="content">KEYS_HANDOVER_EXCLUDED</a> — Webhook de entrega de chaves excluída</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;titleNumber&quot;: int, &quot;customerId&quot;: int, &quot;contractNumber&quot;: string, &quot;dtKeysHandover&quot;: date }</pre>
+    <h4>Títulos do Contas a Pagar</h4>
+    <ul>
+      <li><a href="./html-files/bill-debt-v1.html#operations-webhooks-postwebhookPaymentBillUpdated" target="content">PAYMENT_BILL_UPDATED</a> — Webhook de título alterado no contas a pagar</li>
+      <li><a href="./html-files/bill-debt-v1.html#operations-webhooks-postwebhookPaymentAcknowledgmentPending" target="content">PAYMENT_ACKNOWLEDGMENT_PENDING</a> — Webhook de título a pagar com a ciência pendente</li>
+      <li><a href="./html-files/bill-debt-v1.html#operations-webhooks-postwebhookPaymentAcknowledgmentProcessed" target="content">PAYMENT_ACKNOWLEDGMENT_PROCESSED</a> — Webhook de título a pagar quando a ciência for realizada</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;billId&quot;: int }</pre>
+    <ul>
+      <li><a href="./html-files/bill-debt-v1.html#operations-webhooks-postwebhookPaymentInstallmentCreated" target="content">PAYMENT_INSTALLMENT_CREATED</a> — Webhook de parcela criada no contas a pagar</li>
+      <li><a href="./html-files/bill-debt-v1.html#operations-webhooks-postwebhookPaymentInstallmentUpdated" target="content">PAYMENT_INSTALLMENT_UPDATED</a> — Webhook de parcela alterada no contas a pagar</li>
+      <li><a href="./html-files/bill-debt-v1.html#operations-webhooks-postwebhookPaymentInstallmentRemoved" target="content">PAYMENT_INSTALLMENT_REMOVED</a> — Webhook de parcela removida no contas a pagar</li>
+      <li><a href="./html-files/bill-debt-v1.html#operations-webhooks-postwebhookPaymentReceiptProcessed" target="content">PAYMENT_RECEIPT_PROCESSED</a> — Webhook de baixa processada no contas a pagar</li>
+      <li><a href="./html-files/bill-debt-v1.html#operations-webhooks-postwebhookPaymentReceiptUpdated" target="content">PAYMENT_RECEIPT_UPDATED</a> — Webhook de baixa alterada no contas a pagar</li>
+      <li><a href="./html-files/bill-debt-v1.html#operations-webhooks-postwebhookPaymentReceiptRemoved" target="content">PAYMENT_RECEIPT_REMOVED</a> — Webhook de baixa cancelada no contas a pagar</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;billId&quot;: int, &quot;installmentId&quot;: int, &quot;billOrigin&quot;: string, &quot;documentType&quot;: string }</pre>
+    <ul>
+      <li><a href="./html-files/bill-debt-v1.html#operations-webhooks-postwebhookPaymentAuthorizationAvailable" target="content">PAYMENT_AUTHORIZATION_AVAILABLE</a> — Webhook de autorização disponível no contas a pagar</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;billId&quot;: int, &quot;installmentId&quot;: int, &quot;authorized&quot;: boolean }</pre>
+    <ul>
+      <li><a href="./html-files/bill-debt-v1.html#operations-webhooks-postwebhookPaymentAuthorizationUpdate" target="content">PAYMENT_AUTHORIZATION_UPDATE</a> — Webhook de autorização atualizada no contas a pagar</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;billId&quot;: int, &quot;installmentId&quot;: int, &quot;billOrigin&quot;: string, &quot;documentType&quot;: string, &quot;authorized&quot;: string }</pre>
+    <ul>
+      <li><a href="./html-files/bill-debt-v1.html#operations-webhooks-postwebhookPaymentReceiptChargebackProcessed" target="content">PAYMENT_RECEIPT_CHARGEBACK_PROCESSED</a> — Webhook de estorno da baixa processado no contas a pagar</li>
+      <li><a href="./html-files/bill-debt-v1.html#operations-webhooks-postwebhookPaymentReceiptChargebackRemoved" target="content">PAYMENT_RECEIPT_CHARGEBACK_REMOVED</a> — Webhook de estorno da baixa cancelado no contas a pagar</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;billId&quot;: int, &quot;installmentId&quot;: int }</pre>
+    <h4>Orçamentos de Obra</h4>
+    <ul>
+      <li><a href="./html-files/building-cost-estimations-v1.html#operations-webhooks-postwebhookBuildingCostEstimationsVersionCreated" target="content">BUILDING_COST_ESTIMATIONS_VERSION_CREATED</a> — Webhook de nova versão de orçamento criada</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;buildingId&quot;: int, &quot;buildingStatus&quot;: string, &quot;creationDate&quot;: datetime, &quot;versionNumber&quot;: int }</pre>
+    <ul>
+      <li><a href="./html-files/building-cost-estimations-v1.html#operations-webhooks-postwebhookBuildingCostEstimationUpdated" target="content">BUILDING_COST_ESTIMATION_UPDATED</a> — Webhook de item de orçamento criado ou removido</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;buildingId&quot;: int, &quot;buildingUnitId&quot;: int, &quot;updatedAt&quot;: datetime, &quot;user&quot;: string }</pre>
+    <h4>Bulk-data Caixas e Bancos</h4>
+    <ul>
+      <li><a href="./html-files/bulk-data-caixas-e-bancos.html#operations-webhooks-postwebhookBankMovementCreated" target="content">BANK_MOVEMENT_CREATED</a> — Webhook de movimento bancário criado</li>
+      <li><a href="./html-files/bulk-data-caixas-e-bancos.html#operations-webhooks-postwebhookBankMovementUpdated" target="content">BANK_MOVEMENT_UPDATED</a> — Webhook de movimento bancário atualizado</li>
+      <li><a href="./html-files/bulk-data-caixas-e-bancos.html#operations-webhooks-postwebhookBankMovementDeleted" target="content">BANK_MOVEMENT_DELETED</a> — Webhook de movimento bancário excluído</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;bankMovementId&quot;: int }</pre>
+    <h4>Histórico de Notificação de Cobranças</h4>
+    <ul>
+      <li><a href="./html-files/collections-notification-history-v1.html#operations-webhooks-postcollectionNotifiedWebhook" target="content">COLLECTION_NOTIFIED</a> — Notificação de cobrança gerada</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;collectionHistoryId&quot;: int }</pre>
+    <h4>Comissões</h4>
+    <ul>
+      <li><a href="./html-files/commissions-v1.html#operations-webhooks-postsalesCommissionCreatedWebhook" target="content">SALES_COMMISSION_CREATED</a> — Comissão de vendas criada</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;commissionId&quot;: int, &quot;commissionsBillId&quot;: [integer] }</pre>
+    <ul>
+      <li><a href="./html-files/commissions-v1.html#operations-webhooks-postsalesCommissionInstallmentsAuthorizedWebhook" target="content">SALES_COMMISSION_INSTALLMENTS_AUTHORIZED</a> — Parcela de comissão autorizada</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;commissionId&quot;: int, &quot;authorize&quot;: boolean, &quot;installmentsNumber&quot;: [integer] }</pre>
+    <ul>
+      <li><a href="./html-files/commissions-v1.html#operations-webhooks-postsalesCommissionInstallmentsCanceledWebhook" target="content">SALES_COMMISSION_INSTALLMENTS_CANCELED</a> — Parcela de comissão cancelada</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;commissionId&quot;: int, &quot;cancel&quot;: boolean, &quot;installmentsNumber&quot;: [integer] }</pre>
+    <ul>
+      <li><a href="./html-files/commissions-v1.html#operations-webhooks-postsalesCommissionInstallmentsReleasedWebhook" target="content">SALES_COMMISSION_INSTALLMENTS_RELEASED</a> — Parcela de comissão liberada</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;commissionId&quot;: int, &quot;commissionBillId&quot;: int, &quot;installmentsNumber&quot;: [integer], &quot;comissionReleasedId&quot;: int, &quot;comissionReleasedBillId&quot;: int }</pre>
+    <ul>
+      <li><a href="./html-files/commissions-v1.html#operations-webhooks-postsalesCommissionReleasesExcludedWebhook" target="content">SALES_COMMISSION_RELEASES_EXCLUDED</a> — Liberação de comissão excluída</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;commissionId&quot;: int, &quot;commissionBillId&quot;: int, &quot;installmentNumber&quot;: int, &quot;comissionExcludedId&quot;: int, &quot;comissionExcludedBillId&quot;: int }</pre>
+    <ul>
+      <li><a href="./html-files/commissions-v1.html#operations-webhooks-postsalesCommissionExcludedWebhook" target="content">SALES_COMMISSION_EXCLUDED</a> — Comissão de vendas excluída</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;commissionId&quot;: int, &quot;commissionBillId&quot;: int }</pre>
+    <h4>Diário de Obra</h4>
+    <ul>
+      <li><a href="./html-files/construction-daily-report-v1.html#operations-webhooks-postconstructionDailyReportTypeCreated" target="content">CONSTRUCTION_DAILY_REPORT_TYPE_CREATED</a> — Tipo de diário de obra criado</li>
+      <li><a href="./html-files/construction-daily-report-v1.html#operations-webhooks-postconstructionDailyReportTypeUpdated" target="content">CONSTRUCTION_DAILY_REPORT_TYPE_UPDATED</a> — Tipo de diário de obra atualizado</li>
+      <li><a href="./html-files/construction-daily-report-v1.html#operations-webhooks-postconstructionDailyReportTypeDeleted" target="content">CONSTRUCTION_DAILY_REPORT_TYPE_DELETED</a> — Tipo de diário de obra excluído</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;constructionDailyReportTypeId&quot;: int }</pre>
+    <h4>Contratos de Suprimentos</h4>
+    <ul>
+      <li><a href="./html-files/contracts-v1.html#operations-webhooks-postwebhookContractAuthorized" target="content">CONTRACT_AUTHORIZED</a> — Webhook de contrato autorizado</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;documentId&quot;: string, &quot;contractNumber&quot;: string, &quot;consistent&quot;: boolean }</pre>
+    <ul>
+      <li><a href="./html-files/contracts-v1.html#operations-webhooks-postwebhookContractUnauthorized" target="content">CONTRACT_UNAUTHORIZED</a> — Webhook de contrato desautorizado</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;documentId&quot;: string, &quot;contractNumber&quot;: string, &quot;consistent&quot;: boolean, &quot;disapproved&quot;: boolean }</pre>
+    <h4>Tabelas do Custos Unitários</h4>
+    <ul>
+      <li><a href="./html-files/cost-databases-v1.html#operations-webhooks-postwebhookResourceCreated" target="content">RESOURCE_CREATED</a> — Webhook de insumo criado</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;costDatabaseId&quot;: int, &quot;id&quot;: int, &quot;resourceCode&quot;: string, &quot;createdAt&quot;: datetime }</pre>
+    <ul>
+      <li><a href="./html-files/cost-databases-v1.html#operations-webhooks-postwebhookWorkItemCreated" target="content">WORKITEM_CREATED</a> — Webhook de serviço criado</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;costDatabaseId&quot;: int, &quot;id&quot;: int, &quot;auxiliaryCode&quot;: string, &quot;buildingTypeId&quot;: string, &quot;createdAt&quot;: datetime }</pre>
+    <h4>Credores</h4>
+    <ul>
+      <li><a href="./html-files/creditor-v1.html#operations-webhooks-postcreditorCreatedWebhook" target="content">CREDITORS_CREATED</a> — Webhook disparado quando um credor é criado</li>
+      <li><a href="./html-files/creditor-v1.html#operations-webhooks-postcreditorUpdatedWebhook" target="content">CREDITORS_UPDATED</a> — Webhook disparado quando um credor é atualizado</li>
+      <li><a href="./html-files/creditor-v1.html#operations-webhooks-postcreditorRemovedWebhook" target="content">CREDITORS_REMOVED</a> — Webhook disparado quando um credor é removido</li>
+      <li><a href="./html-files/creditor-v1.html#operations-webhooks-postcreditorDisabledWebhook" target="content">CREDITORS_DISABLED</a> — Webhook disparado quando um credor é desativado</li>
+      <li><a href="./html-files/creditor-v1.html#operations-webhooks-postcreditorEnabledWebhook" target="content">CREDITORS_ENABLED</a> — Webhook disparado quando um credor é ativado</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;creditorId&quot;: int, &quot;typesId&quot;: string }</pre>
+    <h4>Clientes</h4>
+    <ul>
+      <li><a href="./html-files/customers-v1.html#operations-webhooks-postcustomerCreatedWebhook" target="content">CUSTOMER_CREATED</a> — Webhook disparado quando um cliente é criado</li>
+      <li><a href="./html-files/customers-v1.html#operations-webhooks-postcustomerUpdatedWebhook" target="content">CUSTOMER_UPDATED</a> — Webhook disparado quando um cliente é atualizado</li>
+      <li><a href="./html-files/customers-v1.html#operations-webhooks-postcustomerRemovedWebhook" target="content">CUSTOMER_REMOVED</a> — Webhook disparado quando um cliente é removido</li>
+      <li><a href="./html-files/customers-v1.html#operations-webhooks-postcustomerDisabledWebhook" target="content">CUSTOMER_DISABLED</a> — Webhook disparado quando um cliente é desativado</li>
+      <li><a href="./html-files/customers-v1.html#operations-webhooks-postcustomerEnabledWebhook" target="content">CUSTOMER_ENABLED</a> — Webhook disparado quando um cliente é ativado</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;customerId&quot;: int }</pre>
+    <h4>Empreendimentos (Obras)</h4>
+    <ul>
+      <li><a href="./html-files/enterprise-v1.html#operations-webhooks-postwebhookCostCenterCreated" target="content">COST_CENTER_CREATED</a> — Webhook de centro de custo criado</li>
+      <li><a href="./html-files/enterprise-v1.html#operations-webhooks-postwebhookCostCenterUpdated" target="content">COST_CENTER_UPDATED</a> — Webhook de centro de custo atualizado</li>
+      <li><a href="./html-files/enterprise-v1.html#operations-webhooks-postwebhookCostCenterRemoved" target="content">COST_CENTER_REMOVED</a> — Webhook de centro de custo removido</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;costCenterId&quot;: int }</pre>
+    <ul>
+      <li><a href="./html-files/enterprise-v1.html#operations-webhooks-postwebhookEnterpriseIdUpdated" target="content">ENTERPRISE_ID_UPDATED</a> — Webhook de código do empreendimento alterado</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;previousEnterpriseId&quot;: int, &quot;currentEnterpriseId&quot;: int, &quot;updatedAt&quot;: datetime, &quot;user&quot;: string }</pre>
+    <ul>
+      <li><a href="./html-files/enterprise-v1.html#operations-webhooks-postwebhookBuildingStatusUpdated" target="content">BUILDING_STATUS_UPDATED</a> — Webhook de situação da obra alterada</li>
+      <li><a href="./html-files/enterprise-v1.html#operations-webhooks-postwebhookBuildingCostEstimationStatusUpdated" target="content">BUILDING_COST_ESTIMATION_STATUS_UPDATED</a> — Webhook de situação do orçamento alterada</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;buildingId&quot;: int, &quot;updatedAt&quot;: datetime }</pre>
+    <h4>Medições de Contratos de Suprimentos</h4>
+    <ul>
+      <li><a href="./html-files/measurement-v1.html#operations-webhooks-postwebhookMeasurementAuthorized" target="content">MEASUREMENT_AUTHORIZED</a> — Webhook de medição autorizada</li>
+      <li><a href="./html-files/measurement-v1.html#operations-webhooks-postwebhookMeasurementUnauthorized" target="content">MEASUREMENT_UNAUTHORIZED</a> — Webhook de medição desautorizada</li>
+      <li><a href="./html-files/measurement-v1.html#operations-webhooks-postwebhookClearingFinished" target="content">CLEARING_FINISHED</a> — Webhook de liberação de medição finalizada</li>
+      <li><a href="./html-files/measurement-v1.html#operations-webhooks-postwebhookClearingDeleted" target="content">CLEARING_DELETED</a> — Webhook de liberação de medição deletada</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;documentId&quot;: string, &quot;contractNumber&quot;: string, &quot;measurementNumber&quot;: int, &quot;buildingId&quot;: int }</pre>
+    <h4>Locação de Imóveis</h4>
+    <ul>
+      <li><a href="./html-files/property-rental-v1.html#operations-webhooks-postpropertyRentalCreatedWebhook" target="content">PROPERTY_RENTAL_CREATED</a> — Contrato de locação criado</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;contractSeqId&quot;: int, &quot;unitId&quot;: int }</pre>
+    <ul>
+      <li><a href="./html-files/property-rental-v1.html#operations-webhooks-postpropertyRentalUpdatedWebhook" target="content">PROPERTY_RENTAL_UPDATED</a> — Contrato de locação atualizado</li>
+      <li><a href="./html-files/property-rental-v1.html#operations-webhooks-postpropertyRentalExcludedWebhook" target="content">PROPERTY_RENTAL_EXCLUDED</a> — Contrato de locação excluído</li>
+      <li><a href="./html-files/property-rental-v1.html#operations-webhooks-postpropertyRentalCancelledWebhook" target="content">PROPERTY_RENTAL_CANCELLED</a> — Contrato de locação cancelado</li>
+      <li><a href="./html-files/property-rental-v1.html#operations-webhooks-postpropertyRentalTerminatedWebhook" target="content">PROPERTY_RENTAL_TERMINATED</a> — Contrato de locação finalizado</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;contractSeqId&quot;: int }</pre>
+    <ul>
+      <li><a href="./html-files/property-rental-v1.html#operations-webhooks-postpropertyRentalIssuedWebhook" target="content">PROPERTY_RENTAL_ISSUED</a> — Contrato de locação emitido</li>
+      <li><a href="./html-files/property-rental-v1.html#operations-webhooks-postpropertyRentalReactivatedWebhook" target="content">PROPERTY_RENTAL_REACTIVATED</a> — Contrato de locação reativado</li>
+      <li><a href="./html-files/property-rental-v1.html#operations-webhooks-postpropertyRentalTerminationExcludedWebhook" target="content">PROPERTY_RENTAL_TERMINATION_EXCLUDED</a> — Finalização de contrato excluída</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;contractSeqId&quot;: int, &quot;billId&quot;: int }</pre>
+    <h4>Pedidos de Compra</h4>
+    <ul>
+      <li><a href="./html-files/purchase-orders-v1.html#operations-webhooks-postpurchaseOrderAuthorizationChanged" target="content">PURCHASE_ORDER_AUTHORIZATION_CHANGED</a> — Autorização do pedido alterada</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;purchaseOrderId&quot;: int, &quot;authorized&quot;: boolean, &quot;consistent&quot;: boolean, &quot;changedAt&quot;: datetime }</pre>
+    <ul>
+      <li><a href="./html-files/purchase-orders-v1.html#operations-webhooks-postpurchaseOrderGeneratedFromNegotiation" target="content">PURCHASE_ORDER_GENERATED_FROM_NEGOCIATION</a> — Pedido gerado via negociação</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;purchaseOrderId&quot;: int, &quot;purchaseQuotationId&quot;: int, &quot;supplierId&quot;: int, &quot;negotiationNumber&quot;: int, &quot;authorized&quot;: boolean }</pre>
+    <ul>
+      <li><a href="./html-files/purchase-orders-v1.html#operations-webhooks-postpurchaseOrderItemModified" target="content">PURCHASE_ORDER_ITEM_MODIFIED</a> — Itens do pedido modificados</li>
+      <li><a href="./html-files/purchase-orders-v1.html#operations-webhooks-postpurchaseOrderFinancialForecastUpdated" target="content">PURCHASE_ORDER_FINANCIAL_FORECAST_UPDATED</a> — Previsão financeira atualizada</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;purchaseOrderId&quot;: int }</pre>
+    <h4>Cotações de Preços</h4>
+    <ul>
+      <li><a href="./html-files/purchase-quotations-v1.html#operations-webhooks-postpurchaseQuotationNegotiationAuthorizationChanged" target="content">PURCHASE_QUOTATION_NEGOTIATION_AUTHORIZATION_CHANGED</a> — Autorização da negociação alterada</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;purchaseQuotationId&quot;: int, &quot;supplierId&quot;: int, &quot;negotiationId&quot;: int, &quot;authorized&quot;: boolean, &quot;consistent&quot;: boolean, &quot;changedAt&quot;: datetime }</pre>
+    <h4>Solicitações de Compra</h4>
+    <ul>
+      <li><a href="./html-files/solicitacoes-de-compra.html#operations-webhooks-postpurchaseRequestItemAuthorizationUpdate" target="content">PURCHASE_REQUEST_ITEM_AUTHORIZATION_UPDATE</a> — Atualização de autorização do item da solicitação</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;purchaseRequestId&quot;: int, &quot;purchaseRequestItemNumber&quot;: int, &quot;authorized&quot;: boolean, &quot;disapproved&quot;: boolean }</pre>
+    <ul>
+      <li><a href="./html-files/solicitacoes-de-compra.html#operations-webhooks-postpurchaseRequestItemCreated" target="content">PURCHASE_REQUEST_ITEM_CREATED</a> — Item da solicitação criado</li>
+      <li><a href="./html-files/solicitacoes-de-compra.html#operations-webhooks-postpurchaseRequestItemUpdated" target="content">PURCHASE_REQUEST_ITEM_UPDATED</a> — Item da solicitação atualizado</li>
+      <li><a href="./html-files/solicitacoes-de-compra.html#operations-webhooks-postpurchaseRequestItemDeleted" target="content">PURCHASE_REQUEST_ITEM_DELETED</a> — Item da solicitação removido</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;purchaseRequestId&quot;: int, &quot;purchaseRequestItemNumber&quot;: int }</pre>
+    <ul>
+      <li><a href="./html-files/solicitacoes-de-compra.html#operations-webhooks-postpurchaseRequestDeleted" target="content">PURCHASE_REQUEST_DELETED</a> — Solicitação de compra removida</li>
+      <li><a href="./html-files/solicitacoes-de-compra.html#operations-webhooks-postpurchaseRequestUpdated" target="content">PURCHASE_REQUEST_UPDATED</a> — Solicitação de compra atualizada</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;purchaseRequestId&quot;: int }</pre>
+    <h4>Contratos de Vendas</h4>
+    <ul>
+      <li><a href="./html-files/sales-contracts-v1.html#operations-webhooks-postsalesContractCreatedWebhook" target="content">SALES_CONTRACT_CREATED</a> — Contrato de venda criado</li>
+      <li><a href="./html-files/sales-contracts-v1.html#operations-webhooks-postsalesContractUpdatedWebhook" target="content">SALES_CONTRACT_UPDATED</a> — Contrato de venda atualizado</li>
+      <li><a href="./html-files/sales-contracts-v1.html#operations-webhooks-postsalesContractRemovedWebhook" target="content">SALES_CONTRACT_REMOVED</a> — Contrato de venda removido</li>
+      <li><a href="./html-files/sales-contracts-v1.html#operations-webhooks-postsalesContractIssuedWebhook" target="content">SALES_CONTRACT_ISSUED</a> — Contrato de venda emitido</li>
+      <li><a href="./html-files/sales-contracts-v1.html#operations-webhooks-postsalesContractCanceledWebhook" target="content">SALES_CONTRACT_CANCELED</a> — Contrato de venda cancelado</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;salesContractId&quot;: int }</pre>
+    <h4>Estoque de Insumos</h4>
+    <ul>
+      <li><a href="./html-files/stock-inventories-v1.html#operations-webhooks-postinventoryMovementCreated" target="content">INVENTORY_MOVEMENT_CREATED</a> — Notificação de movimentação de estoque criada</li>
+      <li><a href="./html-files/stock-inventories-v1.html#operations-webhooks-postinventoryMovementUpdated" target="content">INVENTORY_MOVEMENT_UPDATED</a> — Notificação de movimentação de estoque atualizada</li>
+      <li><a href="./html-files/stock-inventories-v1.html#operations-webhooks-postinventoryMovementDeleted" target="content">INVENTORY_MOVEMENT_DELETED</a> — Notificação de movimentação de estoque deletada</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;inventoryMovementId&quot;: int }</pre>
+    <h4>Unidades de Imóveis</h4>
+    <ul>
+      <li><a href="./html-files/unit-v1.html#operations-webhooks-postunitCreatedWebhook" target="content">UNIT_CREATED</a> — Nova unidade criada</li>
+      <li><a href="./html-files/unit-v1.html#operations-webhooks-postunitUpdatedWebhook" target="content">UNIT_UPDATED</a> — Unidade atualizada</li>
+      <li><a href="./html-files/unit-v1.html#operations-webhooks-postunitRemovedWebhook" target="content">UNIT_REMOVED</a> — Unidade removida</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;unitId&quot;: int }</pre>
+    <h4>Gerenciamento de Cobrança</h4>
+    <ul>
+      <li><a href="./html-files/gerenciamento-de-cobranca.html#operations-webhooks-postbookCollectionConfirmedWebhook" target="content">BOOK_COLLECTION_CONFIRMED</a> — Cobrança escritural confirmada</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;billId&quot;: int, &quot;installmentId&quot;: int, &quot;banknumber&quot;: string }</pre>
+    <h4>Registro de Boletos</h4>
+    <ul>
+      <li><a href="./html-files/registro-de-boletos.html#operations-webhooks-postpaymentSlipRegisteredWebhook" target="content">PAYMENT_SLIP_REGISTERED</a> — Registro de boleto processado</li>
+    </ul>
+    <p>JSON enviado na notificação:</p>
+    <pre>{ &quot;receivableBillId&quot;: int, &quot;installmentId&quot;: int, &quot;accountNumber&quot;: string, &quot;status&quot;: string }</pre>
+    <h4>Assistência Técnica</h4>
+    <ul>
+      <li><a href="./html-files/assistencia-tecnica.html#operations-webhooks-postwebhookTechnicalAssistanceAnalysis" target="content">TECHNICAL_ASSISTANCE_ANALYSIS</a> — Webhook de assistência técnica em análise</li>
+      <li><a href="./html-files/assistencia-tecnica.html#operations-webhooks-postwebhookTechnicalAssistanceCanceled" target="content">TECHNICAL_ASSISTANCE_CANCELED</a> — Webhook de assistência técnica cancelada</li>
+      <li><a href="./html-files/assistencia-tecnica.html#operations-webhooks-postwebhookTechnicalAssistanceClosed" target="content">TECHNICAL_ASSISTANCE_CLOSED</a> — Webhook de assistência técnica encerrada</li>
+      <li><a href="./html-files/assistencia-tecnica.html#operations-webhooks-postwebhookTechnicalAssistanceCreated" target="content">TECHNICAL_ASSISTANCE_CREATED</a> — Webhook de assistência técnica criada</li>
+      <li><a href="./html-files/assistencia-tecnica.html#operations-webhooks-postwebhookTechnicalAssistanceExcluded" target="content">TECHNICAL_ASSISTANCE_EXCLUDED</a> — Webhook de assistência técnica excluída</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;enterpriseId&quot;: int, &quot;unitId&quot;: int, &quot;solicitationId&quot;: int }</pre>
+    <ul>
+      <li><a href="./html-files/assistencia-tecnica.html#operations-webhooks-postwebhookServiceOrderCreated" target="content">SERVICE_ORDER_CREATED</a> — Webhook de ordem de serviço criada</li>
+      <li><a href="./html-files/assistencia-tecnica.html#operations-webhooks-postwebhookServiceOrderRemoved" target="content">SERVICE_ORDER_REMOVED</a> — Webhook de ordem de serviço removida</li>
+      <li><a href="./html-files/assistencia-tecnica.html#operations-webhooks-postwebhookServiceOrderUpdated" target="content">SERVICE_ORDER_UPDATED</a> — Webhook de ordem de serviço atualizada</li>
+    </ul>
+    <p>JSON enviado na notificação para os eventos acima:</p>
+    <pre>{ &quot;enterpriseId&quot;: int, &quot;unitId&quot;: int, &quot;solicitationId&quot;: int, &quot;serviceOrderId&quot;: int }</pre>
+  </body>
+</html>

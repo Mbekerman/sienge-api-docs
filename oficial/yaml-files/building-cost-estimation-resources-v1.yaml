@@ -1,0 +1,697 @@
+openapi: 3.1.1
+info:
+  title: Insumos do Orçamento da Obra
+  version: 1.24.0
+  description: API de insumos do orçamento da obra.
+paths:
+  /building-cost-estimations/{buildingId}/resources:
+    get:
+      description: >-
+        Lista os insumos ativos associados ao orçamento da obra indicada, com
+        suporte a filtros por grupos de insumo e paginação. (REST)
+      operationId: getBuildingCostEstimationsResources
+      x-original-file: building-cost-estimation-resources-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Insumos do Orçamento da Obra
+      summary: Lista insumos do orçamento
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+        - name: resourceGroups
+          in: query
+          description: 'Códigos dos grupos de insumo. Exemplo: [''02'', ''01.001'']'
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+            example:
+              - '02'
+              - '01.001'
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: >-
+            Retorna um array com todos os insumos ativos existentes no orçamento
+            da respectiva obra. Quando não houver resultados, retorna uma lista
+            vazia.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseResources'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+    post:
+      description: >-
+        Inclui um novo insumo ativo no orçamento da obra indicada, copiando os
+        dados a partir da tabela de custos unitários utilizada pela obra. (REST)
+      tags:
+        - Insumos do Orçamento da Obra
+      operationId: postBuildingCostEstimationsResources
+      x-original-file: building-cost-estimation-resources-v1.yaml
+      summary: Inclui um insumo no orçamento de uma obra.
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+      requestBody:
+        description: >-
+          Insumo a ser cadastrado no orçamento da obra.<br>Deve ser um insumo
+          ativo já existente na tabela do custos unitários utilizada pela obra,
+          pois os dados desse novo insumo serão copiados a partir dessa
+          referência.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceDTOForPost'
+            example:
+              id: 1001
+      responses:
+        '201':
+          description: Insumo cadastrado com sucesso no orçamento da obra (criação).
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /building-cost-estimations/{buildingId}/resources/{id}:
+    get:
+      description: >-
+        Recupera os dados detalhados do insumo do orçamento identificado pelo
+        parâmetro "id" para a obra informada. (REST)
+      tags:
+        - Insumos do Orçamento da Obra
+      operationId: getBuildingCostEstimationsResource
+      x-original-file: building-cost-estimation-resources-v1.yaml
+      summary: Consulta insumo específico
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+        - in: path
+          name: id
+          description: Código do insumo passado como parâmetro na URL do endpoint GET.
+          required: true
+          schema:
+            description: Id do insumo
+            example: 1001
+            format: int32
+            type: integer
+      responses:
+        '200':
+          description: >-
+            Retorna um objeto único com os dados do insumo correspondente ao
+            código fornecido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceDTO'
+              example:
+                id: 1001
+                description: Cimento Portland
+                unitOfMeasure: kg
+                category: MATERIAL
+                resourceCode: M1354
+                barcode: '7613033174728'
+                details:
+                  - id: 1
+                    description: CP-320
+                    detailCode: DT-01
+                trademarks:
+                  - id: 123
+                    description: Lorem ipsum
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+    patch:
+      description: >-
+        Atualiza o código auxiliar do insumo do orçamento para a obra indicada,
+        preservando os demais atributos do insumo. (REST)
+      tags:
+        - Insumos do Orçamento da Obra
+      operationId: patchBuildingCostEstimationsResource
+      x-original-file: building-cost-estimation-resources-v1.yaml
+      summary: Atualiza código auxiliar de insumo no orçamento de obra
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+        - in: path
+          name: id
+          description: Código do insumo passado como parâmetro na URL do endpoint PATCH.
+          required: true
+          schema:
+            description: Id do insumo
+            example: 1001
+            format: int32
+            type: integer
+      requestBody:
+        description: >-
+          Código auxiliar do insumo a ser atualizado na obra.<br>Deve ser um
+          insumo ativo de uma obra existente e não encerrada. O código auxiliar
+          deve possuir no máximo 25 caracteres.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceCodeDTO'
+            example:
+              resourceCode: I-01
+      responses:
+        '204':
+          description: >-
+            Atualização do código auxiliar do insumo realizada com sucesso no
+            orçamento da obra.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    GetResponseResources:
+      example:
+        resultSetMetadata:
+          count: 1
+          offset: 0
+          limit: 100
+        results:
+          - id: 1001
+            description: Cimento Portland
+            unitOfMeasure: kg
+            category: MATERIAL
+            resourceCode: M1354
+            barcode: '7613033174728'
+            details:
+              - id: 1
+                description: CP-320
+                detailCode: DT-01
+            trademarks:
+              - id: 123
+                description: Lorem ipsum
+      description: >-
+        Objeto contendo os metadados do resultado da consulta e o array de
+        insumos.
+      type: object
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceDTO'
+          example:
+            - id: 1001
+              description: Cimento Portland
+              unitOfMeasure: kg
+              category: MATERIAL
+              resourceCode: M1354
+              barcode: '7613033174728'
+              details:
+                - id: 1
+                  description: CP-320
+                  detailCode: DT-01
+              trademarks:
+                - id: 123
+                  description: Lorem ipsum
+    ResourceDTOForPost:
+      description: >-
+        Payload para inclusão de insumo no orçamento. Contém: id: identificador
+        numérico do insumo a ser incluído.
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          description: Id do insumo
+          example: 1001
+          format: int32
+          type: integer
+    ResourceDTO:
+      description: >-
+        Representa um insumo do orçamento. Contém: id: identificador numérico do
+        insumo; description: descrição legível do insumo; unitOfMeasure: símbolo
+        da unidade de medida básica (ex.: kg, m, un); category: categoria do
+        insumo, conforme enum (ex.: MATERIAL, LABOR); resourceCode: código
+        auxiliar interno do insumo; barcode: código de barras do insumo na
+        unidade básica, sem detalhe/marca; details: lista de detalhes ativos do
+        insumo (ResourceDetailDTO); trademarks: lista de marcas ativas do insumo
+        (ResourceTrademarkDTO).
+      type: object
+      properties:
+        id:
+          description: Id do insumo
+          example: 1001
+          format: int32
+          type: integer
+        description:
+          description: Descrição do insumo
+          example: Cimento Portland
+          type: string
+        unitOfMeasure:
+          description: Símbolo da unidade de medida básica do insumo
+          example: kg
+          type: string
+        category:
+          $ref: '#/components/schemas/ResourceCategoryEnum'
+        resourceCode:
+          description: Código auxiliar do insumo
+          example: M1354
+          type: string
+        barcode:
+          description: >-
+            Código de barras do insumo, considerando a unidade de medida básica,
+            sem detalhe nem marca especificados.
+          example: '7613033174728'
+          type: string
+        details:
+          $ref: '#/components/schemas/ResourceDetails'
+        trademarks:
+          $ref: '#/components/schemas/Trademarks'
+    ResourceCodeDTO:
+      description: >-
+        Payload para atualização do código auxiliar do insumo. Contém:
+        resourceCode: novo código auxiliar do insumo (até 25 caracteres).
+      type: object
+      required:
+        - resourceCode
+      properties:
+        resourceCode:
+          description: >-
+            Código auxiliar do insumo para identificação interna; texto máximo
+            de 25 caracteres (ex.: "I-01")
+          type: string
+          example: I-01
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    ResourceCategoryEnum:
+      description: Categoria do insumo
+      enum:
+        - EQUIPMENT
+        - LABOR
+        - INCREMENTAL_COST_ITEM
+        - MATERIAL
+        - TRANSPORT_ITEM
+        - OTHER
+        - OFFICE_SUPPLY
+        - FUELS_AND_LUBRICANTS
+        - MAINTENANCE_MATERIAL
+      example: MATERIAL
+      type: string
+    ResourceDetails:
+      description: Detalhes do insumo
+      example:
+        - description: CP-320
+          detailCode: DT-01
+          fiscalProduct:
+            description: Cimento Portland
+            id: 10
+          id: 1
+          status: ACTIVE
+      items:
+        $ref: '#/components/schemas/ResourceDetailDTO'
+      type: array
+    Trademarks:
+      description: Marcas ativas do insumo
+      example:
+        - description: Lorem ipsum
+          id: 123
+      items:
+        $ref: '#/components/schemas/ResourceTrademarkDTO'
+      type: array
+    ResourceDetailDTO:
+      description: Retorna um objeto representando um detalhe de um insumo.
+      properties:
+        description:
+          description: Descrição do detalhe
+          example: CP-320
+          type: string
+        detailCode:
+          description: Código auxiliar do detalhe
+          example: DT-01
+          type: string
+        fiscalProduct:
+          allOf:
+            - $ref: '#/components/schemas/FiscalProductDTO'
+          description: >-
+            Produto fiscal vinculado ao detalhe do insumo. Pode ser null quando
+            o detalhe não tiver produto fiscal vinculado.
+          nullable: true
+        id:
+          description: Id do detalhe
+          example: 1
+          type: integer
+        status:
+          description: >-
+            Status do detalhe do insumo. Indica se o detalhe está ativo (ACTIVE)
+            ou inativo (INACTIVE).
+          enum:
+            - ACTIVE
+            - INACTIVE
+          example: ACTIVE
+          type: string
+      type: object
+    ResourceTrademarkDTO:
+      description: Retorna um objeto representando uma marca de um insumo.
+      properties:
+        description:
+          description: Descrição da marca
+          example: Lorem ipsum
+          type: string
+        id:
+          description: Id da marca
+          example: 123
+          type: integer
+      type: object
+    FiscalProductDTO:
+      description: >-
+        Retorna um objeto representando o produto fiscal vinculado ao detalhe do
+        insumo.
+      properties:
+        description:
+          description: Descrição do produto fiscal
+          example: Produto Fiscal 1
+          type: string
+        id:
+          description: Código do produto fiscal
+          example: 10
+          type: integer
+      type: object
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    BuildingIdPath:
+      description: Identificador único da obra
+      in: path
+      name: buildingId
+      required: true
+      schema:
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

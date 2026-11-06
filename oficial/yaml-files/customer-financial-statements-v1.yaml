@@ -1,0 +1,1052 @@
+openapi: 3.1.1
+info:
+  title: Extrato de Cliente Por E-Mail
+  version: 1.24.0
+  description: API de extrato de cliente por e-mail
+paths:
+  /customer-financial-statements:
+    get:
+      x-original-file: customer-financial-statements-v1.yaml
+      x-section: Extrato do cliente
+      x-audience:
+        - public
+      tags:
+        - Extrato do cliente
+      summary: Exibe as informações do extrato do cliente
+      operationId: customerStatements
+      parameters:
+        - $ref: '#/components/parameters/CustomerIdQueryRequired'
+        - $ref: '#/components/parameters/BillReceivableId'
+        - $ref: '#/components/parameters/MonetaryCorrectionForAnnualInstallment'
+        - $ref: '#/components/parameters/IncludeSubJudice'
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/JointVentureId'
+        - $ref: '#/components/parameters/UnityId'
+        - $ref: '#/components/parameters/UnityCode'
+        - $ref: '#/components/parameters/ConditionIdIn'
+        - $ref: '#/components/parameters/ConditionIdNotIn'
+        - $ref: '#/components/parameters/IncludeRemadeInstallmentsStringQuery'
+        - $ref: '#/components/parameters/IncludeWriteOff'
+        - $ref: '#/components/parameters/IncludeCancelation'
+        - $ref: '#/components/parameters/IncludeRenegotiation'
+        - $ref: '#/components/parameters/MonetaryCorrectionForDueDateInstallment'
+        - $ref: '#/components/parameters/IncludeBankMovements'
+      responses:
+        '200':
+          description: Extrato do cliente carregado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCustomerFinancialStatement'
+              example:
+                resultSetMetadata:
+                  count: 1
+                  offset: 0
+                  limit: 200
+                results:
+                  - billsReceivable:
+                      billReceivableId: 1234
+                      finePercent: 2.5
+                      interestPercent: 3.5
+                      documentId: '123456'
+                      documentCode: CT
+                      subJudice: false
+                      installments:
+                        - installmentId: 1234
+                          dueDate: '2025-06-30'
+                          conditionType: AT
+                          originalValue: 1000
+                          currentBalance: 1050
+                          interestPercent: 5
+                          receipts:
+                            - calculationDate: '2025-06-30'
+                              receiptDate: '2025-06-30'
+                              receiptValue: 1000
+                              interestValue: 50
+                              additionalValue: 10
+                              discountValue: 5
+                              administrativeFee: 2
+                              netReceiptValue: 1043
+                              receiptType: Recebimento
+                              insuranceAmount: 100.5
+                              mipInsuranceAmount: 50.25
+                              fixedInsuranceAmount: 50.25
+                              bankMovements:
+                                - bankMovementDate: '2018-01-01'
+                                  sequencialNumber: 1
+                                  id: 123
+                                  amount: 150.75
+                                  historicId: 42
+                                  historicName: Recebimento
+                                  operationId: 7
+                                  operationName: Recebimento
+                                  operationType: CR
+                                  reconcile: S
+                                  correctedAmount: 155.25
+                                  originId: CR
+                                  financialCategories:
+                                    - costCenterId: 201
+                                      financialCategoryId: FIN001
+                                      financialCategoryName: Receita com vendas
+                                      financialCategoryReducer: RED001
+                                      financialCategoryType: Receita
+                                      financialCategoryRate: 25.5
+                                      bankMovementId: 123
+                              accountNumber: 12345-6
+                          generatedBillet: false
+                          installmentNumber: 2/5
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Exibe as informações de títulos, parcelas e baixas do extrato do cliente
+        (REST)
+    post:
+      tags:
+        - Extrato de cliente por e-mail
+      summary: Envia relatório de extrato de cliente por e-mail
+      operationId: sendCustomerFinancialStatements
+      x-section: Extrato de cliente por e-mail
+      x-original-file: customer-financial-statements-v1.yaml
+      x-audience:
+        - public
+      requestBody:
+        description: >-
+          Dados do corpo da requisição para envio do relatório de extrato de
+          cliente por e-mail
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CustomerFinancialStatementEmailReportBody'
+            example:
+              customerId: 1
+              email: exemplo@email.com
+              billReceivableId: 1234
+              subject: Assunto teste
+              message: Exemplo de corpo de email
+              unityId:
+                - APTO101
+                - APTO102
+              unityCode:
+                - 101
+                - 102
+              conditionIdIn:
+                - AT
+                - PM
+              conditionIdNotIn:
+                - AV
+                - CA
+        required: true
+      responses:
+        '204':
+          description: Relatório Gerado
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Envia relatório de extrato de cliente por e-mail para títulos a receber
+        contendo parcelas e baixas (REST)
+  /customer-financial-statements/pdf:
+    get:
+      x-original-file: customer-financial-statements-v1.yaml
+      x-section: URL do Extrato do cliente
+      x-audience:
+        - public
+      tags:
+        - URL do Extrato do cliente
+      summary: Gera link para download do PDF do Extrato do Cliente.
+      operationId: customerStatementsUrl
+      parameters:
+        - $ref: '#/components/parameters/CustomerIdQueryRequired'
+        - $ref: '#/components/parameters/BillReceivableId'
+        - $ref: '#/components/parameters/MonetaryCorrectionForAnnualInstallment'
+        - $ref: '#/components/parameters/IncludeSubJudice'
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/JointVentureId'
+        - $ref: '#/components/parameters/UnityId'
+        - $ref: '#/components/parameters/UnityCode'
+        - $ref: '#/components/parameters/ConditionIdIn'
+        - $ref: '#/components/parameters/ConditionIdNotIn'
+        - $ref: '#/components/parameters/IncludeRemadeInstallmentsStringQuery'
+        - $ref: '#/components/parameters/IncludeWriteOff'
+        - $ref: '#/components/parameters/IncludeCancelation'
+        - $ref: '#/components/parameters/IncludeRenegotiation'
+        - $ref: '#/components/parameters/MonetaryCorrectionForDueDateInstallment'
+      responses:
+        '200':
+          description: Extrato do cliente por PDF carregado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCustomerFinancialStatement'
+              example:
+                resultSetMetadata:
+                  count: 1
+                  offset: 0
+                  limit: 200
+                results:
+                  - billsReceivable:
+                      billReceivableId: 1234
+                      finePercent: 2.5
+                      interestPercent: 3.5
+                      documentId: '123456'
+                      documentCode: CT
+                      subJudice: false
+                      installments:
+                        - installmentId: 1234
+                          dueDate: '2025-06-30'
+                          conditionType: AT
+                          originalValue: 1000
+                          currentBalance: 1050
+                          interestPercent: 5
+                          receipts:
+                            - calculationDate: '2025-06-30'
+                              receiptDate: '2025-06-30'
+                              receiptValue: 1000
+                              interestValue: 50
+                              additionalValue: 10
+                              discountValue: 5
+                              administrativeFee: 2
+                              netReceiptValue: 1043
+                              receiptType: Recebimento
+                              insuranceAmount: 100.5
+                              mipInsuranceAmount: 50.25
+                              fixedInsuranceAmount: 50.25
+                              bankMovements:
+                                - bankMovementDate: '2018-01-01'
+                                  sequencialNumber: 1
+                                  id: 123
+                                  amount: 150.75
+                                  historicId: 42
+                                  historicName: Recebimento de parcela
+                                  operationId: 7
+                                  operationName: Baixa de título
+                                  operationType: CR
+                                  reconcile: S
+                                  correctedAmount: 155.25
+                                  originId: CR
+                                  financialCategories:
+                                    - costCenterId: 201
+                                      financialCategoryId: FIN001
+                                      financialCategoryName: Receita com vendas
+                                      financialCategoryReducer: RED001
+                                      financialCategoryType: Receita
+                                      financialCategoryRate: 25.5
+                                      bankMovementId: 123
+                              accountNumber: 12345-6
+                          generatedBillet: false
+                          installmentNumber: 2/5
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Gera o link para o download do PDF referente ao Extrato do Cliente com
+        informações de títulos, parcelas e baixas. O link expira em 5 minutos.
+        (REST)
+components:
+  schemas:
+    GetCustomerFinancialStatement:
+      description: Contém os metadados e resultados do extrato do cliente
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de unidades retornadas como resultado da pesquisa.
+          example:
+            - billsReceivable:
+                billReceivableId: 1234
+                finePercent: 2.5
+                interestPercent: 3.5
+                documentId: '123456'
+                documentCode: CT
+                subJudice: false
+                installments:
+                  - installmentId: 1234
+                    dueDate: '2025-06-30'
+                    conditionType: AT
+                    originalValue: 1000
+                    currentBalance: 1050
+                    interestPercent: 5
+                    generatedBillet: false
+                    installmentNumber: 2/5
+          items:
+            $ref: '#/components/schemas/CustomerFinancialStatementResults'
+    CustomerFinancialStatementEmailReportBody:
+      description: Dados para envio do relatório de extrato de cliente por e-mail
+      required:
+        - customerId
+        - email
+      type: object
+      example:
+        customerId: 1
+        email: exemplo@email.com
+        billReceivableId: 1234
+        subject: Assunto teste
+        message: Exemplo de corpo de email
+        unityId:
+          - APTO101
+          - APTO102
+        unityCode:
+          - 101
+          - 102
+        conditionIdIn:
+          - AT
+          - PM
+        conditionIdNotIn:
+          - AV
+          - CA
+      properties:
+        customerId:
+          type: integer
+          format: int32
+          example: 1
+        email:
+          type: string
+          description: E-mail que será enviado o relatório
+          example: exemplo@email.com
+        billReceivableId:
+          allOf:
+            - $ref: '#/components/schemas/ReceivableBillNumberDescription'
+            - type: integer
+              format: int32
+          example: 1234
+        subject:
+          type: string
+          description: 'Assunto do e-mail. O padrão é: Relatório de Extrato do Cliente'
+          example: Assunto teste
+        message:
+          type: string
+          description: Mensagem do corpo do e-mail. O padrão é uma string vazia.
+          example: Exemplo de corpo de email
+        unityId:
+          $ref: '#/components/schemas/UnityIdArray'
+        unityCode:
+          $ref: '#/components/schemas/UnityCodeArray'
+        conditionIdIn:
+          $ref: '#/components/schemas/ConditionIdInArray'
+        conditionIdNotIn:
+          $ref: '#/components/schemas/ConditionIdNotInArray'
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    CustomerFinancialStatementResults:
+      description: Contém os dados de resultado do extrato do cliente
+      type: object
+      properties:
+        billsReceivable:
+          $ref: '#/components/schemas/BillReceivable'
+    ReceivableBillNumberDescription:
+      description: Número do título
+    UnityIdArray:
+      type: array
+      description: >-
+        Unidades (Descrição). Preenchendo este parâmetro trará somente os
+        títulos cadastradas com as mesmas unidades informadas no parâmetro.
+      example:
+        - APTO101
+        - APTO102
+      items:
+        type: string
+        example: APTO101
+    UnityCodeArray:
+      type: array
+      description: >-
+        Códigos (IDs) das Unidades. Preenchendo este parâmetro trará somente os
+        títulos relacionados as mesmas unidades informadas no parâmetro,
+        considerando o Código interno do sistema.
+      example:
+        - 101
+        - 102
+      items:
+        type: integer
+        example: 101
+    ConditionIdInArray:
+      description: >-
+        Id das condições de pagamento para incluir na consulta (Exemplo: AT, PM)
+        | Preenchendo este parâmetro serão consideradas somente as parcelas
+        cadastradas com as mesmas condições de pagamento informadas no
+        parâmetro.
+      example:
+        - AT
+        - PM
+      items:
+        type: string
+      type: array
+    ConditionIdNotInArray:
+      description: >-
+        Id das condições de pagamento para excluir na consulta (Exemplo: AT, PM)
+        | Preenchendo este parâmetro serão consideradas somente as parcelas
+        cadastradas com as mesmas condições de pagamento informadas no
+        parâmetro.
+      example:
+        - AT
+        - PM
+      items:
+        type: string
+      type: array
+    BillReceivable:
+      description: Informações do título a receber
+      type: object
+      properties:
+        billReceivableId:
+          type: integer
+          format: int64
+        finePercent:
+          type: number
+          description: Percentual de multa de mora
+          format: double
+        interestPercent:
+          type: number
+          description: Percentual de juros de mora
+          format: double
+        documentId:
+          type: string
+          description: Id documento do Titulo.
+        documentCode:
+          type: string
+          description: Código do Documento ex.("CT")
+        subJudice:
+          type: boolean
+          description: informa se o título está ou não sub-judice
+        installments:
+          type: array
+          items:
+            $ref: '#/components/schemas/FinancialStatementInstallmentReceivable'
+    FinancialStatementInstallmentReceivable:
+      description: Informações da parcela do título a receber
+      type: object
+      properties:
+        installmentId:
+          type: integer
+          format: int64
+        dueDate:
+          description: Data de vencimento. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        conditionType:
+          type: string
+          description: Tipo de condição da parcela (extrato do cliente)
+          example: AT
+        originalValue:
+          description: Valor original da parcela.
+          example: 1000
+          type: number
+        currentBalance:
+          type: integer
+          description: Saldo atual corrigido da parcela (extrato do cliente)
+          example: 1050
+        interestPercent:
+          type: integer
+          description: Percentual de juros de mora da parcela (extrato do cliente)
+          example: 5
+        receipts:
+          type: array
+          description: Baixas referente à parcela.
+          items:
+            $ref: '#/components/schemas/FinancialStatementPaymentReceived'
+        generatedBillet:
+          description: informa se foi gerado boleto para a cobrança.
+          type: boolean
+        installmentNumber:
+          type: string
+          description: Número sequencial/condicional da parcela (extrato do cliente)
+          example: 2/5
+    FinancialStatementPaymentReceived:
+      description: Informações sobre a baixa de parcelas do extrato do cliente
+      type: object
+      properties:
+        calculationDate:
+          type: string
+          description: Data de cálculo da baixa (extrato do cliente)
+          example: '2023-12-15'
+        receiptDate:
+          type: string
+          description: Data de efetivação da baixa (extrato do cliente)
+          example: '2023-12-20'
+        receiptValue:
+          type: integer
+          description: Valor total pago na baixa (extrato do cliente)
+          example: 1050
+        interestValue:
+          type: integer
+          description: Valor de juros de mora na baixa (extrato do cliente)
+          example: 50
+        additionalValue:
+          type: integer
+          description: Valor de acréscimo na baixa (extrato do cliente)
+          example: 10
+        discountValue:
+          type: integer
+          description: Valor de desconto aplicado na baixa (extrato do cliente)
+          example: 5
+        administrativeFee:
+          type: integer
+          description: Valor de taxa administrativa na baixa (extrato do cliente)
+          example: 2
+        netReceiptValue:
+          type: integer
+          description: Valor líquido recebido na baixa (extrato do cliente)
+          example: 1043
+        receiptType:
+          type: string
+          description: Tipo de baixa realizada (extrato do cliente)
+          example: Recebimento
+        insuranceAmount:
+          type: number
+          description: Valor total do seguro relacionado à baixa (extrato do cliente)
+          format: double
+          example: 100.5
+        mipInsuranceAmount:
+          type: number
+          description: Valor do seguro MIP relacionado à baixa (extrato do cliente)
+          format: double
+          example: 50.25
+        fixedInsuranceAmount:
+          type: number
+          description: Valor do seguro fixo relacionado à baixa (extrato do cliente)
+          format: double
+          example: 50.25
+        bankMovements:
+          type: array
+          description: Movimentos bancários
+          items:
+            $ref: '#/components/schemas/BankMovementCustomerFinancialStatement'
+        accountNumber:
+          description: Número da conta
+          example: '13354'
+          type: string
+    BankMovementCustomerFinancialStatement:
+      description: Informações do movimento bancário do título a receber
+      type: object
+      properties:
+        bankMovementDate:
+          type: string
+          description: Data do movimento bancário (extrato do cliente)
+          format: date
+          example: 2018-01-01T00:00:00.000Z
+        sequencialNumber:
+          type: integer
+          description: Número sequencial do registro (extrato do cliente)
+          format: int32
+          example: 1
+        id:
+          type: integer
+          description: Código do lançamento bancário (extrato do cliente)
+          format: int32
+          example: 123
+        amount:
+          type: number
+          description: Valor do movimento bancário (extrato do cliente)
+          format: double
+          example: 150.75
+        historicId:
+          type: integer
+          description: Código do histórico do movimento (extrato do cliente)
+          format: int32
+          example: 42
+        historicName:
+          type: string
+          description: Descrição do histórico do movimento (extrato do cliente)
+          example: Recebimento de parcela
+        operationId:
+          type: integer
+          description: Código da operação bancária (extrato do cliente)
+          format: int32
+          example: 7
+        operationName:
+          type: string
+          description: Descrição da operação bancária (extrato do cliente)
+          example: Baixa de título
+        operationType:
+          type: string
+          description: Tipo da operação bancária (extrato do cliente)
+          example: CR
+        reconcile:
+          type: string
+          description: Indicador de conciliação do movimento (extrato do cliente)
+          example: S
+        correctedAmount:
+          type: number
+          description: Valor do movimento com correção (extrato do cliente)
+          format: double
+          example: 155.25
+        originId:
+          type: string
+          description: Módulo de origem do movimento (extrato do cliente)
+          example: CR
+        financialCategories:
+          type: array
+          description: Apropriações financeiras do movimento bancário
+          items:
+            $ref: '#/components/schemas/FinancialCategoryCustomerFinancialStatement'
+    FinancialCategoryCustomerFinancialStatement:
+      description: >-
+        Informações da apropriação financeira do movimento bancário do título a
+        receber
+      type: object
+      properties:
+        costCenterId:
+          type: integer
+          description: Código do centro de custo (extrato do cliente)
+          format: int32
+          example: 201
+        financialCategoryId:
+          description: Código do plano financeiro
+          example: '2010101'
+          type: string
+        financialCategoryName:
+          type: string
+          description: Nome do plano financeiro (extrato do cliente)
+          example: Receita com vendas
+        financialCategoryReducer:
+          description: Indica se é plano financeiro redutor
+          example: S
+          type: string
+        financialCategoryType:
+          description: Indica plano financeiro de receita ou despesa (R/D)
+          example: R
+          type: string
+        financialCategoryRate:
+          type: number
+          description: Percentual de apropriação financeira (extrato do cliente)
+          format: double
+          example: 25.5
+        bankMovementId:
+          description: Código do movimento bancário
+          example: 1
+          format: int32
+          type: integer
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    CustomerIdQueryRequired:
+      description: Código do cliente (obrigatório)
+      in: query
+      name: customerId
+      required: true
+      schema:
+        example: 1001
+        type: integer
+    BillReceivableId:
+      description: Número do título a receber
+      in: query
+      name: billReceivableId
+      schema:
+        example: 12345
+        type: integer
+    MonetaryCorrectionForAnnualInstallment:
+      description: >-
+        informe "S" caso queira que as parcelas de correção anual sejam
+        corrigidas monetariamente
+      in: query
+      name: monetaryCorrectionForAnnualInstallment
+      schema:
+        example: S
+        type: string
+    IncludeSubJudice:
+      description: informe true se desejar que as parcelas sub-judice sejam mostradas
+      in: query
+      name: includeSubJudice
+      schema:
+        example: true
+        type: boolean
+    CompanyId:
+      description: Código da empresa (opcional)
+      in: query
+      name: companyId
+      schema:
+        example: 101
+        type: integer
+    JointVentureId:
+      description: Código do Empreendimento
+      in: query
+      name: jointVentureId
+      schema:
+        example: 5001
+        type: integer
+    UnityId:
+      description: Filtro por unidades (descrição).
+      example:
+        - APTO101
+        - APTO102
+      explode: false
+      in: query
+      name: unityId
+      schema:
+        example:
+          - APTO101
+          - APTO102
+        items:
+          example: APTO101
+          type: string
+        type: array
+      style: form
+    UnityCode:
+      description: Filtro por códigos (IDs) das unidades.
+      example:
+        - 123
+        - 456
+      explode: false
+      in: query
+      name: unityCode
+      schema:
+        example:
+          - 123
+          - 456
+        items:
+          example: 123
+          type: integer
+        type: array
+      style: form
+    ConditionIdIn:
+      description: Filtro para incluir condições de pagamento.
+      example:
+        - AT
+        - PM
+      explode: false
+      in: query
+      name: conditionIdIn
+      schema:
+        example:
+          - AT
+          - PM
+        items:
+          type: string
+        type: array
+      style: form
+    ConditionIdNotIn:
+      description: Filtro para excluir condições de pagamento.
+      example:
+        - AT
+        - PM
+      explode: false
+      in: query
+      name: conditionIdNotIn
+      schema:
+        example:
+          - AT
+          - PM
+        items:
+          example: PM
+          type: string
+        type: array
+      style: form
+    IncludeRemadeInstallmentsStringQuery:
+      description: >-
+        informe "N" caso queira que não seja incluídas parcelas reparceladas. Se
+        omitida essa flag, ou informado "S", elas são listadas na consulta.
+      in: query
+      name: includeRemadeInstallments
+      schema:
+        type: string
+    IncludeWriteOff:
+      description: >-
+        informe "N" caso queira que não seja incluídas parcelas canceladas. Se
+        omitida essa flag, ou informado "S", elas são listadas na consulta.
+      in: query
+      name: includeWriteOff
+      schema:
+        type: string
+    IncludeCancelation:
+      description: >-
+        informe "N" caso queira que não seja incluídas parcelas distratadas. Se
+        omitida essa flag, ou informado "S", elas são listadas na consulta.
+      in: query
+      name: includeCancelation
+      schema:
+        type: string
+    IncludeRenegotiation:
+      description: >-
+        informe "N" caso queira que não seja incluídas baixas por repactuação.
+        Se omitida essa flag, ou informado "S", elas são listadas na consulta.
+      in: query
+      name: includeRenegotiation
+      schema:
+        type: string
+    MonetaryCorrectionForDueDateInstallment:
+      description: >-
+        informe "S" caso queira que as parcelas de correção anual sejam
+        corrigidas até o vencimento.
+      in: query
+      name: monetaryCorrectionForDueDateInstallment
+      schema:
+        type: string
+    IncludeBankMovements:
+      description: >-
+        informe true se desejar que as movimentações bancárias das baixas sejam
+        mostradas.
+      in: query
+      name: includeBankMovements
+      schema:
+        example: true
+        type: boolean
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

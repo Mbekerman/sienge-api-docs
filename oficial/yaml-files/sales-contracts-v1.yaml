@@ -1,0 +1,3307 @@
+openapi: 3.1.1
+info:
+  title: Contratos de Vendas
+  version: 1.24.0
+  description: APIs para consulta, inclusão, alteração e exclusão de contratos de vendas.
+paths:
+  /sales-contracts:
+    get:
+      x-original-file: sales-contracts-v1.yaml
+      x-section: Contrato
+      x-audience:
+        - public
+      tags:
+        - Contrato
+      summary: Busca contratos de vendas ordenados pelo código.
+      operationId: loadSalesContracts
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+        - name: customerId
+          in: query
+          description: Código do cliente do contrato.
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - name: companyId
+          in: query
+          description: Código da empresa a ser consultada
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - name: enterpriseId
+          in: query
+          description: Id do empreendimento a ser consultado
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - name: enterpriseName
+          in: query
+          description: Nome do empreendimento
+          schema:
+            type: string
+            example: Residencial Primavera
+        - name: externalId
+          in: query
+          description: Identificador externo
+          schema:
+            type: string
+            example: EXT-001
+        - name: unitId
+          in: query
+          description: Código da unidade
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - name: number
+          in: query
+          description: Número do contrato a ser consultado
+          schema:
+            type: string
+            example: CONTR-2025-0001
+        - name: situation
+          in: query
+          description: >-
+            Situação do contrato: * `0` - Solicitado * `1` - Autorizado * `2` -
+            Emitido * `3` - Cancelado
+          schema:
+            type: array
+            items:
+              type: integer
+          example:
+            - 2
+        - name: createdAfter
+          in: query
+          description: >-
+            Data inicial para filtrar contratos pela data em que foram
+            cadastrados. Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2025-01-01'
+        - name: createdBefore
+          in: query
+          description: >-
+            Data final para filtrar contratos pela data em que foram
+            cadastrados. Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2025-01-01'
+        - name: modifiedAfter
+          in: query
+          description: >-
+            Data inicial para filtrar contratos pela data da última atualização.
+            Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2025-01-01'
+        - name: modifiedBefore
+          in: query
+          description: >-
+            Data final para filtrar contratos pela data da última atualização.
+            Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2025-01-01'
+        - name: onlyContractsWithoutCommission
+          in: query
+          description: Considerar somente contratos sem comissão de venda.
+          schema:
+            type: boolean
+            default: false
+            example: false
+        - name: initialIssueDate
+          in: query
+          description: >-
+            Filtro para consultar contratos a partir da data de emissão
+            informada. Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2025-01-01'
+        - name: finalIssueDate
+          in: query
+          description: >-
+            Filtro para consultar contratos até a data de emissão informada.
+            Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2025-01-01'
+        - name: initialCancelDate
+          in: query
+          description: >-
+            Filtro para consultar contratos distratados a partir da data de
+            distrato informada. Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2025-01-01'
+        - name: finalCancelDate
+          in: query
+          description: >-
+            Filtro para consultar contratos distratados até a da data de
+            distrato informada. Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2025-01-01'
+      responses:
+        '200':
+          description: Contratos encontrados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesContractsGetArray'
+              example:
+                resultSetMetadata:
+                  count: 1
+                  limit: 10
+                  offset: 0
+                results:
+                  - id: 1234
+                    companyId: 10
+                    internalCompanyId: 100
+                    companyName: Softplan S.A.
+                    enterpriseId: 20
+                    internalEnterpriseId: 200
+                    enterpriseName: Residencial Primavera
+                    receivableBillId: 555
+                    cancellationPayableBillId: 777
+                    contractDate: '2025-07-01'
+                    issueDate: '2025-07-02'
+                    accountingDate: '2025-07-03'
+                    expectedDeliveryDate: '2026-01-31'
+                    keysDeliveredAt: '2026-02-15'
+                    number: CONTR-2025-0001
+                    externalId: EXT-001
+                    correctionType: Anual
+                    situation: Emitido
+                    discountType: A
+                    discountPercentage: 5
+                    value: 350000
+                    totalSellingValue: 360000
+                    cancellationDate: '2025-08-01'
+                    totalCancellationAmount: 1000
+                    cancellationReason: Desistência do cliente
+                    financialInstitutionNumber: '341'
+                    financialInstitutionDate: '2025-07-10'
+                    proRataIndexer: 1
+                    interestType: C
+                    interestPercentage: 1.2
+                    fineRate: 2
+                    lateInterestCalculationType: M
+                    dailyLateInterestValue: 10
+                    containsRemadeInstallments: false
+                    specialClause: Imóvel entregue mobiliado
+                    preHandoverIndexerId: 3
+                    preHandoverIndexerName: INCC
+                    postHandoverIndexerId: 2
+                    postHandoverIndexerName: IGPM
+                    postHandoverInterestType: P
+                    postHandoverInterestPercentage: 1.2
+                    nfeContractType: 1
+                    nfeContractTypeDescription: 01.01.01 - Promessa / compromisso de compra e venda
+                    salesContractCustomers:
+                      - id: 501
+                        name: Maria Oliveira
+                        main: true
+                        spouse: false
+                        participationPercentage: 100
+                    salesContractUnits:
+                      - id: 301
+                        main: true
+                        name: Apto 101
+                        participationPercentage: 100
+                    paymentConditions:
+                      - bearerName: Banco do Brasil
+                        indexerName: IGPM
+                        conditionTypeId: FI
+                        conditionTypeName: Financiamento
+                        interestType: Price
+                        matchMaturities: 'N'
+                        installmentsNumber: 120
+                        openInstallmentsNumber: 120
+                        bearerId: 1
+                        indexerId: 2
+                        monthsGracePeriod: 6
+                        firstPayment: '2025-08-01'
+                        baseDate: '2025-07-01'
+                        baseDateInterest: '2025-07-01'
+                        totalValue: 350000
+                        outstandingBalance: 350000
+                        interestPercentage: 1.2
+                        totalValueInterest: 42000
+                        amountPaid: 0
+                        sequenceId: 1
+                    brokers:
+                      - id: 99
+                        main: true
+                    linkedCommissions:
+                      totalCommission: 7000
+                      totalCommissionAmount: 7000
+                    links:
+                      - rel: guarantors
+                        href: http://../v1/sales-contracts/1234/guarantors
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Busca uma lista de contratos de vendas ordenados pelo código do contrato
+        de forma decrescente. (REST)
+    post:
+      tags:
+        - Contrato
+      summary: Insere um contrato de vendas.
+      operationId: insertSalesContract
+      x-section: Contrato
+      x-original-file: sales-contracts-v1.yaml
+      x-audience:
+        - public
+      requestBody:
+        description: Objeto para criação do contrato
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesContractInsertDocument'
+            example:
+              enterpriseId: 20
+              externalId: EXT-001
+              number: CONTR-2025-0001
+              contractDate: '2025-08-21'
+              expectedDeliveryDate: '2026-01-31'
+              keysDeliveredAt: '2026-02-15'
+              accountingDate: '2025-08-22'
+              readjustAfterOf: '2026-01-31'
+              saleType: C
+              correctionType: A
+              anualCorrectionType: A
+              generateResidue: S
+              diluteResidue: S
+              financialPlanAccount: '10101'
+              value: 350000
+              totalSellingValue: 360000
+              note: Contrato de venda de unidade residencial.
+              readjustEach: 12
+              readjustMonth: 1
+              lateInterestDaily: false
+              proRataIndexer: 1
+              interestType: C
+              interestPercentage: 1.2
+              fineRate: 2.5
+              dailyLateInterestValue: 1.2
+              housingProgram: 'N'
+              discountType: A
+              discountPercentage: 5.1
+              specialClause: Imóvel entregue mobiliado.
+              preHandoverIndexerId: 3
+              postHandoverIndexerId: 2
+              postHandoverInterestType: P
+              postHandoverInterestPercentage: 1.2
+              nfeContractType: 1
+              paymentConditions:
+                - conditionTypeId: PM
+                  installmentsNumber: 120
+                  firstPayment: '2025-09-01'
+                  totalValue: 350000
+                  matchMaturities: 'N'
+                  bearerId: 1
+                  indexerId: 2
+                  baseDate: '2025-08-21'
+                  interestType: P
+                  interestPercentage: 1.2
+                  monthsGracePeriod: 6
+                  baseDateInterest: '2025-08-21'
+              salesContractCustomers:
+                - id: 501
+                  main: true
+                  participationPercentage: 100
+                  safePercentage: 1
+                  participationPercentageSpouse: 0
+              salesContractUnits:
+                - id: 301
+                  main: true
+                  participationPercentage: 100
+              brokers:
+                - id: 99
+                  main: true
+              salesContractGuarantors:
+                - name: Carlos Avalista
+                  cpf: '41833114035'
+                  nationality: Brasileiro
+                  numberIdentityCard: MG1234567
+                  professionId: 12
+                  civilStatusId: 1
+                  birthDate: '1980-05-10'
+                  email: carlos.avalista@email.com
+                  address:
+                    cityId: 1001
+                    complement: Apto 101
+                    neighborhood: Centro
+                    number: '100'
+                    streetName: Rua das Flores
+                    zipCode: 88000-000
+                  phones:
+                    - number: '48991234567'
+                      main: true
+                      type: CE
+                      note: Celular principal
+        required: true
+      responses:
+        '201':
+          description: Contrato de vendas cadastrado com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Persiste um contrato de vendas. (REST)
+  /sales-contracts/{salesContractId}:
+    get:
+      x-original-file: sales-contracts-v1.yaml
+      x-section: Contrato
+      x-audience:
+        - public
+      tags:
+        - Contrato
+      summary: Consulta um contrato de vendas.
+      operationId: loadSalesContract
+      parameters:
+        - $ref: '#/components/parameters/SalesContractId'
+      responses:
+        '200':
+          description: Contrato encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesContractGetDocument'
+              example:
+                id: 1234
+                companyId: 10
+                internalCompanyId: 100
+                companyName: Softplan S.A.
+                enterpriseId: 20
+                internalEnterpriseId: 200
+                enterpriseName: Residencial Primavera
+                receivableBillId: 555
+                cancellationPayableBillId: 777
+                contractDate: '2025-07-01'
+                issueDate: '2025-07-02'
+                accountingDate: '2025-07-03'
+                expectedDeliveryDate: '2026-01-31'
+                keysDeliveredAt: '2026-02-15'
+                number: CONTR-2025-0001
+                externalId: EXT-001
+                correctionType: A
+                situation: Ativo
+                discountType: Nenhum
+                discountPercentage: 0
+                value: 350000
+                totalSellingValue: 350000
+                cancellationDate: '2025-12-31'
+                totalCancellationAmount: 0
+                cancellationReason: Desistência do comprador
+                financialInstitutionNumber: '001'
+                financialInstitutionDate: '2025-12-31'
+                proRataIndexer: 1
+                interestType: C
+                interestPercentage: 1.5
+                fineRate: 2
+                lateInterestCalculationType: M
+                dailyLateInterestValue: 0
+                containsRemadeInstallments: false
+                specialClause: Apartamento entregue mobiliado
+                preHandoverIndexerId: 3
+                preHandoverIndexerName: INCC
+                postHandoverIndexerId: 2
+                postHandoverIndexerName: IGPM
+                postHandoverInterestType: P
+                postHandoverInterestPercentage: 1.5
+                nfeContractType: 1
+                nfeContractTypeDescription: 01.01.01 - Promessa / compromisso de compra e venda
+                salesContractCustomers:
+                  - id: 1
+                    name: João Silva
+                    main: true
+                    spouse: false
+                    participationPercentage: 100
+                salesContractUnits:
+                  - id: 101
+                    main: true
+                    name: Apto 101
+                    participationPercentage: 100
+                paymentConditions:
+                  - bearerName: João Silva
+                    indexerName: IGPM
+                    conditionTypeId: PM
+                    conditionTypeName: Parcelas Mensais
+                    interestType: 'N'
+                    matchMaturities: 'N'
+                    installmentsNumber: 1
+                    openInstallmentsNumber: 0
+                    bearerId: 1
+                    indexerId: 1
+                    monthsGracePeriod: 0
+                    firstPayment: '2025-08-01'
+                    baseDate: '2025-08-01'
+                    baseDateInterest: '2025-08-01'
+                    totalValue: 350000
+                    outstandingBalance: 0
+                    interestPercentage: 0
+                    totalValueInterest: 0
+                    amountPaid: 350000
+                    sequenceId: 1
+                brokers:
+                  - id: 501
+                    main: true
+                linkedCommissions:
+                  totalCommission: 0
+                  totalCommissionAmount: 0
+                links:
+                  - rel: self
+                    href: https://api.exemplo.com/v1/sales-contracts/1234
+                  - rel: attachments
+                    href: >-
+                      https://api.exemplo.com/v1/sales-contracts/1234/attachments
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca um contrato de vendas. (REST)
+    delete:
+      x-original-file: sales-contracts-v1.yaml
+      x-section: Contrato
+      x-audience:
+        - public
+      tags:
+        - Contrato
+      summary: Remove um contrato de vendas.
+      operationId: deleteSalesContract
+      parameters:
+        - $ref: '#/components/parameters/SalesContractId'
+      responses:
+        '204':
+          description: Contrato excluído
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Exclui um contrato de vendas. (REST)
+    patch:
+      tags:
+        - Contrato
+      summary: Atualiza informações do contrato.
+      operationId: updateSalesContract
+      x-section: Contrato
+      x-original-file: sales-contracts-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/SalesContractId'
+      requestBody:
+        description: Objeto com informações para atualização do contrato
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesContractUpdateDocument'
+            example:
+              id: 1234
+              companyId: 10
+              value: 360000
+              note: Atualização do contrato.
+        required: true
+      responses:
+        '204':
+          description: Contrato atualizado
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Atualiza dados de contratos. (REST)
+  /sales-contracts/{salesContractId}/attachments:
+    get:
+      x-original-file: sales-contracts-v1.yaml
+      x-section: Anexos do Contrato
+      x-audience:
+        - public
+      tags:
+        - Anexos do Contrato
+      summary: Busca os anexos do contrato de vendas.
+      operationId: getSalesContractAttachments
+      parameters:
+        - $ref: '#/components/parameters/SalesContractId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: >-
+            Foi encontrado anexos para o contrato, caso retorne vazio foi
+            encontrado apenas o contrato.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesContractAttachmentsGetResponse'
+              example:
+                results:
+                  - id: 1
+                    name: contrato-assinado.pdf
+                    url: https://api.exemplo.com/attachments/1
+                    uploadedAt: '2025-08-20T10:00:00Z'
+                    uploadedBy: joao.silva
+                resultSetMetadata:
+                  count: 1
+                  limit: 10
+                  offset: 0
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca as informações dos anexos do contrato (REST)
+    post:
+      x-original-file: sales-contracts-v1.yaml
+      x-section: Anexos do Contrato
+      x-audience:
+        - public
+      tags:
+        - Anexos do Contrato
+      summary: Inclui um anexo ao contrato de vendas.
+      operationId: insertSalesContractAttachment
+      parameters:
+        - $ref: '#/components/parameters/SalesContractId'
+        - name: description
+          in: query
+          description: Descrição do anexo do contrato de vendas.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: >-
+                    Arquivo para inserção de anexo | Tamanho máximo: 70 MB |
+                    Tamanho máximo do nome do arquivo: 100 caracteres | Somente
+                    1 Anexo por requisição. Caso seja enviado mais de 1 Anexo, o
+                    Sienge vai aceitar somente o primeiro selecionado.
+                  format: binary
+                  example: documento.pdf
+            examples:
+              exemplo1:
+                summary: Exemplo de PDF
+                value:
+                  file: documento.pdf
+        required: true
+        description: Objeto para criação do anexo.
+      responses:
+        '201':
+          description: Anexo do contrato de vendas inserido com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Inclui um anexo ao contrato. (REST)
+  /sales-contracts/{salesContractId}/attachments/{attachmentId}:
+    get:
+      x-original-file: sales-contracts-v1.yaml
+      x-section: Anexos do Contrato
+      x-audience:
+        - public
+      tags:
+        - Anexos do Contrato
+      summary: Download do anexo do contrato de vendas.
+      operationId: downloadSalesContractAttachment
+      parameters:
+        - $ref: '#/components/parameters/SalesContractId'
+        - $ref: '#/components/parameters/AttachmentId'
+      responses:
+        '200':
+          description: Anexo do contrato de vendas encontrado
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Download de anexo do contrato (REST)
+  /sales-contracts/{salesContractId}/guarantors:
+    get:
+      x-original-file: sales-contracts-v1.yaml
+      x-section: Avalistas
+      x-audience:
+        - public
+      tags:
+        - Avalistas
+      summary: Busca avalistas do contrato de vendas.
+      operationId: loadGuarantorsSalesContract
+      parameters:
+        - $ref: '#/components/parameters/SalesContractId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Avalistas encontrados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesContractGuarantorsArray'
+              example:
+                resultSetMetadata:
+                  count: 1
+                  limit: 10
+                  offset: 0
+                results:
+                  - id: 1
+                    name: Carlos Souza
+                    cpf: 123.456.789-00
+                    birthDate: '1980-05-15'
+                    nationality: Brasileiro
+                    numberIdentityCard: MG1234567
+                    professionId: 1
+                    civilStatusId: 2
+                    email: carlos.souza@email.com
+                    address:
+                      street: Rua das Flores
+                      number: '100'
+                      complement: Apto 202
+                      district: Centro
+                      city: Belo Horizonte
+                      state: MG
+                      zipCode: 30123-456
+                    phones:
+                      - number: '48991234567'
+                        main: true
+                        type: CE
+                        note: Celular principal
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Busca uma lista dos avalistas do contrato de vendas ordenados pelo
+        código do avalista de forma decrescente. (REST)
+    post:
+      tags:
+        - Avalistas
+      summary: Inclui avalistas ao contrato.
+      description: Vincula avalistas ao contrato de vendas. (REST)
+      operationId: insertGuarantors
+      x-section: Avalistas
+      x-original-file: sales-contracts-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/SalesContractId'
+      requestBody:
+        description: Objeto para criação dos avalistas.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuarantorsInsertArray'
+            example:
+              - name: Carlos Avalista
+                cpf: '41833114035'
+                cnpj: '12345678901234'
+                nationality: Brasileiro
+                numberIdentityCard: MG1234567
+                professionId: 12
+                civilStatusId: 1
+                birthDate: '1980-05-10'
+                email: carlos.avalista@email.com
+                address:
+                  cityId: 1001
+                  complement: Apto 101
+                  neighborhood: Centro
+                  number: '100'
+                  streetName: Rua das Flores
+                  zipCode: 88000-000
+                phones:
+                  - number: '48991234567'
+                    main: true
+                    type: CE
+                    note: Celular principal
+        required: true
+      responses:
+        '201':
+          description: Avalista criado.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /sales-contracts/{salesContractId}/guarantors/{guarantorId}:
+    get:
+      x-original-file: sales-contracts-v1.yaml
+      x-section: Avalistas
+      x-audience:
+        - public
+      tags:
+        - Avalistas
+      summary: Retorna o avalista do contrato de vendas.
+      operationId: loadGuarantorById
+      parameters:
+        - $ref: '#/components/parameters/SalesContractId'
+        - $ref: '#/components/parameters/GuarantorId'
+      responses:
+        '200':
+          description: Avalista encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuarantorDocument'
+              example:
+                id: 1
+                name: Carlos Souza
+                cpf: 123.456.789-00
+                birthDate: '1980-05-15'
+                nationality: Brasileiro
+                numberIdentityCard: MG1234567
+                professionId: 1
+                civilStatusId: 2
+                email: carlos.souza@email.com
+                address:
+                  street: Rua das Flores
+                  number: '100'
+                  complement: Apto 202
+                  district: Centro
+                  city: Belo Horizonte
+                  state: MG
+                  zipCode: 30123-456
+                phones:
+                  - type: mobile
+                    number: (31) 99999-8888
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca um avalista no contrato de venda. (REST)
+    patch:
+      tags:
+        - Avalistas
+      summary: Atualiza informações de avalistas do contrato de vendas.
+      operationId: updateGuarantors
+      x-section: Avalistas
+      x-original-file: sales-contracts-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/SalesContractId'
+        - $ref: '#/components/parameters/GuarantorId'
+      requestBody:
+        description: >-
+          Objeto com informações para atualização do avalista. Se você não
+          quiser atualizar um campo, não insira no objeto. Se quiser remover o
+          conteúdo de um campo, envie uma string vazia como valor do campo.
+          Campos não enviados ou nulos serão ignorados. Campos obrigatórios não
+          podem ser removidos, apenas atualizados.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuarantorsUpdateDocument'
+            example:
+              name: Carlos Avalista Atualizado
+              email: novo.email@email.com
+              phones:
+                - number: '48991234567'
+                  main: true
+                  type: CE
+                  note: Celular principal
+        required: true
+      responses:
+        '204':
+          description: Avalista atualizado.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Atualiza informações de avalistas do contrato. (REST)
+  /sales-contracts/{salesContractId}/guarantors/{guarantorId}/phones:
+    put:
+      tags:
+        - Avalistas
+      summary: Sobrescreve a lista de telefones existentes do avalista.
+      operationId: updateGuarantorPhones
+      x-section: Avalistas
+      x-original-file: sales-contracts-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/SalesContractId'
+        - $ref: '#/components/parameters/GuarantorId'
+      requestBody:
+        description: >-
+          Objeto para atualizar telefones do avalista. Esta ação apagará os
+          telefones existentes no cadastro e irá registrar os telefones enviados
+          nessa requisição.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuarantorsPhoneUpdateArray'
+            example:
+              - number: '48991234567'
+                main: true
+                type: CE
+                note: Celular principal
+        required: true
+      responses:
+        '204':
+          description: Telefones do avalista atualizados.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Sobrescreve a lista de telefones do avalista. (REST)
+  /sales-contracts/{salesContractId}/cancellation:
+    post:
+      tags:
+        - Contrato
+      summary: Cancela o contrato de venda.
+      operationId: cancellation
+      x-section: Contrato
+      x-original-file: sales-contracts-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/SalesContractId'
+      requestBody:
+        description: Objeto para informações do cancelamento do contrato
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesContractCancellationDocument'
+            example:
+              date: '2025-12-31'
+              reason: Desistência do cliente
+              subType: Rescisão
+              cancellationDate: '2025-12-31'
+              cancellationReason: Desistência do cliente
+              totalCancellationAmount: 1000
+        required: true
+      responses:
+        '201':
+          description: Contrato cancelado
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Cancela um contrato de venda. (REST)
+components:
+  schemas:
+    SalesContractsGetArray:
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      description: Lista com os contratos de vendas retornados como resultado da pesquisa.
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de contratos retornados como resultado da pesquisa.
+          items:
+            $ref: '#/components/schemas/SalesContractGetDocument'
+          example:
+            - id: 1234
+              companyId: 10
+              internalCompanyId: 100
+              companyName: Softplan S.A.
+              enterpriseId: 20
+              internalEnterpriseId: 200
+              enterpriseName: Residencial Primavera
+              receivableBillId: 555
+              cancellationPayableBillId: 777
+              contractDate: '2025-07-01'
+              issueDate: '2025-07-02'
+              accountingDate: '2025-07-03'
+              expectedDeliveryDate: '2026-01-31'
+              keysDeliveredAt: '2026-02-15'
+              number: CONTR-2025-0001
+              externalId: EXT-001
+              correctionType: A
+              situation: Ativo
+              discountType: Nenhum
+              discountPercentage: 0
+              value: 350000
+              totalSellingValue: 350000
+              cancellationDate: '2025-12-31'
+              totalCancellationAmount: 0
+              cancellationReason: Desistência do comprador
+              financialInstitutionNumber: '001'
+              financialInstitutionDate: '2025-12-31'
+              proRataIndexer: 1
+              interestType: C
+              interestPercentage: 1.5
+              fineRate: 2
+              lateInterestCalculationType: M
+              dailyLateInterestValue: 0
+              containsRemadeInstallments: false
+              specialClause: Apartamento entregue mobiliado
+              postHandoverIndexerId: 2
+              postHandoverIndexerName: IGPM
+              postHandoverInterestType: P
+              postHandoverInterestPercentage: 1.5
+              nfeContractType: 1
+              nfeContractTypeDescription: 01.01.01 - Promessa / compromisso de compra e venda
+              salesContractCustomers:
+                - id: 1,
+                  name: João Silva,
+                  main: true,
+                  spouse: false,
+                  participationPercentage: 100,
+    SalesContractInsertDocument:
+      type: object
+      description: Informações para criação do contrato de vendas
+      properties:
+        enterpriseId:
+          type: integer
+          description: Código do empreendimento ao qual o contrato será vinculado.
+          format: int32
+          example: 1
+        externalId:
+          type: string
+          description: Identificador externo do contrato, gerado por outro sistema.
+          example: A1
+        number:
+          type: string
+          description: Número do contrato para inclusão.
+          example: CONTR-2025-0001
+        contractDate:
+          type: string
+          description: Data do contrato. Formato YYYY-MM-DD. Exemplo -> 1990-12-25.
+          example: {}
+        expectedDeliveryDate:
+          type: string
+          description: >
+            Data de previsão de entrega. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-25. Este é um campo novo que passará a ser obrigatório.
+          example: {}
+        keysDeliveredAt:
+          type: string
+          example: {}
+          description: >
+            Data de entrega de chaves. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-25.
+
+            Este campo era usado como data de previsão de entrega e passará a
+            ser utilizado para a data de entrega de chaves.
+
+            Caso o json contenha apenas este campo, continuará sendo preenchido
+            como data de previsão de entrega, não preenchendo a data de entrega
+            de chaves.
+
+            A data informada neste campo será preenchida como data de entrega de
+            chaves, apenas quando o campo 'expectedDeliveryDate' estiver
+            preenchido.
+
+            Este comportamento foi adotado por se tratar de um campo obrigatório
+            no cadastro de contrato.'
+        accountingDate:
+          type: string
+          description: Data contábil. Formato YYYY-MM-DD. Exemplo -> 1990-12-25.
+          example: {}
+        readjustAfterOf:
+          type: string
+          description: >-
+            Corrigir parcelas a partir. Informar quando o campo 'correctionType'
+            for 'A' .Formato YYYY-MM-DD. Exemplo -> 1990-12-25.
+          example: {}
+        saleType:
+          type: string
+          description: >-
+            Tipo do contrato: C - Contrato, A - Alienação Fiduciária, P -
+            Permuta
+          enum:
+            - C
+            - A
+            - P
+          example: C
+        correctionType:
+          type: string
+          description: 'Tipo de correção: A - Anual, M - Mensal'
+          enum:
+            - A
+            - M
+          example: A
+        anualCorrectionType:
+          type: string
+          description: >-
+            Tipo de correção anual: A - Aniversário, F - Fixa, M - Mensal, P -
+            Programada
+          enum:
+            - A
+            - F
+            - M
+            - P
+          example: A
+        generateResidue:
+          type: string
+          description: >-
+            Gerar resíduo: S - Sim, N - Não (Campo pode ser informado quando
+            'correctionType' for 'A')
+          enum:
+            - S
+            - 'N'
+          example: S
+        diluteResidue:
+          type: string
+          description: >-
+            Diluir valor do resíduo: S - Sim, N - Não (Campo pode ser informado
+            quando 'correctionType' for 'A' e o campo 'generateResidue' for 'S')
+          enum:
+            - S
+            - 'N'
+          example: S
+        financialPlanAccount:
+          type: string
+          description: Conta do plano financeiro. Informar apenas números. Exemplo -> 10101
+          example: '10101'
+        value:
+          type: number
+          description: Valor total do contrato. Formato -> 80000.00
+          example: 80000
+        totalSellingValue:
+          type: number
+          description: Preço total de venda. Formato -> 80000.00
+          example: 80000
+        note:
+          type: string
+          description: >-
+            Observação do contrato. Texto livre com tamanho máximo aceito de
+            3800 caracteres.
+          example: Contrato de venda de unidade residencial.
+        readjustEach:
+          type: integer
+          description: >-
+            Corrigir parcelas a cada. Número de meses para correção dos valores
+            das parcelas do contrato. Informar entre 1 e 12 . Exemplo -> (12
+            para um contrato com correção anual e 1 para contrato com correção
+            mensal).
+          format: int32
+          example: 12
+        readjustMonth:
+          type: integer
+          description: >-
+            Mês de reajuste. Informar o número correspondente ao mês de
+            correção. Campo pode ser informado quando o campo
+            'anualCorrectionType' for 'P', Valores aceitos de 1 a 12, valor
+            padrão 1 .
+          format: int32
+          example: 1
+        lateInterestDaily:
+          type: boolean
+          example: true
+          description: >-
+            Indica o tipo de cálculo de acréscimo de mora. Informe 'true' para
+            ('D' - Diário) ou 'false' para ('M' - Mensal).<br> Caso não
+            informado, por padrão, o tipo de cálculo de acréscimo de juros
+            moratórios será (Mensal).<br> Os campos considerados para o cálculo
+            serão os referentes ao tipo de cálculo de juros moratórios informado
+            através deste campo.
+        proRataIndexer:
+          type: integer
+          description: >-
+            Id do indexador de pró-rata. Usado apenas para acréscimo de mora
+            mensal.
+          format: int32
+          example: 1
+        interestType:
+          type: string
+          description: >-
+            Tipo de juros para acréscimos de mora: C - Composto, S - Simples
+            (padrão: S, usado apenas para acréscimo de mora mensal)
+          enum:
+            - C
+            - S
+          example: C
+        interestPercentage:
+          type: number
+          description: >-
+            Percentual/taxa de juros ao mês para acréscimos de mora. Usado
+            apenas para acréscimo de mora mensal.
+          format: double
+          example: 1.2
+        fineRate:
+          type: number
+          description: >-
+            Percentual de multa de acréscimo de mora. Apenas para acréscimo de
+            mora mensal.
+          format: double
+          example: 1.2
+        dailyLateInterestValue:
+          type: number
+          description: >-
+            Valor de mora diário em reais. Usado apenas para acréscimo de mora
+            diário.
+          format: double
+          example: 1.2
+        housingProgram:
+          type: string
+          description: 'Programa habitacional: S - Sim, N - Não'
+          enum:
+            - S
+            - 'N'
+          example: S
+        discountType:
+          type: string
+          description: >-
+            Tipo de desconto do contrato: A - Anual, D - Diário, F - Fixo, M -
+            Mensal
+          enum:
+            - A
+            - D
+            - F
+            - M
+          example: A
+        discountPercentage:
+          type: number
+          description: Percentual de desconto a ser inserido no contrato.
+          format: double
+          example: 1.2
+        specialClause:
+          type: string
+          description: >-
+            Cláusula especial. Texto livre com tamanho máximo aceito de 3800
+            caracteres.
+          example: Cláusula especial
+        preHandoverIndexerId:
+          type: integer
+          description: Código do indexador pré-chaves do contrato.
+          format: int32
+          example: 3
+        postHandoverIndexerId:
+          type: integer
+          description: Código do indexador pós-chaves do contrato.
+          format: int32
+          example: 2
+        postHandoverInterestType:
+          $ref: '#/components/schemas/SalesContractPostHandoverInterestType'
+        postHandoverInterestPercentage:
+          type: number
+          format: double
+          description: >-
+            Percentual de juros pós-chaves. Formato numérico com até 6 casas
+            decimais (ex.: 12.345678). Quando informado, deve ser maior que
+            0,000000 e menor ou igual a 100,000000. Obrigatório quando
+            'postHandoverInterestType' for informado e diferente de 'N', senão é
+            ignorado.
+          example: 1.2
+        nfeContractType:
+          $ref: '#/components/schemas/SalesContractNfeContractType'
+        paymentConditions:
+          type: array
+          description: Condições de pagamento do contrato.
+          items:
+            $ref: '#/components/schemas/SalesContractPaymentConditionsInsertDocument'
+          example:
+            - bearerName: Banco do Brasil
+              indexerName: IGPM
+              conditionTypeId: FI
+              conditionTypeName: Financiamento
+              interestType: P
+              matchMaturities: 'N'
+              installmentsNumber: 120
+              openInstallmentsNumber: 120
+              bearerId: 1
+              indexerId: 2
+              monthsGracePeriod: 6
+              firstPayment: '2025-08-01'
+              baseDate: '2025-07-01'
+              baseDateInterest: '2025-07-01'
+              totalValue: 350000
+              outstandingBalance: 350000
+              interestPercentage: 1.2
+              totalValueInterest: 42000
+              amountPaid: 0
+              sequenceId: 1
+        salesContractCustomers:
+          type: array
+          description: Clientes do contrato de vendas.
+          items:
+            $ref: '#/components/schemas/SalesContractCustomersInsertDocument'
+          example:
+            - id: 501
+              name: Maria Oliveira
+              main: true
+              spouse: false
+              participationPercentage: 100
+        salesContractUnits:
+          type: array
+          description: Unidades do contrato de vendas.
+          items:
+            $ref: '#/components/schemas/SalesContractUnitsInsertDocument'
+          example:
+            - id: 301
+              main: true
+              name: Apto 101
+              participationPercentage: 100
+        brokers:
+          type: array
+          description: Corretores do contrato de vendas.
+          items:
+            $ref: '#/components/schemas/SalesContractBrokersInsertDocument'
+          example:
+            - id: 99
+              main: true
+        salesContractGuarantors:
+          type: array
+          description: Avalistas do contrato.
+          items:
+            $ref: '#/components/schemas/SalesContractGuarantorsInsertDocument'
+          example:
+            - name: Carlos Avalista
+              cpf: '41833114035'
+              nationality: Brasileiro
+              numberIdentityCard: MG1234567
+              professionId: 12
+              civilStatusId: 1
+              birthDate: '1980-05-10'
+              email: carlos.avalista@email.com
+              address:
+                cityId: 1001
+                complement: Apto 101
+                neighborhood: Centro
+                number: '100'
+                streetName: Rua das Flores
+                zipCode: 88000-000
+              phones:
+                - number: '48991234567'
+                  main: true
+                  type: CE
+                  note: Celular principal
+    SalesContractGetDocument:
+      example:
+        id: 1234
+        companyId: 10
+        internalCompanyId: 100
+        companyName: Softplan S.A.
+        enterpriseId: 20
+        internalEnterpriseId: 200
+        enterpriseName: Residencial Primavera
+        receivableBillId: 555
+        cancellationPayableBillId: 777
+        contractDate: '2025-07-01'
+        issueDate: '2025-07-02'
+        accountingDate: '2025-07-03'
+        expectedDeliveryDate: '2026-01-31'
+        keysDeliveredAt: '2026-02-15'
+        number: CONTR-2025-0001
+        externalId: EXT-001
+        correctionType: A
+        situation: Ativo
+        discountType: Nenhum
+        discountPercentage: 0
+        value: 350000
+        totalSellingValue: 350000
+        cancellationDate: '2025-12-31'
+        totalCancellationAmount: 0
+        cancellationReason: Desistência do comprador
+        financialInstitutionNumber: '001'
+        financialInstitutionDate: '2025-12-31'
+        proRataIndexer: 1
+        interestType: C
+        interestPercentage: 1.5
+        fineRate: 2
+        lateInterestCalculationType: M
+        dailyLateInterestValue: 0
+        containsRemadeInstallments: false
+        specialClause: Apartamento entregue mobiliado
+        salesContractCustomers:
+          - id: 1
+            name: João Silva
+            main: true
+            spouse: false
+            participationPercentage: 100
+        salesContractUnits:
+          - id: 101
+            main: true
+            name: Apto 101
+            participationPercentage: 100
+        paymentConditions:
+          - bearerName: João Silva
+            indexerName: IGPM
+            conditionTypeId: PM
+            conditionTypeName: Parcelas Mensais
+            interestType: 'N'
+            matchMaturities: 'N'
+            installmentsNumber: 1
+            openInstallmentsNumber: 0
+            bearerId: 1
+            indexerId: 1
+            monthsGracePeriod: 0
+            firstPayment: '2025-08-01'
+            baseDate: '2025-08-01'
+            baseDateInterest: '2025-08-01'
+            totalValue: 350000
+            outstandingBalance: 0
+            interestPercentage: 0
+            totalValueInterest: 0
+            amountPaid: 350000
+            sequenceId: 1
+        brokers:
+          - id: 501
+            main: true
+        linkedCommissions:
+          totalCommission: 1
+          totalCommissionAmount: 1
+      type: object
+      description: Contrato de vendas
+      properties:
+        id:
+          type: integer
+          description: Id do contrato de vendas
+          format: int32
+          example: 1171
+        companyId:
+          type: integer
+          description: Código da empresa do contrato de vendas
+          format: int32
+          example: 10
+        internalCompanyId:
+          type: integer
+          description: Código interno da empresa do contrato de vendas
+          format: int32
+          example: 100
+        companyName:
+          type: string
+          description: Nome da empresa do contrato de vendas
+          example: Softplan S.A.
+        enterpriseId:
+          type: integer
+          description: Código do empreendimento do contrato de vendas
+          format: int32
+          example: 20
+        internalEnterpriseId:
+          type: integer
+          description: Código interno do empreendimento do contrato de vendas
+          format: int32
+          example: 200
+        enterpriseName:
+          type: string
+          description: Nome do empreendimento do contrato de vendas
+          example: Residencial Primavera
+        receivableBillId:
+          type: integer
+          description: Número do título a receber
+          format: int32
+          example: 555
+        cancellationPayableBillId:
+          type: integer
+          description: Número do título a pagar do distrato
+          format: int32
+          example: 777
+        contractDate:
+          type: string
+          description: Data do contrato
+          example: {}
+        issueDate:
+          type: string
+          description: Data de emissão do contrato
+          example: {}
+        accountingDate:
+          type: string
+          description: Data contábil. Formato YYYY-MM-DD. Exemplo -> 1994-01-13.
+          example: {}
+        expectedDeliveryDate:
+          type: string
+          description: >-
+            Data de previsão de entrega. Formato YYYY-MM-DD. Exemplo ->
+            1994-01-13.
+          example: {}
+        keysDeliveredAt:
+          type: string
+          description: Data de entrega. Formato YYYY-MM-DD. Exemplo -> 1994-01-13.
+          example: {}
+        number:
+          type: string
+          description: Número do contrato de vendas
+          example: CONTR-2025-0001
+        externalId:
+          type: string
+          description: Identificador externo do contrato de vendas
+          example: EXT-001
+        correctionType:
+          type: string
+          description: Tipo de correção
+          example: A
+        situation:
+          type: string
+          description: Situação do contrato
+          example: Ativo
+        discountType:
+          type: string
+          description: Tipo de desconto do contrato
+          example: 'N'
+        discountPercentage:
+          type: number
+          description: Percentual de desconto do contrato
+          example: 0
+        value:
+          type: number
+          description: Valor do contrato
+          example: 350000
+        totalSellingValue:
+          type: number
+          description: Valor total de venda
+          example: 350000
+        cancellationDate:
+          type: string
+          description: >-
+            Data do cancelamento do contrato. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-31.
+          example: {}
+        totalCancellationAmount:
+          type: number
+          description: Valor total do título a pagar do distrato
+          example: 0
+        cancellationReason:
+          type: string
+          description: Motivo do cancelamento do contrato.
+          example: Desistência do comprador
+        financialInstitutionNumber:
+          type: string
+          description: Número da instituição financeira
+          example: 123456-A
+        financialInstitutionDate:
+          type: string
+          description: >-
+            Data da instituição financeira. Formato YYYY-MM-DD. Exemplo ->
+            1994-01-13.
+          example: {}
+        proRataIndexer:
+          type: integer
+          description: >-
+            Código do indexador de pró-rata. Apenas para acréscimo de mora
+            mensal.
+          format: int32
+          example: 1
+        interestType:
+          type: string
+          description: >-
+            Tipo de juros para acréscimos de mora: C - Composto, S - Simples
+            (usado apenas para acréscimo de mora mensal)
+          enum:
+            - C
+            - S
+          example: C
+        interestPercentage:
+          type: number
+          description: >-
+            Percentual de juros ao mês para acréscimos de mora. Apenas para
+            acréscimo de mora mensal.
+          format: double
+          example: 1.5
+        fineRate:
+          type: number
+          description: >-
+            Percentual de multa para acréscimo de mora. Apenas para acréscimo de
+            mora mensal.
+          format: double
+          example: 2
+        lateInterestCalculationType:
+          type: string
+          description: >-
+            Tipo de cálculo de acréscimos de mora. Valores possíveis: 'M' -
+            Mensal ou 'D' - Diário.
+          example: M
+        dailyLateInterestValue:
+          type: number
+          description: Valor de mora diário em reais. Apenas para acréscimo de mora diário.
+          format: double
+          example: 0
+        containsRemadeInstallments:
+          type: boolean
+          description: Indica se o título do contrato possui um reparcelamento financeiro.
+          example: false
+        specialClause:
+          type: string
+          description: Cláusula especial.
+          example: Apartamento entregue mobiliado.
+        preHandoverIndexerId:
+          type: integer
+          description: Código do indexador pré-chaves do contrato.
+          format: int32
+          example: 3
+        preHandoverIndexerName:
+          type: string
+          description: Nome do indexador pré-chaves do contrato.
+          example: INCC
+        postHandoverIndexerId:
+          type: integer
+          description: Código do indexador pós-chaves do contrato.
+          format: int32
+          example: 2
+        postHandoverIndexerName:
+          type: string
+          description: Nome do indexador pós-chaves do contrato.
+          example: IGPM
+        postHandoverInterestType:
+          $ref: '#/components/schemas/SalesContractPostHandoverInterestType'
+        postHandoverInterestPercentage:
+          type: number
+          format: double
+          description: >-
+            Percentual de juros pós-chaves. Formato numérico com até 6 casas
+            decimais (ex.: 12.345678). Quando informado, deve ser maior que
+            0,000000 e menor ou igual a 100,000000. Obrigatório quando
+            'postHandoverInterestType' for informado e diferente de 'N', senão é
+            ignorado.
+          example: 1.2
+        nfeContractType:
+          $ref: '#/components/schemas/SalesContractNfeContractTypeResponse'
+        nfeContractTypeDescription:
+          $ref: '#/components/schemas/SalesContractNfeContractTypeDescription'
+        salesContractCustomers:
+          type: array
+          items:
+            type: object
+          properties:
+            id:
+              type: integer
+              description: Id do cliente do contrato
+              format: int32
+              example: 1
+            name:
+              description: Nome do cliente
+              example: Nome do cliente
+              type: string
+            main:
+              type: boolean
+              description: True se o cliente for principal
+              example: true
+            spouse:
+              type: boolean
+              description: True se o cliente for cônjuge
+              example: false
+            participationPercentage:
+              type: number
+              description: Percentual de participação do cliente
+              example: 100
+          example:
+            - id: 1
+              name: João Silva
+              main: true
+              spouse: false
+              participationPercentage: 100
+        salesContractUnits:
+          type: array
+          items:
+            type: object
+          properties:
+            id:
+              type: integer
+              description: Id da unidade
+              format: int32
+              example: 1
+            main:
+              type: boolean
+              description: True se a unidade for principal
+              example: true
+            name:
+              type: string
+              description: Nome da unidade
+              example: Apto 101
+            participationPercentage:
+              type: number
+              description: Percentual de participação da unidade
+              example: 100
+          example:
+            - id: 1
+              name: Apto 101
+              main: true
+              participationPercentage: 100
+        paymentConditions:
+          type: array
+          items:
+            type: object
+          properties:
+            bearerName:
+              type: string
+              description: Nome do portador da condição de pagamento.
+              example: João Silva
+            indexerName:
+              type: string
+              description: Nome do indexador da condição de pagamento.
+              example: IPCA
+            conditionTypeId:
+              type: string
+              description: Código do tipo de condição para pagamento.
+              example: PM
+            conditionTypeName:
+              type: string
+              description: Nome do tipo de condição para pagamento.
+              example: Parcelamento
+            interestType:
+              type: string
+              description: >-
+                Tipo de juros: N - Nenhum, P - PRICE, A - SAC, S - Simples, C -
+                Composto, F - Fixo
+              enum:
+                - 'N'
+                - P
+                - A
+                - S
+                - C
+                - F
+              example: 'N'
+            matchMaturities:
+              type: string
+              description: 'Coincidir vencimentos com outras parcelas: S - Sim, N - Não'
+              enum:
+                - S
+                - 'N'
+              example: S
+            installmentsNumber:
+              type: integer
+              description: Quantidade de parcelas da condição de pagamento.
+              format: int32
+              example: 12
+            openInstallmentsNumber:
+              type: integer
+              description: Número de parcelas em aberto.
+              format: int32
+              example: 12
+            bearerId:
+              type: integer
+              description: Código do portador da condição de pagamento.
+              format: int32
+              example: 1
+            indexerId:
+              type: integer
+              description: Código do indexador da condição de pagamento.
+              format: int32
+              example: 1
+            monthsGracePeriod:
+              type: integer
+              description: Quantidade de meses de carência.
+              format: int32
+              example: 6
+            firstPayment:
+              type: string
+              description: >-
+                Data do primeiro vencimento. Formato YYYY-MM-DD. Exemplo >-
+                1990-12-25.
+              example: {}
+            baseDate:
+              type: string
+              description: Data base. Formato YYYY-MM-DD. Exemplo >- 1990-12-25.
+              example: {}
+            baseDateInterest:
+              type: string
+              description: Data base de juros. Formato YYYY-MM-DD. Exemplo -> 1990-12-31.
+              example: {}
+            totalValue:
+              type: number
+              description: Valor total da Condição de pagamento.
+              format: double
+              example: 350000
+            outstandingBalance:
+              type: number
+              description: Valor em aberto da Condição de pagamento.
+              format: double
+              example: 350000
+            interestPercentage:
+              type: number
+              description: Porcentagem de juros.
+              format: double
+              example: 1.2
+            totalValueInterest:
+              type: number
+              description: Valor total de juros.
+              format: double
+              example: 4200
+            amountPaid:
+              type: number
+              description: Valor pago.
+              format: double
+              example: 0
+            sequenceId:
+              type: number
+              description: ID da sequência.
+              format: int32
+              example: 1
+          example:
+            - bearerName: João Silva
+              indexerName: IPCA
+              conditionTypeId: PM
+              conditionTypeName: Parcelamento
+              dueDay: 5
+              totalValue: 350000
+              entryValue: 50000
+              installments: 30
+              installmentValue: 10000
+              interestRate: 1.2
+              fineRate: 2
+              discountValue: 0
+              firstDueDate: '2025-08-10'
+              lastDueDate: '2028-01-10'
+              notes: Parcelamento padrão com entrada
+        brokers:
+          type: array
+          items:
+            type: object
+          properties:
+            id:
+              type: number
+              description: Id do corretor
+              format: int32
+              example: 1
+            main:
+              type: boolean
+              description: True se o corretor for o principal
+              example: true
+          example:
+            - id: 1
+              main: true
+        linkedCommissions:
+          type: object
+          properties:
+            totalCommission:
+              type: number
+              description: Total de comissão de venda
+              format: int32
+              example: 2
+            totalCommissionAmount:
+              type: number
+              description: Valor total de comissões de venda
+              format: double
+              example: 2000
+          example:
+            totalCommission: 2
+            totalCommissionAmount: 2000
+        links:
+          $ref: '#/components/schemas/Links'
+    SalesContractUpdateDocument:
+      type: object
+      description: Informações para atualização do contrato de vendas.
+      properties:
+        financialInstitutionNumber:
+          type: string
+          description: Número do contrato com a instituição financeira
+          example: 123456789A
+        financialInstitutionDate:
+          type: string
+          description: >-
+            Data do contrato com a instituição financeira. Formato YYYY-MM-DD.
+            Exemplo -> 1994-01-31.
+          example: {}
+        keysDeliveredAt:
+          type: string
+          description: >-
+            Data da entrega de chaves. Formato YYYY-MM-DD. Exemplo ->
+            1994-01-31.
+          example: {}
+        registerPropertyDate:
+          type: string
+          description: >-
+            Data do registro do imóvel. Formato YYYY-MM-DD. Exemplo ->
+            1994-01-31.
+          example: {}
+        sellingCategory:
+          type: string
+          description: Categoria de venda.
+          example: Venda
+        financingStatus:
+          type: string
+          description: Situação do financiamento.
+          example: Financiado
+        contractDate:
+          type: string
+          description: Data do contrato. Formato YYYY-MM-DD. Exemplo -> 2025-08-21.
+          example: {}
+        accountingDate:
+          type: string
+          description: Data contábil. Formato YYYY-MM-DD. Exemplo -> 2025-08-31.
+          example: {}
+        specialClause:
+          type: string
+          maxLength: 3800
+          description: >-
+            Cláusula especial do contrato. Texto livre com tamanho máximo aceito
+            de 3800 caracteres.
+          example: Cláusula especial do contrato
+    SalesContractAttachmentsGetResponse:
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      description: Anexos do contrato de vendas.
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de anexos do contrato
+          items:
+            $ref: '#/components/schemas/SalesContractAttachmentDocument'
+          example:
+            - attachmentid: 1
+              name: arquivo.pdf
+              description: Contrato Documento
+              size: 320123
+              contentType: application/pdf
+              links:
+                - rel: contentDownloadLink
+                  href: http://../v1/sales-contracts/1202/attachments/1
+    SalesContractGuarantorsArray:
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      description: >-
+        Lista de avalistas do contrato de vendas retornados como resultado da
+        pesquisa.
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: >-
+            Lista de avalistas do contrato retornados como resultado da
+            pesquisa.
+          items:
+            $ref: '#/components/schemas/GuarantorDocument'
+          example:
+            - name: João da Silva
+              cnpj: '12345678000199'
+              cpf: '12345678901'
+              nationality: Brasileiro
+              numberIdentityCard: MG1234567
+              profession: Engenheiro
+              civilStatus: Casado
+              email: joao.silva@example.com
+              birthDate: '1980-05-15'
+              address:
+                city: Belo Horizonte
+                complement: Apto 202
+                neighborhood: Centro
+                number: '100'
+                state: MG
+                streetName: Rua das Flores
+                zipCode: 30123-456
+              spouse:
+                name: Maria Silva
+                cpf: '98765432100'
+                birthDate: '1982-07-20'
+              phones:
+                - type: CELULAR
+                  number: (31)99999-8888
+                  main: true
+    GuarantorsInsertArray:
+      type: array
+      description: Avalistas para inclusão no contrato.
+      items:
+        $ref: '#/components/schemas/GuarantorInsertDocument'
+    GuarantorDocument:
+      type: object
+      description: Informações do avalista
+      properties:
+        name:
+          type: string
+          description: Nome do avalista
+          example: João da Silva
+        cnpj:
+          type: string
+          description: CNPJ do avalista
+          example: '12345678000199'
+        cpf:
+          type: string
+          description: CPF do avalista
+          example: '12345678901'
+        nationality:
+          type: string
+          description: Nacionalidade
+          example: Brasileiro
+        numberIdentityCard:
+          type: string
+          description: RG
+          example: MG1234567
+        profession:
+          type: string
+          description: Profissão
+          example: Engenheiro
+        civilStatus:
+          type: string
+          description: Estado civil
+          example: Casado
+        email:
+          type: string
+          description: Endereço eletrônico (e-mail) do avalista.
+          example: joao.silva@example.com
+        birthDate:
+          type: string
+          description: >-
+            Data de nascimento do avalista. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-25.
+          example: '1990-12-25'
+        address:
+          $ref: '#/components/schemas/AddressDocument'
+        spouse:
+          $ref: '#/components/schemas/GuarantorSpouseDocument'
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/GuarantorPhonesDocument'
+          example:
+            - type: CELULAR
+              number: (31)99999-8888
+              main: true
+    GuarantorsUpdateDocument:
+      type: object
+      description: Informações para atualização do avalista do contrato.
+      properties:
+        name:
+          maxLength: 40
+          type: string
+          description: Nome do avalista para atualização.
+          example: Exemplo de Avalista
+        cnpj:
+          type: string
+          description: >-
+            CNPJ do avalista. Formato NNNNNNNNNNNNNN (somente números). Exemplo
+            -> 87389750000185. Informar quando pessoa jurídica. Obrigatório
+            quando CPF não informado.
+          example: '87389750000185'
+        cpf:
+          type: string
+          description: >-
+            CPF do avalista. Formato NNNNNNNNNNN (somente números). Exemplo ->
+            41833114035. Informar quando pessoa física. Obrigatório quando CNPJ
+            não informado.
+          example: '41833114035'
+        nationality:
+          maxLength: 40
+          type: string
+          description: Nacionalidade do avalista para atualização.
+          example: Nacionalidade
+        numberIdentityCard:
+          maxLength: 20
+          type: string
+          description: >-
+            Número da carteira de identidade (RG). Informar quando pessoa
+            física.
+          example: '123456789'
+        professionId:
+          type: integer
+          description: Código da profissão do avalista. Informar quando pessoa física.
+          format: int32
+          example: 1
+        civilStatusId:
+          type: integer
+          description: Código do estado civil. Informar quando pessoa física.
+          format: int32
+          example: 1
+        birthDate:
+          type: string
+          description: >-
+            Data de nascimento do avalista para atualização. Formato YYYY-MM-DD.
+            Exemplo -> 1990-12-25.
+          example: '1990-12-25'
+        email:
+          type: string
+          description: Endereço eletrônico (e-mail).
+          example: email@example.com
+        lgpd:
+          $ref: '#/components/schemas/GuarantorLgpdDocument'
+        address:
+          $ref: '#/components/schemas/AddressUpdateDocument'
+        spouse:
+          $ref: '#/components/schemas/GuarantorSpouseUpdateDocument'
+    GuarantorsPhoneUpdateArray:
+      type: array
+      description: Telefones do avalista.
+      items:
+        $ref: '#/components/schemas/GuarantorPhoneInsertDocument'
+    SalesContractCancellationDocument:
+      required:
+        - date
+        - reason
+        - subType
+      type: object
+      description: Informações para cancelamento do contrato de vendas.
+      properties:
+        date:
+          type: string
+          description: Data do cancelamento. Formato YYYY-MM-DD. Exemplo -> 1990-12-25.
+          example: '1990-12-25'
+        reason:
+          type: string
+          description: Motivo de cancelamento do contrato.
+          example: Motivo Exemplo
+        subType:
+          type: string
+          description: >-
+            Subtipo de cancelamento. Valores aceitos: 'I' - Interno, 'X' -
+            Notificação cartório, 'J' - Notificação escritório, 'E' - Edital.
+            <br>(Informar um subtipo apenas quando a categoria do empreendimento
+            for do tipo 'Loteamento')
+          example: I
+    SalesContractWebhookPayload:
+      type: object
+      description: Payload para webhook de contratos de vendas
+      properties:
+        salesContractId:
+          type: integer
+          description: Código do contrato de vendas
+          example: 123
+      required:
+        - salesContractId
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    SalesContractPostHandoverInterestType:
+      type: string
+      description: >-
+        Tipo de juros pós-chaves. Valores aceitos: 'N' - Nenhum, 'P' - Price,
+        'A' - S.A.C., 'S' - Simples, 'C' - Composto, 'F' - Fixo.
+      enum:
+        - 'N'
+        - P
+        - A
+        - S
+        - C
+        - F
+      example: P
+    SalesContractNfeContractType:
+      type: integer
+      format: int32
+      description: >-
+        Tipo de contrato (NFe) do contrato. Opcional: se não informado, nenhum
+        valor é gravado. Valores aceitos: 1 = 01.01.01 - Promessa / compromisso
+        de compra e venda; 2 = 01.01.02 - Compra e venda definitiva; 3 =
+        01.02.03 - Promessa / compromisso de dação em pagamento; 4 = 01.02.04 -
+        Dação em pagamento definitiva; 5 = 04.13 - Permuta envolvendo
+        exclusivamente bens imóveis (com ou sem torna); 6 = 04.15 - Permuta não
+        enquadrada nos itens anteriores.
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+      example: 1
+    SalesContractPaymentConditionsInsertDocument:
+      type: object
+      description: Informações para inclusão de uma condição de pagamento no contrato.
+      properties:
+        conditionTypeId:
+          type: string
+          description: >-
+            Código da condição de pagamento. Exemplo -> 'PM' para indicar
+            parcelas mensais.
+        installmentsNumber:
+          type: integer
+          description: Quantidade de parcelas para a condição de pagamento.
+          format: int32
+        firstPayment:
+          type: string
+          description: Primeiro vencimento. Formato YYYY-MM-DD. Exemplo -> 1990-12-25.
+        totalValue:
+          type: number
+          description: Valor total da condição. Formato -> 80000.00
+        matchMaturities:
+          type: string
+          description: >-
+            Coincidir vencimentos com outras parcelas. Informar 'S' ou 'N', caso
+            não seja informado o valor default será 'N'.
+        bearerId:
+          type: integer
+          description: Código do portador para a condição de pagamento.
+          format: int32
+        indexerId:
+          type: integer
+          description: Código do indexador para a condição de pagamento.
+          format: int32
+        baseDate:
+          type: string
+          description: >-
+            Data base da condição de pagamento. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-31.
+        interestType:
+          type: string
+          description: >-
+            Tipo de juros: N - Nenhum, P - PRICE, A - SAC, S - Simples, C -
+            Composto, U - Anual
+          enum:
+            - 'N'
+            - P
+            - A
+            - S
+            - C
+            - U
+        interestPercentage:
+          type: number
+          description: >-
+            Percentual de juros. Formato -> 1.00. Caso o percentual informado
+            for zero ou nulo, o tipo de juros automaticamente será reconhecido
+            como "Nenhum".
+        monthsGracePeriod:
+          type: integer
+          description: >-
+            Quantidade de meses de carência. Informar um número correspondente a
+            carência para cobrança de juros.
+          format: int32
+        baseDateInterest:
+          type: string
+          description: Data base de juros. Formato YYYY-MM-DD. Exemplo -> 1990-12-25 .
+    SalesContractCustomersInsertDocument:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Código do cliente a ser inserido no contrato.
+          format: int32
+        main:
+          type: boolean
+          description: Indica se o cliente é o principal.
+        participationPercentage:
+          type: number
+          description: Percentual de participação do cliente. Formato -> 1.00
+        safePercentage:
+          type: number
+          description: Percentual de seguro. Formato -> 1.00
+        participationPercentageSpouse:
+          type: number
+          description: Percentual de participação do cônjuge. Formato -> 1.00
+      description: Informações do cliente do contrato.
+    SalesContractUnitsInsertDocument:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Id da unidade a ser inserida no contrato.
+          format: int32
+        main:
+          type: boolean
+          description: Indica se a unidade é a principal.
+        participationPercentage:
+          type: number
+          description: Percentual de participação. Formato >- 1.00
+      description: Informações sobre a unidade do contrato.
+    SalesContractBrokersInsertDocument:
+      type: object
+      description: Informações sobre o corretor do contrato.
+      properties:
+        id:
+          type: integer
+          description: Código do corretor a ser inserido no contrato.
+          format: int32
+        main:
+          type: boolean
+          description: Indica se o corretor é o principal.
+    SalesContractGuarantorsInsertDocument:
+      required:
+        - civilStatusId
+        - name
+        - professionId
+      type: object
+      description: Informações sobre o avalista do contrato.
+      properties:
+        name:
+          maxLength: 40
+          type: string
+          description: Nome do avalista para inclusão.
+        cnpj:
+          type: string
+          description: >-
+            CNPJ do avalista. Formato NNNNNNNNNNNNNN (somente números). Exemplo
+            -> 87389750000185. Informar quando pessoa jurídica.
+        cpf:
+          type: string
+          description: >-
+            CPF do avalista. Formato NNNNNNNNNNN (somente números). Exemplo ->
+            41833114035. Informar quando pessoa física.
+        nationality:
+          maxLength: 40
+          type: string
+          description: Nacionalidade do avalista para inclusão.
+        numberIdentityCard:
+          maxLength: 20
+          type: string
+          description: >-
+            Número da carteira de identidade (RG) do avalista para inclusão.
+            Informar quando pessoa física.
+        professionId:
+          type: integer
+          description: Profissão do avalista para inclusão. Informar quando pessoa física.
+          format: int32
+        civilStatusId:
+          type: integer
+          description: >-
+            Estado civil do avalista para inclusão. Informar quando pessoa
+            física.
+          format: int32
+        birthDate:
+          type: string
+          description: Data de nascimento. Formato YYYY-MM-DD. Exemplo -> 1990-12-31.
+        email:
+          type: string
+          description: Endereço eletrônico (e-mail) do avalista para inclusão.
+        address:
+          $ref: '#/components/schemas/AddressInsertDocument'
+        spouse:
+          $ref: '#/components/schemas/GuarantorSpouseInsertDocument'
+        phones:
+          type: array
+          description: Telefones do avalista do contrato.
+          items:
+            $ref: '#/components/schemas/GuarantorPhoneInsertDocument'
+    SalesContractNfeContractTypeResponse:
+      type:
+        - integer
+        - 'null'
+      format: int32
+      description: >-
+        Tipo de contrato (NFe) do contrato. É null quando o tipo não foi
+        informado no contrato. Valores: 1 = 01.01.01 - Promessa / compromisso de
+        compra e venda; 2 = 01.01.02 - Compra e venda definitiva; 3 = 01.02.03 -
+        Promessa / compromisso de dação em pagamento; 4 = 01.02.04 - Dação em
+        pagamento definitiva; 5 = 04.13 - Permuta envolvendo exclusivamente bens
+        imóveis (com ou sem torna); 6 = 04.15 - Permuta não enquadrada nos itens
+        anteriores.
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - null
+      example: 1
+    SalesContractNfeContractTypeDescription:
+      type:
+        - string
+        - 'null'
+      description: >-
+        Descrição do tipo de contrato (NFe) no formato 'código da operação -
+        texto'. Campo somente leitura, derivado de 'nfeContractType'; não deve
+        ser usado como chave. É null quando 'nfeContractType' é null.
+      example: 01.01.01 - Promessa / compromisso de compra e venda
+    Links:
+      description: Links para acessar outros recursos
+      example:
+        - href: https://../v1/purchase-..
+          rel: Recurso
+      items:
+        $ref: '#/components/schemas/Link'
+      type: array
+    SalesContractAttachmentDocument:
+      type: object
+      description: Anexo do contrato de vendas.
+      properties:
+        attachmentid:
+          type: integer
+          description: Id do anexo do contrato de vendas.
+          format: int32
+          example: 1
+        name:
+          maxLength: 100
+          type: string
+          description: Nome do arquivo de anexo | Exemplo -> arquivo-1.pdf
+          example: arquivo-1.pdf
+        description:
+          maxLength: 500
+          type: string
+          description: Descrição do anexo | Exemplo -> Contrato Documento
+          example: Contrato Documento
+        size:
+          type: integer
+          description: Tamanho do arquivo em bytes | Exemplo -> 20123
+          format: int32
+          example: 20123
+        contentType:
+          type: string
+          description: Tipo do arquivo do anexo (MimeType) | Exemplo -> application/pdf
+          example: application/pdf
+        links:
+          $ref: '#/components/schemas/Links'
+    GuarantorInsertDocument:
+      required:
+        - civilStatusId
+        - cnpj
+        - cpf
+        - name
+        - professionId
+      type: object
+      description: Informações para inclusão de um avalista no contrato.
+      properties:
+        name:
+          maxLength: 40
+          type: string
+          description: Nome do avalista a ser inserido.
+        cnpj:
+          type: string
+          description: >-
+            CNPJ do avalista para inclusão. Formato NNNNNNNNNNNNNN (somente
+            números). Exemplo -> 87389750000185. Informar quando pessoa
+            jurídica. Obrigatório quando CPF não informado.
+        cpf:
+          type: string
+          description: >-
+            CPF do avalista para inclusão. Formato NNNNNNNNNNN (somente
+            números). Exemplo -> 41833114035. Informar quando pessoa física.
+            Obrigatório quando CNPJ não informado.
+        nationality:
+          maxLength: 40
+          type: string
+          description: Nacionalidade do avalista.
+        numberIdentityCard:
+          maxLength: 20
+          type: string
+          description: >-
+            Número da carteira de identidade (RG) do avalista. Informar quando
+            pessoa física.
+        professionId:
+          type: integer
+          description: Profissão do avalista. Informar quando pessoa física.
+          format: int32
+        civilStatusId:
+          type: integer
+          description: Estado civil do avalista. Informar quando pessoa física.
+          format: int32
+        birthDate:
+          type: string
+          description: >-
+            Data de nascimento do avalista. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-31.
+        email:
+          type: string
+          description: >-
+            Endereço eletrônico (e-mail) do avalista para inclusão. Exemplo ->
+            email@example.com.
+        address:
+          $ref: '#/components/schemas/AddressInsertDocument'
+        spouse:
+          $ref: '#/components/schemas/GuarantorSpouseInsertDocument'
+        phones:
+          type: array
+          description: Lista com os telefones do avalista do contrato.
+          items:
+            $ref: '#/components/schemas/GuarantorPhoneInsertDocument'
+    AddressDocument:
+      type: object
+      description: Informações de endereço.
+      example:
+        city: Belo Horizonte
+        complement: Apto 202
+        neighborhood: Centro
+        number: '100'
+        state: MG
+        streetName: Rua das Flores
+        zipCode: 30123-456
+      properties:
+        city:
+          type: string
+          description: Município
+        complement:
+          type: string
+          description: Complemento
+        neighborhood:
+          type: string
+          description: Bairro
+        number:
+          type: string
+          description: Número
+        state:
+          type: string
+          description: Estado
+        streetName:
+          type: string
+          description: Endereço
+        zipCode:
+          type: string
+          description: CEP
+    GuarantorSpouseDocument:
+      type: object
+      description: Informações do cônjuge do avalista.
+      example:
+        name: Maria Silva
+        cpf: '98765432100'
+        numberIdentityCard: '123456789'
+        email: maria.silva@example.com
+        birthDate: '1982-07-20'
+        address:
+          city: Belo Horizonte
+          complement: Apto 202
+          neighborhood: Centro
+          number: '100'
+          state: MG
+          streetName: Rua das Flores
+          zipCode: 30123-456
+      properties:
+        name:
+          type: string
+          description: Nome
+          example: Maria Silva
+        cpf:
+          type: string
+          description: Número de CPF
+          example: '12345678901'
+        numberIdentityCard:
+          type: string
+          description: Número de Identidade (RG)
+          example: '123456789'
+        email:
+          type: string
+          description: Endereço eletrônico (e-mail)
+          example: maria.silva@example.com
+        birthDate:
+          type: string
+          description: Data de nascimento
+          example: {}
+        address:
+          $ref: '#/components/schemas/AddressDocument'
+    GuarantorPhonesDocument:
+      type: object
+      description: Informações do telefone do avalista
+      properties:
+        number:
+          type: string
+          description: Número de telefone completo.
+          example: +55 11 99999-9999
+        main:
+          type: boolean
+          description: True indica que o telefone é principal.
+          example: true
+        type:
+          type: string
+          description: Tipo de telefone do avalista.
+          example: celular
+        note:
+          type: string
+          description: Observação do telefone do avalista.
+          example: telefone principal
+    GuarantorLgpdDocument:
+      type: object
+      description: Informações para atualização do consentimento à LGPD do avalista.
+      example:
+        consent: SIM
+        details: Detalhes da LGPD
+      properties:
+        consent:
+          type: string
+          description: Consentimento à LGPD. Opções válidas são "SIM" e "NAO".
+          enum:
+            - SIM
+            - NAO
+          example: SIM
+        details:
+          maxLength: 1000
+          type: string
+          description: Detalhes da LGPD.
+          example: Detalhes da LGPD
+    AddressUpdateDocument:
+      type: object
+      description: Informações para atualização do endereço.
+      example:
+        cityId: 1
+        complement: Complemento Exemplo
+        neighborhood: Bairro Exemplo
+        number: '123'
+        streetName: Logradouro Exemplo
+        zipCode: 83000-000
+      properties:
+        cityId:
+          type: integer
+          description: Código do município do endereço.
+          format: int32
+          example: 1
+        complement:
+          maxLength: 40
+          type: string
+          description: Complemento do endereço do avalista para atualização.
+          example: Complemento Exemplo
+        neighborhood:
+          maxLength: 40
+          type: string
+          description: Bairro do endereço do avalista para atualização.
+          example: Bairro Exemplo
+        number:
+          maxLength: 10
+          type: string
+          description: Número do endereço do avalista para atualização.
+          example: '123'
+        streetName:
+          maxLength: 80
+          type: string
+          description: Logradouro do endereço do avalista para atualização.
+          example: Logradouro Exemplo
+        zipCode:
+          maxLength: 9
+          type: string
+          description: >-
+            Código de endereçamento postal (CEP) do endereço | Formato:
+            NNNNN-NNN (Exemplo: 83820-449)
+          example: 83000-000
+    GuarantorSpouseUpdateDocument:
+      type: object
+      description: Informações para atualização do cônjuge do avalista.
+      example:
+        name: Exemplo de Cônjuge
+        cpf: '41833114035'
+        numberIdentityCard: '123456789'
+        email: email@example.com
+        birthDate: '1990-12-25'
+        address:
+          cityId: 1
+          complement: Complemento Exemplo
+          neighborhood: Bairro Exemplo
+          number: '123'
+          streetName: Logradouro Exemplo
+          zipCode: 83000-000
+      properties:
+        name:
+          maxLength: 50
+          type: string
+          description: Nome do cônjuge do avalista para atualização.
+          example: Exemplo de Cônjuge
+        cpf:
+          type: string
+          description: >-
+            Número de CPF do cônjuge do avalista para atualização. Formato
+            000.000.000-00.
+          example: '41833114035'
+        numberIdentityCard:
+          maxLength: 20
+          type: string
+          description: Número de Identidade (RG) do cônjuge do avalista para atualização.
+          example: '123456789'
+        email:
+          maxLength: 100
+          type: string
+          description: >-
+            Endereço eletrônico (e-mail) do cônjuge do avalista para
+            atualização. Exemplo -> email@example.com.
+          example: email@example.com
+        birthDate:
+          type: string
+          description: >-
+            Data de nascimento do cônjuge do avalista para atualização. Formato
+            YYYY-MM-DD. Exemplo -> 1990-12-25.
+          example: '1990-12-25'
+        address:
+          $ref: '#/components/schemas/AddressUpdateDocument'
+    GuarantorPhoneInsertDocument:
+      type: object
+      description: Informações para criação do telefone do avalista.
+      properties:
+        number:
+          type: string
+          description: >-
+            Número de telefone do avalista para inclusão. Formato DDDNNNNNNNNN.
+            Exemplo -> 041912341111
+          example: '048912345678'
+        main:
+          type: boolean
+          description: >-
+            True se o telefone é principal. Deve ser informado um telefone como
+            principal.
+          example: true
+        type:
+          type: string
+          description: >-
+            Tipo do telefone do avalista. Informar CE para celular, CO para
+            comercial ou RE para residencial.
+          example: CE
+        note:
+          type: string
+          description: Observação do telefone do avalista para inclusão.
+          example: Observação Exemplo
+    AddressInsertDocument:
+      required:
+        - cityId
+      type: object
+      description: Informações para criação do endereço do avalista.
+      properties:
+        cityId:
+          type: integer
+          description: Código do município do endereço para inclusão.
+          format: int32
+          example: 1
+        complement:
+          maxLength: 40
+          type: string
+          description: Complemento do endereço do avalista para inclusão.
+          example: Complemento Exemplo
+        neighborhood:
+          maxLength: 40
+          type: string
+          description: Bairro do endereço do avalista para inclusão.
+          example: Bairro Exemplo
+        number:
+          maxLength: 10
+          type: string
+          description: Número do endereço para inclusão.
+          example: '123'
+        streetName:
+          maxLength: 80
+          type: string
+          description: Logradouro do endereço para inclusão.
+          example: Logradouro Exemplo
+        zipCode:
+          maxLength: 9
+          type: string
+          description: >-
+            Código de endereçamento postal (CEP) do endereço para inclusão |
+            Formato: NNNNN-NNN (Exemplo: 83000-000)
+          example: 83000-000
+    GuarantorSpouseInsertDocument:
+      type: object
+      properties:
+        name:
+          maxLength: 50
+          type: string
+          description: Nome do cônjuge do avalista.
+          example: Exemplo de Cônjuge
+        cpf:
+          type: string
+          description: Número de CPF do cônjuge do avalista. Formato 000.000.000-00.
+          example: '41833114035'
+        numberIdentityCard:
+          maxLength: 20
+          type: string
+          description: Número de Identidade (RG) do cônjuge do avalista.
+          example: '123456789'
+        email:
+          maxLength: 100
+          type: string
+          description: Endereço eletrônico (e-mail) do cônjuge do avalista.
+          example: email@example.com
+        birthDate:
+          type: string
+          description: >-
+            Data de nascimento do cônjuge do avalista. Formato YYYY-MM-DD.
+            Exemplo -> 1990-12-25.
+          example: '1990-12-25'
+        address:
+          $ref: '#/components/schemas/GuarantorSpouseAddressInsertDocument'
+      description: Cônjuge do Avalista.
+    Link:
+      description: Representa um link para outro recurso.
+      properties:
+        href:
+          description: URL do recurso associado
+          example: https://../v1/purchase-..
+          type: string
+        rel:
+          description: Nome da recurso associado
+          example: Recurso
+          type: string
+      type: object
+    GuarantorSpouseAddressInsertDocument:
+      type: object
+      description: Informações para criação do endereço do cônjuge do avalista.
+      properties:
+        cityId:
+          type: integer
+          description: Código do município do endereço do cônjuge do avalista.
+          format: int32
+          example: 1
+        complement:
+          maxLength: 40
+          type: string
+          description: Complemento do endereço do cônjuge do avalista.
+          example: Complemento Exemplo
+        neighborhood:
+          maxLength: 40
+          type: string
+          description: Bairro do endereço do cônjuge do avalista.
+          example: Bairro Exemplo
+        number:
+          maxLength: 10
+          type: string
+          description: Número do endereço do cônjuge do avalista.
+          example: '123'
+        streetName:
+          maxLength: 80
+          type: string
+          description: Logradouro do endereço do cônjuge do avalista.
+          example: Logradouro Exemplo
+        zipCode:
+          maxLength: 9
+          type: string
+          description: >-
+            Código de endereçamento postal (CEP) do endereço do cônjuge do
+            avalista | Formato: NNNNN-NNN (Exemplo: 83820-449)
+          example: 83000-000
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    SalesContractId:
+      name: salesContractId
+      in: path
+      description: Id do contrato de vendas.
+      required: true
+      schema:
+        type: integer
+        format: int32
+    AttachmentId:
+      description: ID do anexo
+      in: path
+      name: attachmentId
+      required: true
+      schema:
+        format: int32
+        type: integer
+    GuarantorId:
+      name: guarantorId
+      in: path
+      description: Id do avalista.
+      required: true
+      schema:
+        type: integer
+        format: int32
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1
+webhooks:
+  SALES_CONTRACT_CREATED:
+    post:
+      tags:
+        - Webhooks - Contratos de Vendas
+      summary: Contrato de venda criado
+      description: Sempre que um contrato de venda é criado
+      operationId: salesContractCreatedWebhook
+      requestBody:
+        description: Dados do evento de criação de contrato
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesContractWebhookPayload'
+            example:
+              salesContractId: 123
+        required: true
+      responses:
+        2XX:
+          description: O evento SALES_CONTRACT_CREATED foi processado com sucesso
+      x-audience:
+        - public
+  SALES_CONTRACT_UPDATED:
+    post:
+      tags:
+        - Webhooks - Contratos de Vendas
+      summary: Contrato de venda atualizado
+      description: >-
+        Sempre que um contrato de venda é atualizado (não recebe esse evento
+        quando o contrato é emitido)
+      operationId: salesContractUpdatedWebhook
+      requestBody:
+        description: Dados do evento de atualização de contrato
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesContractWebhookPayload'
+            example:
+              salesContractId: 123
+        required: true
+      responses:
+        2XX:
+          description: O evento SALES_CONTRACT_UPDATED foi processado com sucesso
+      x-audience:
+        - public
+  SALES_CONTRACT_REMOVED:
+    post:
+      tags:
+        - Webhooks - Contratos de Vendas
+      summary: Contrato de venda removido
+      description: Sempre que um contrato de venda é removido
+      operationId: salesContractRemovedWebhook
+      requestBody:
+        description: Dados do evento de remoção de contrato
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesContractWebhookPayload'
+            example:
+              salesContractId: 123
+        required: true
+      responses:
+        2XX:
+          description: O evento SALES_CONTRACT_REMOVED foi processado com sucesso
+      x-audience:
+        - public
+  SALES_CONTRACT_ISSUED:
+    post:
+      tags:
+        - Webhooks - Contratos de Vendas
+      summary: Contrato de venda emitido
+      description: Sempre que um contrato de venda é emitido
+      operationId: salesContractIssuedWebhook
+      requestBody:
+        description: Dados do evento de emissão de contrato
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesContractWebhookPayload'
+            example:
+              salesContractId: 123
+        required: true
+      responses:
+        2XX:
+          description: O evento SALES_CONTRACT_ISSUED foi processado com sucesso
+      x-audience:
+        - public
+  SALES_CONTRACT_CANCELED:
+    post:
+      tags:
+        - Webhooks - Contratos de Vendas
+      summary: Contrato de venda cancelado
+      description: Sempre que um contrato de venda é cancelado
+      operationId: salesContractCanceledWebhook
+      requestBody:
+        description: Dados do evento de cancelamento de contrato
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SalesContractWebhookPayload'
+            example:
+              salesContractId: 123
+        required: true
+      responses:
+        2XX:
+          description: O evento SALES_CONTRACT_CANCELED foi processado com sucesso
+      x-audience:
+        - public

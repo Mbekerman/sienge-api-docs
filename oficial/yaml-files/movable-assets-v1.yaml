@@ -1,0 +1,537 @@
+openapi: 3.1.1
+info:
+  title: Bens Móveis
+  version: 1.24.0
+  description: API para listagem de bens móveis
+paths:
+  /patrimony/movable:
+    get:
+      x-original-file: movable-assets-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Bens Móveis
+      summary: Lista bens móveis
+      description: Lista os bens ordenados por código do patrimônio - (Bens Móveis). (REST)
+      operationId: getPatrimonyMovable
+      parameters:
+        - name: patrimonyId
+          in: query
+          description: Código do patrimônio - (Bens Móveis).
+          schema:
+            type: integer
+        - name: barCode
+          in: query
+          description: Código de barras/RFID.
+          schema:
+            type: string
+        - name: costCenter
+          in: query
+          description: Empreendimento/Centro de custo (Bens Móveis)
+          schema:
+            type: string
+        - name: model
+          in: query
+          description: Modelo
+          schema:
+            type: integer
+        - name: plateId
+          in: query
+          description: Plaqueta/Placa
+          schema:
+            type: string
+        - name: situation
+          in: query
+          description: >-
+            Situação do bem podendo ser A - Ativo ou B - Baixados - (Bens
+            Móveis)
+          schema:
+            $ref: '#/components/schemas/AssetSituationEnum'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Resultado da pesquisa retornado com sucesso - (Bens Móveis)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovableAssetsPaginationResult'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    MovableAssetsPaginationResult:
+      description: Lista paginada dos bens móveis retornados
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista dos bens móveis
+          items:
+            $ref: '#/components/schemas/MovableAssetItem'
+          example:
+            - patrimonyId: 10
+              detail: Detalhe do bem
+              prefix: MB
+              brand: Toyota
+              model: Corolla
+              observation: Bem em bom estado
+              barCode: '55699815'
+              costCenter: 5
+              plateId: AAA-1234
+              situation: A
+              preservation: Ótimo
+              color: Azul
+              useFuel: true
+              fuel: Gasolina
+              serialNumber: AABBCCDDEE
+              modelYear: '2021'
+              manufactureYear: 2021
+              initialDepartment: '2'
+              actualDepartment: '3'
+              incorporationForm: Compra
+              incorporationDate: '2021-01-05'
+              incorporationValue: 5000
+              incorporationNoteNumber: '15566388511'
+              incorporationProvider: 4
+              accountancyIncorporationAccount: 1.01.02.01
+              accountancyIdentity: Máquinas
+              accountancyOrigin: Aquisição no Mercado Interno
+              accountancyUsageIndicator: Produção de Bens Destinados a Venda
+              accountancyLifetime: 36
+              depreciationInitialDate: '2021-02-01'
+              depreciationDebitAccount: 3.01.02.05
+              depreciationCreditAccount: 1.01.02.09
+              depreciationValue: 32
+              depreciationLastDate: '2022-02-01'
+              depreciationActualValue: 600.5
+              resourceId: 12
+              resourceDescription: Escavadeira hidráulica
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    MovableAssetItem:
+      type: object
+      description: Representação de um bem móvel
+      properties:
+        patrimonyId:
+          type: integer
+          description: Código do patrimônio
+          example: 10
+        detail:
+          type: string
+          description: Detalhamento
+          example: Detalhe do bem
+        prefix:
+          type: string
+          description: Prefixo
+          example: MB
+        brand:
+          type: string
+          description: Marca
+          example: Toyota
+        model:
+          type: string
+          description: Modelo do bem móvel
+          example: Corolla
+        observation:
+          type: string
+          description: Observação do bem móvel
+          example: Bem em bom estado
+        barCode:
+          type: string
+          description: Código de barras/RFID
+          example: '55699815'
+        costCenter:
+          type: integer
+          description: Centro de custo (Bens Móveis)
+          example: 5
+        plateId:
+          type: string
+          description: Plaqueta/Placa do bem móvel
+          example: AAA-1234
+        situation:
+          $ref: '#/components/schemas/AssetSituationEnum'
+          description: Situação do bem
+        preservation:
+          type: string
+          description: Estado de conservação
+          example: Ótimo
+        color:
+          type: string
+          description: Cor
+          example: Azul
+        useFuel:
+          type: boolean
+          description: Utiliza combustível
+          example: true
+        fuel:
+          type: string
+          description: Combustível
+          example: Gasolina
+        serialNumber:
+          type: string
+          description: Nº de série/chassi
+          example: AABBCCDDEE
+        modelYear:
+          type: string
+          description: Ano do modelo
+          example: '2021'
+        manufactureYear:
+          type: integer
+          description: Ano de fabricação
+          example: 2021
+        initialDepartment:
+          type: string
+          description: Setor/Obra inicial
+          example: '2'
+        actualDepartment:
+          type: string
+          description: Setor/Obra atual
+          example: '3'
+        incorporationForm:
+          type: string
+          description: Forma de incorporação
+          example: Compra
+        incorporationDate:
+          type: string
+          description: Data da incorporação
+          example: {}
+        incorporationValue:
+          type: number
+          description: Valor da incorporação
+          example: 5000
+        incorporationNoteNumber:
+          type: string
+          description: Número da nota
+          example: '15566388511'
+        incorporationProvider:
+          type: integer
+          description: Fornecedor
+          example: 4
+        accountancyIncorporationAccount:
+          type: string
+          description: Conta de incorporação
+          example: 1.01.02.01
+        accountancyIdentity:
+          type: string
+          description: Identificação
+          example: Máquinas
+        accountancyOrigin:
+          type: string
+          description: Origem
+          example: Aquisição no Mercado Interno
+        accountancyUsageIndicator:
+          type: string
+          description: Indicador da utilização
+          example: Produção de Bens Destinados a Venda
+        accountancyLifetime:
+          type: integer
+          description: Vida útil em meses
+          example: 36
+        depreciationInitialDate:
+          type: string
+          description: Data de início da depreciação
+          example: {}
+        depreciationDebitAccount:
+          type: string
+          description: Despesa de depreciação (Débito)
+          example: 3.01.02.05
+        depreciationCreditAccount:
+          type: string
+          description: Depreciação acumulada (Crédito)
+          example: 1.01.02.09
+        depreciationValue:
+          type: number
+          description: Depreciação (%)
+          example: 32
+        depreciationLastDate:
+          type: string
+          description: Data da última depreciação
+          example: {}
+        depreciationActualValue:
+          type: number
+          description: Valor atual da depreciação
+          example: 600.5
+        resourceId:
+          type: integer
+          description: Código do insumo (equipamento) vinculado ao bem móvel
+          example: 12
+        resourceDescription:
+          type: string
+          description: Descrição do insumo (equipamento) vinculado ao bem móvel
+          example: Escavadeira hidráulica
+    AssetSituationEnum:
+      description: Situação do bem patrimonial
+      enum:
+        - A
+        - B
+      example: A
+      type: string
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

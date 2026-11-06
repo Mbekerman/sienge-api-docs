@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>URL e Requisições · Documentação de APIs</title>
+    <link href="../fonts.css" rel="stylesheet" />
+    <link href="../general-page.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>URL e Requisições</h1>
+    <p>Para consumir as APIs do Sienge Plataforma, cada requisição precisa ser direcionada à URL correta, que é composta pelo <strong>subdomínio do seu cliente Sienge</strong> mais o caminho do recurso desejado.</p>
+<p>O subdomínio identifica qual ambiente Sienge receberá a requisição — ele é o mesmo prefixo usado no acesso ao sistema web. Por exemplo, se sua empresa acessa o Sienge em <code>minhaempresa.sienge.com.br</code>, o subdomínio é <code>minhaempresa</code>.</p>
+<p>O padrão geral da URL é:</p>
+<pre><code>https://api.sienge.com.br/{subdominio-do-cliente}/public/api/{versão-da-api}/{recurso}
+</code></pre>
+<p><strong>Exemplo com valores reais:</strong></p>
+<ul>
+<li><strong>Subdomínio do Cliente</strong>: <code>minhaempresa</code></li>
+<li><strong>Versão da API</strong>: <code>v1</code></li>
+<li><strong>Recurso</strong>: <code>examples</code></li>
+</ul>
+<p><strong>URL Final</strong>: <code>https://api.sienge.com.br/minhaempresa/public/api/v1/examples</code></p>
+<blockquote>
+<p>As APIs <strong>Bulk Data</strong> utilizam um caminho diferente, com o prefixo <code>bulk-data</code>:</p>
+<p><code>https://api.sienge.com.br/minhaempresa/public/api/bulk-data/v1/examples</code></p>
+</blockquote>
+<p>Utilize sempre HTTPS para garantir a segurança das informações transmitidas.</p>
+
+  </body>
+</html>

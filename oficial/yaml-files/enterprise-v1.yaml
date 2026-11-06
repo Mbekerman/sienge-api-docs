@@ -1,0 +1,1365 @@
+openapi: 3.1.1
+info:
+  title: Empreendimentos (Obras)
+  version: 1.24.0
+  description: API para listagem de empreendimentos
+paths:
+  /enterprises/{enterpriseId}:
+    get:
+      tags:
+        - Empreendimentos
+      summary: Busca o empreendimento no Sienge
+      description: >-
+        Retorna os detalhes completos de um empreendimento específico
+        identificado por enterpriseId. (REST)
+      operationId: getEnterprisesId
+      x-section: Empreendimentos
+      x-original-file: enterprise-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - name: enterpriseId
+          in: path
+          description: ID do empreendimento (ID) a ser consultado.
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: >-
+            Retorna os detalhes do empreendimento (DetailedEnterprise) para o ID
+            informado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailedEnterprise'
+              example:
+                id: 123
+                name: Empreendimento Alpha
+                commercialName: Alpha Residence
+                enterpriseObservation: Observação do empreendimento
+                cnpj: '12345678000199'
+                type: '1'
+                adress: Av. Central, 1000 - Centro - Florianópolis/SC
+                creationDate: '2023-05-10'
+                modificationDate: '2023-06-01'
+                createdBy: usuario.criador
+                modifiedBy: usuario.editor
+                companyId: 10
+                companyName: Empresa Exemplo SA
+                costDatabaseId: 5
+                costDatabaseDescription: SINAPI 2024
+                buildingTypeId: 2
+                buildingTypeDescription: Edifício Residencial
+                addressDetails:
+                  streetName: Av. Central
+                  number: '1000'
+                  complement: Bloco A
+                  neighborhood: Centro
+                  city: Florianópolis
+                  state: SC
+                  zipCode: 88000-000
+                buildingCostEstimationStatus: OPENED
+                buildingStatus: COST_ESTIMATING
+                buildingAppropriationLevel: '4'
+                buildingEnabledForIntegration: true
+                costCenterStatus: ACTIVE
+                constructionDetails:
+                  technicalManager: Eng. João Silva
+                  numberOfFloors: 12
+                  totalArea: 15000.5
+                  landArea: 3000
+                  startDate: '2024-01-15'
+                  endDate: '2025-12-20'
+                salesDetails:
+                  keysDelivery: '2025-12-31'
+                  generalSalesValue: 120000000
+                  layout: V
+                  realEstateRegistrationNumber: '12345'
+                  realEstateRegistrationDigit: '7'
+                  nationalRealEstateCode: BR-0001
+                  realEstateUse: '1'
+                  realEstateType: '0'
+                  recordRealEstateNumber: REG-2024-0001
+                  recordRealEstateDate: '2024-03-10'
+                  recordSeggregateEstateNumber: PA-2024-0002
+                  recordSeggregateEstateDate: '2024-04-05'
+                  geographicUrl: https://maps.example/alpha
+                  commomAreas: Piscina, Salão de festas
+                  realEstateUrl: https://alpha.example.com
+                  realEstateLocation: Bairro Central
+                  realEstateClassification: Alto padrão
+                  realEstateTargetAudience: Famílias
+                  account: Banco 123 Ag. 0001 C/C 12345-6
+                  validationPartner:
+                    cnpj: '11222333000144'
+                    realEstateSales: S
+                    realEstateBankMovement: S
+                    realEstateAccountancy: 'N'
+                    realEstateBuilding: S
+                    realEstateLocalStock: 'N'
+                accountable:
+                  name: Usuário Sienge
+                  cpf: '12345628963'
+                  phone: (11)33337899
+                  cellphone: (11)99997899
+                  email: email@sienge.com
+                associatedBuilding:
+                  id: 12
+                  description: Obra Associada Sienge
+                associatedCostCenters:
+                  - id: 15
+                    name: Centro de Custo Associado
+                    companyId: 13
+                    companyName: Empresa
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /enterprises:
+    get:
+      tags:
+        - Empreendimentos
+      summary: Busca uma lista de empreendimentos
+      description: >-
+        Retorna uma lista paginada de empreendimentos conforme filtros
+        informados. (REST)
+      operationId: getEnterprises
+      x-section: Empreendimentos
+      x-original-file: enterprise-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - name: companyId
+          in: query
+          description: Código empresa do centro de custo.
+          required: false
+          schema:
+            type: integer
+            example: 10
+        - name: type
+          in: query
+          description: |-
+            Filtro pelo tipo de empreendimento. Valores possíveis:
+
+
+
+
+              - 1: Obra e Centro de custo
+              - 2: Obra
+              - 3: Centro de custo
+              - 4: Centro de custo associado a obra
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 1
+              - 2
+              - 3
+              - 4
+            example: 1
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+        - name: receivableRegister
+          in: query
+          description: Filtro de registro de recebíveis.
+          required: false
+          schema:
+            type: string
+            enum:
+              - B3
+              - CERC
+            example: B3
+        - name: onlyBuildingsEnabledForIntegration
+          in: query
+          description: Retornar apenas obras habilitadas para integração orçamentária
+          required: false
+          schema:
+            type: boolean
+            default: false
+            example: false
+      responses:
+        '200':
+          description: >-
+            Retorna uma lista paginada de empreendimentos, com metadados e
+            resultados (GetResponseDocument).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseDocument'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /enterprises/{enterpriseId}/groupings:
+    get:
+      tags:
+        - Agrupamentos de unidades
+      summary: Busca valores dos agrupamentos no Sienge
+      description: >-
+        Retorna os agrupamentos de unidades e seus valores associados para um
+        empreendimento. (REST)
+      operationId: getEnterpriseGroupings
+      x-section: Agrupamentos de unidades
+      x-original-file: enterprise-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - name: enterpriseId
+          in: path
+          description: >-
+            ID do empreendimento para o qual os agrupamentos devem ser
+            retornados.
+          required: true
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Unidade encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnitGroupings'
+              example:
+                - unitGroupingDescription: Torre A
+                  unitGroupingId: 101
+                  enterpriseId: 123
+                  orderNumber: 1
+                  valueGroupings:
+                    - expectedOccupancyDate: '2025-12-01'
+                      legalOccupancyDate: '2026-01-15'
+                      realOccupancyDate: '2026-02-10'
+                      releaseDate: '2024-03-01'
+                      dateEvolutionWork: '2025-08-01'
+                      numberFloors: 20
+                      orderNumber: 1
+                      workProgressPercentage: 35.5
+                      valueGroupingDescription: 1
+                    - expectedOccupancyDate: '2026-06-01'
+                      legalOccupancyDate: '2026-06-15'
+                      realOccupancyDate: '2026-07-10'
+                      releaseDate: '2024-09-01'
+                      dateEvolutionWork: '2026-01-01'
+                      numberFloors: 20
+                      orderNumber: 2
+                      workProgressPercentage: 40
+                      valueGroupingDescription: 2
+                - unitGroupingDescription: Torre B
+                  unitGroupingId: 102
+                  enterpriseId: 123
+                  orderNumber: 2
+                  valueGroupings:
+                    - expectedOccupancyDate: '2025-10-01'
+                      legalOccupancyDate: '2025-11-01'
+                      realOccupancyDate: '2026-01-05'
+                      releaseDate: '2024-02-15'
+                      dateEvolutionWork: '2025-07-01'
+                      numberFloors: 18
+                      orderNumber: 1
+                      workProgressPercentage: 28
+                      valueGroupingDescription: 1
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    DetailedEnterprise:
+      description: >-
+        Representa um empreendimento com informações detalhadas adicionais.
+        Estende o schema Enterprise adicionando dados de endereço, obra, vendas,
+        responsável e associações (obra e centros de custo).
+      allOf:
+        - $ref: '#/components/schemas/Enterprise'
+        - type: object
+          properties:
+            addressDetails:
+              type: object
+              description: Detalhes do endereço
+              properties:
+                streetName:
+                  type: string
+                  description: Logradouro do endereço
+                  example: Av. Central
+                number:
+                  type: string
+                  description: Número do endereço
+                  example: '1000'
+                complement:
+                  type: string
+                  description: Complemento do endereço
+                  example: Bloco A
+                neighborhood:
+                  type: string
+                  description: Bairro do endereço
+                  example: Centro
+                city:
+                  type: string
+                  description: Cidade do endereço
+                  example: Florianópolis
+                state:
+                  type: string
+                  description: Sigla do estado do endereço
+                  example: SC
+                zipCode:
+                  type: string
+                  description: CEP do endereço
+                  example: 88000-000
+            buildingCostEstimationStatus:
+              type: string
+              description: |-
+                Situação do orçamento, em que:
+
+
+
+
+                  - 'OPENED': Aberto
+                  - 'CLOSED': Fechado
+              enum:
+                - OPENED
+                - CLOSED
+              example: OPENED
+            buildingStatus:
+              type: string
+              description: |-
+                Situação da obra, em que:
+
+
+
+
+                  - 'COST_ESTIMATING': Orçamento
+                  - 'IN_PROGRESS': Em andamento
+                  - 'FINISHED_WITH_FINANCIAL_PENDENCIES': Encerrada com pendências financeiras
+                  - 'FINISHED_WITHOUT_FINANCIAL_PENDENCIES': Encerrada sem pendências
+              enum:
+                - COST_ESTIMATING
+                - IN_PROGRESS
+                - FINISHED_WITH_FINANCIAL_PENDENCIES
+                - FINISHED_WITHOUT_FINANCIAL_PENDENCIES
+              example: COST_ESTIMATING
+            buildingAppropriationLevel:
+              type: string
+              description: |-
+                Nível de apropriação da obra, em que:
+
+
+
+
+                  - 0: Obra
+                  - 1: Célula construtiva
+                  - 2: Etapa
+                  - 3: Subetapa
+                  - 4: Serviço
+              enum:
+                - '0'
+                - '1'
+                - '2'
+                - '3'
+                - '4'
+              example: '4'
+            buildingEnabledForIntegration:
+              type: boolean
+              description: Obra habilitada para integração orçamentária
+              example: true
+            costCenterStatus:
+              type: string
+              description: >-
+                Situação do centro de custos. Será nulo quando o tipo do
+                empreendimento for "Obra e Centro de custo" ou "Obra". Pode ser:
+
+
+
+
+                  - ACTIVE: Ativo
+                  - INACTIVE_WITH_PENDENCIES: Inativo com pendência
+                  - INACTIVE_WITHOUT_PENDENCIES: Inativo sem pendência
+              example: ACTIVE
+              enum:
+                - ACTIVE
+                - INACTIVE_WITH_PENDENCIES
+                - INACTIVE_WITHOUT_PENDENCIES
+            constructionDetails:
+              type: object
+              description: Detalhes da obra
+              properties:
+                technicalManager:
+                  type: string
+                  description: Nome do responsável técnico
+                  example: Eng. João Silva
+                numberOfFloors:
+                  type: integer
+                  description: Número de pavimentos
+                  example: 12
+                totalArea:
+                  type: number
+                  description: Área total
+                  example: 15000.5
+                landArea:
+                  type: number
+                  description: Área do terreno
+                  example: 3000
+                startDate:
+                  type: string
+                  format: date
+                  description: Data de início da obra
+                  example: '2024-01-15'
+                endDate:
+                  type: string
+                  format: date
+                  description: Data de fim da obra
+                  example: '2025-12-20'
+            salesDetails:
+              type: object
+              description: Detalhes sobre as vendas do empreendimento
+              properties:
+                keysDelivery:
+                  type: string
+                  format: date
+                  description: Data de entrega das chaves.
+                  example: '2025-12-31'
+                generalSalesValue:
+                  type: number
+                  description: Valor geral de vendas
+                  example: 120000000
+                layout:
+                  type: string
+                  description: |-
+                    Orientação do empreendimento, em que:
+
+
+
+
+                      - H: Horizontal
+                      - V: Vertical
+                  enum:
+                    - H
+                    - V
+                  example: V
+                realEstateRegistrationNumber:
+                  type: string
+                  description: Número da matrícula do empreendimento
+                  example: '12345'
+                realEstateRegistrationDigit:
+                  type: string
+                  description: Dígito da matrícula do empreendimento
+                  example: '7'
+                nationalRealEstateCode:
+                  type: string
+                  description: CNS do cartório
+                  example: BR-0001
+                realEstateUse:
+                  type: string
+                  description: |-
+                    Tipo de uso do empreendimento, em que:
+
+
+
+
+                      - 0: Não Residencial
+                      - 1: Residencial
+                      - 2: Misto
+                  enum:
+                    - '0'
+                    - '1'
+                    - '2'
+                  example: '1'
+                realEstateType:
+                  type: string
+                  description: |-
+                    Tipo de implantação do empreendimento, em que:
+
+
+
+
+                      - 0: Condomínio
+                      - 1: Aberto
+                  enum:
+                    - '0'
+                    - '1'
+                  example: '0'
+                recordRealEstateNumber:
+                  type: string
+                  description: >-
+                    Número do registro de averbação da incorporação do
+                    empreendimento
+                  example: REG-2024-0001
+                recordRealEstateDate:
+                  type: string
+                  format: date
+                  description: >-
+                    Data do registro de averbação da incorporação do
+                    empreendimento
+                  example: '2024-03-10'
+                recordSeggregateEstateNumber:
+                  type: string
+                  description: >-
+                    Número do registro de averbação do patrimônio de afetação do
+                    empreendimento
+                  example: PA-2024-0002
+                recordSeggregateEstateDate:
+                  type: string
+                  format: date
+                  description: >-
+                    Data do registro de averbação do patrimônio de afetação do
+                    empreendimento
+                  example: '2024-04-05'
+                geographicUrl:
+                  type: string
+                  description: Link do local geográfico do empreendimento
+                  example: https://maps.example/alpha
+                commomAreas:
+                  type: string
+                  description: Descrição das áreas comuns do empreendimento
+                  example: Piscina, Salão de festas
+                realEstateUrl:
+                  type: string
+                  description: Url do site do empreendimento
+                  example: https://alpha.example.com
+                realEstateLocation:
+                  type: string
+                  description: Local de implantação do empreendimento
+                  example: Bairro Central
+                realEstateClassification:
+                  type: string
+                  description: Descrição da classificação do empreendimento
+                  example: Alto padrão
+                realEstateTargetAudience:
+                  type: string
+                  description: Descrição do público alvo do empreendimento
+                  example: Famílias
+                account:
+                  type: string
+                  description: Domícilio bancário do empreendimento
+                  example: Banco 123 Ag. 0001 C/C 12345-6
+                validationPartner:
+                  type: object
+                  description: Dados da validação do parceiro
+                  properties:
+                    cnpj:
+                      type: string
+                      description: CNPJ do parceiro de validação
+                      example: '11222333000144'
+                    realEstateSales:
+                      type: string
+                      description: >-
+                        Indica se possui o tipo de validação de formalização das
+                        vendas e suas movimentações, em que:
+
+
+
+
+                          - S: Sim
+                          - N: Não
+                      enum:
+                        - S
+                        - 'N'
+                      example: S
+                    realEstateBankMovement:
+                      type: string
+                      description: >-
+                        Indica se possui o tipo de validação de conciliação e
+                        cobrança, em que:
+
+
+
+
+                          - S: Sim
+                          - N: Não
+                      enum:
+                        - S
+                        - 'N'
+                      example: S
+                    realEstateAccountancy:
+                      type: string
+                      description: >-
+                        Indica se possui o tipo de validação de contabilidade,
+                        em que:
+
+
+
+
+                          - S: Sim
+                          - N: Não
+                      enum:
+                        - S
+                        - 'N'
+                      example: 'N'
+                    realEstateBuilding:
+                      type: string
+                      description: |-
+                        Indica se possui o tipo de validação de obra, em que:
+
+
+
+
+                          - S: Sim
+                          - N: Não
+                      enum:
+                        - S
+                        - 'N'
+                      example: S
+                    realEstateLocalStock:
+                      type: string
+                      description: >-
+                        Indica se possui o tipo de validação de estoque físico,
+                        em que:
+
+
+
+
+                          - S: Sim
+                          - N: Não
+                      enum:
+                        - S
+                        - 'N'
+                      example: 'N'
+            accountable:
+              type: object
+              description: Contato
+              properties:
+                name:
+                  type: string
+                  description: Nome do responsável
+                  example: Usuário Sienge
+                cpf:
+                  type: string
+                  description: CPF do responsável
+                  example: '12345628963'
+                phone:
+                  type: string
+                  description: Telefone do responsável
+                  example: (11)33337899
+                cellphone:
+                  type: string
+                  description: Celular do responsável
+                  example: (11)99997899
+                email:
+                  type: string
+                  description: E-mail do responsável
+                  example: email@sienge.com
+            associatedBuilding:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Código da obra associada
+                  example: 12
+                description:
+                  type: string
+                  description: Descrição da obra associada
+                  example: Obra Associada Sienge
+            associatedCostCenters:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Código do centro de custo associado
+                    example: 15
+                  name:
+                    type: string
+                    description: Descrição do centro de custo associado
+                    example: Centro de Custo Associado
+                  companyId:
+                    type: integer
+                    description: >-
+                      Identificador da empresa (ID) à qual o centro de custo
+                      está vinculado
+                    example: 13
+                  companyName:
+                    type: string
+                    description: Descrição da empresa
+                    example: Empresa
+    GetResponseDocument:
+      description: >-
+        Documento de resposta para listagem de empreendimentos, contendo
+        metadados de paginação e a lista de resultados.
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de Empresas retornadas como resultado da pesquisa
+          items:
+            $ref: '#/components/schemas/Enterprise'
+          example:
+            - id: 10
+              name: Empreendimento Alpha
+              commercialName: Alpha Residence
+              enterpriseObservation: Observação do empreendimento
+              cnpj: 12.345.678/0001-90
+              type: '1'
+              adress: Rua Exemplo, 123 - Centro, Florianópolis/SC
+              creationDate: '2018-01-01'
+              modificationDate: '2025-08-01'
+              createdBy: usuarioA
+              modifiedBy: usuarioB
+              companyId: 10
+              companyName: Empresa Exemplo SA
+              costDatabaseId: 5
+              costDatabaseDescription: SINAPI 2024
+              buildingTypeId: 2
+              buildingTypeDescription: Edifício Residencial
+    UnitGroupings:
+      type: array
+      description: Descrição dos agrupamentos de unidade
+      items:
+        type: object
+        properties:
+          unitGroupingDescription:
+            type: string
+            description: Descrição do agrupamento
+            example: Torre A
+          unitGroupingId:
+            type: integer
+            format: int32
+            description: ID de agrupamento de unidade
+            example: 101
+          enterpriseId:
+            type: integer
+            format: int32
+            description: >-
+              ID do empreendimento ao qual este agrupamento de unidades está
+              associado
+            example: 123
+          orderNumber:
+            type: integer
+            format: int32
+            description: Ordem do agrupamento dentro do empreendimento
+            example: 1
+          valueGroupings:
+            type: array
+            description: Detalhes do valor de agrupamento
+            items:
+              $ref: '#/components/schemas/ValueGrouping'
+    CostCenterEvent:
+      description: Evento relacionado a centro de custo.
+      type: object
+      required:
+        - costCenterId
+      properties:
+        costCenterId:
+          description: Código do centro de custo
+          example: 123
+          format: int32
+          type: integer
+    EnterpriseIdUpdatedEvent:
+      description: Evento de alteração do código do empreendimento.
+      type: object
+      required:
+        - previousEnterpriseId
+        - currentEnterpriseId
+        - updatedAt
+        - user
+      properties:
+        previousEnterpriseId:
+          description: Código do empreendimento antes da alteração
+          type: integer
+          format: int32
+          minimum: 0
+          example: 10
+        currentEnterpriseId:
+          description: Código do empreendimento após a alteração
+          type: integer
+          format: int32
+          minimum: 0
+          example: 11
+        updatedAt:
+          description: Momento (data e hora) em que a alteração foi efetivada
+          type: string
+          format: date-time
+          example: '2025-01-01T12:00:00Z'
+        user:
+          description: Identificador do usuário que realizou a alteração
+          type: string
+          example: usuario.sienge
+    BuildingStatusUpdatedEvent:
+      description: Evento de alteração da situação da obra.
+      type: object
+      required:
+        - buildingId
+        - updatedAt
+      properties:
+        buildingId:
+          description: Código da obra
+          example: 100
+          format: int32
+          minimum: 0
+          type: integer
+        updatedAt:
+          description: Data e hora da alteração da situação da obra
+          type: string
+          format: date-time
+          example: '2025-01-01T12:00:00Z'
+    BuildingCostEstimationStatusUpdatedEvent:
+      description: Evento de alteração da situação do orçamento da obra.
+      type: object
+      required:
+        - buildingId
+        - updatedAt
+      properties:
+        buildingId:
+          description: Código da obra
+          example: 100
+          format: int32
+          minimum: 0
+          type: integer
+        updatedAt:
+          description: Timestamp da alteração da situação do orçamento
+          type: string
+          format: date-time
+          example: '2025-01-01T12:00:00Z'
+    Enterprise:
+      description: >-
+        Representa um empreendimento (obra e/ou centro de custo) com seus dados
+        principais.
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: ID do empreendimento (ID) no cadastro do Sienge
+          example: 10
+        name:
+          type: string
+          description: Nome do empreendimento
+          example: Empreendimento Alpha
+        commercialName:
+          type: string
+          description: Nome comercial do empreendimento
+          example: Alpha Residence
+        enterpriseObservation:
+          type: string
+          description: Observação do empreendimento
+          example: Observação do empreendimento
+        cnpj:
+          type: string
+          description: CNPJ do empreendimento
+          example: 12.345.678/0001-90
+        type:
+          type: string
+          description: |-
+            Tipo do empreendimento. Valores possíveis:
+
+
+
+
+              - 1: Obra e Centro de custo
+              - 2: Obra
+              - 3: Centro de custo
+              - 4: Centro de custo associado a obra
+          enum:
+            - '1'
+            - '2'
+            - '3'
+            - '4'
+          example: '1'
+        adress:
+          type: string
+          description: Endereço completo do empreendimento
+          example: Rua Exemplo, 123 - Centro, Florianópolis/SC
+        creationDate:
+          type: string
+          format: date
+          description: Data de cadastramento
+          example: '2018-01-01'
+        modificationDate:
+          type: string
+          format: date
+          description: Data da última alteração do cadastro
+          example: '2025-08-01'
+        createdBy:
+          type: string
+          description: Usuário que cadastrou o empreendimento
+          example: usuarioA
+        modifiedBy:
+          type: string
+          description: Último usuário que alterou o cadastro do empreendimento
+          example: usuarioB
+        companyId:
+          type: integer
+          format: int32
+          description: Identificador da empresa (ID) à qual o empreendimento pertence
+          example: 10
+        companyName:
+          type: string
+          description: Nome da empresa
+          example: Empresa Exemplo SA
+        costDatabaseId:
+          type: integer
+          format: int32
+          description: Código da tabela do custos unitários
+          example: 5
+        costDatabaseDescription:
+          type: string
+          description: Descrição da tabela do custos unitários
+          example: SINAPI 2024
+        buildingTypeId:
+          type: integer
+          format: int32
+          description: Código do Tipo de obra
+          example: 2
+        buildingTypeDescription:
+          type: string
+          description: Descrição do tipo de obra
+          example: Edifício Residencial
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    ValueGrouping:
+      type: object
+      description: Valores do agrupamento
+      properties:
+        expectedOccupancyDate:
+          type: string
+          format: date
+          description: Data de Ocupação Prevista
+          example: '2025-12-01'
+        legalOccupancyDate:
+          type: string
+          format: date
+          description: Data de ocupação legal
+          example: '2026-01-15'
+        realOccupancyDate:
+          type: string
+          format: date
+          description: Data de ocupação real
+          example: '2026-02-10'
+        releaseDate:
+          type: string
+          format: date
+          description: Data do lançamento
+          example: '2024-03-01'
+        dateEvolutionWork:
+          type: string
+          format: date
+          description: Data base da evolução da obra
+          example: '2025-08-01'
+        numberFloors:
+          type: integer
+          format: int32
+          description: Quantidade de Pavimentos
+          example: 20
+        orderNumber:
+          type: integer
+          format: int32
+          description: Ordem do valor dentro do agrupamento de unidades
+          example: 1
+        workProgressPercentage:
+          type: number
+          format: double
+          description: Evolução total da obra
+          example: 35.5
+        valueGroupingDescription:
+          type: integer
+          format: int32
+          description: Descrição do valor de agrupamento
+          example: 1
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1
+webhooks:
+  COST_CENTER_CREATED:
+    post:
+      tags:
+        - Webhooks - Empreendimentos (Obras)
+      operationId: webhookCostCenterCreated
+      summary: Webhook de centro de custo criado
+      description: Disparado quando um centro de custo é criado.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CostCenterEvent'
+      responses:
+        2XX:
+          description: O evento COST_CENTER_CREATED foi recebido com sucesso
+      x-audience:
+        - public
+  COST_CENTER_UPDATED:
+    post:
+      tags:
+        - Webhooks - Empreendimentos (Obras)
+      operationId: webhookCostCenterUpdated
+      summary: Webhook de centro de custo atualizado
+      description: >-
+        Disparado quando há atualização na aba Centro de Custo do cadastro do
+        empreendimento.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CostCenterEvent'
+      responses:
+        2XX:
+          description: O evento COST_CENTER_UPDATED foi recebido com sucesso
+      x-audience:
+        - public
+  COST_CENTER_REMOVED:
+    post:
+      tags:
+        - Webhooks - Empreendimentos (Obras)
+      operationId: webhookCostCenterRemoved
+      summary: Webhook de centro de custo removido
+      description: Disparado quando um centro de custo é removido.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CostCenterEvent'
+      responses:
+        2XX:
+          description: O evento COST_CENTER_REMOVED foi recebido com sucesso
+      x-audience:
+        - public
+  ENTERPRISE_ID_UPDATED:
+    post:
+      tags:
+        - Webhooks - Empreendimentos (Obras)
+      operationId: webhookEnterpriseIdUpdated
+      summary: Webhook de código do empreendimento alterado
+      description: Disparado quando o código do empreendimento é alterado.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnterpriseIdUpdatedEvent'
+      responses:
+        2XX:
+          description: O evento ENTERPRISE_ID_UPDATED foi recebido com sucesso
+      x-audience:
+        - public
+  BUILDING_STATUS_UPDATED:
+    post:
+      tags:
+        - Webhooks - Empreendimentos (Obras)
+      operationId: webhookBuildingStatusUpdated
+      summary: Webhook de situação da obra alterada
+      description: Disparado quando a situação da obra é alterada.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildingStatusUpdatedEvent'
+      responses:
+        2XX:
+          description: O evento BUILDING_STATUS_UPDATED foi recebido com sucesso
+      x-audience:
+        - public
+  BUILDING_COST_ESTIMATION_STATUS_UPDATED:
+    post:
+      tags:
+        - Webhooks - Empreendimentos (Obras)
+      operationId: webhookBuildingCostEstimationStatusUpdated
+      summary: Webhook de situação do orçamento alterada
+      description: Disparado quando a situação do orçamento é alterada.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildingCostEstimationStatusUpdatedEvent'
+      responses:
+        2XX:
+          description: >-
+            O evento BUILDING_COST_ESTIMATION_STATUS_UPDATED foi recebido com
+            sucesso
+      x-audience:
+        - public

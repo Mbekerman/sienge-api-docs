@@ -1,0 +1,2195 @@
+openapi: 3.1.1
+info:
+  title: Notas Fiscais Eletrônicas de Produto
+  version: 1.24.0
+  description: >-
+    API REST que expõe os dados das Notas Fiscais Eletrônicas recebidas no
+    sistema por meio dos processos de importação via SEFAZ ou upload manual de
+    arquivos
+paths:
+  /nfes:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Notas Fiscais
+      x-audience:
+        - public
+      tags:
+        - Notas Fiscais
+      summary: Consulta notas fiscais emitidas por período
+      operationId: loadAllNfeDocuments
+      parameters:
+        - $ref: '#/components/parameters/StartDateQueryRequired'
+          description: >-
+            Data de início da busca (data emissão) no formato: yyyy-MM-dd.
+            Exemplo: 2016-08-13
+        - $ref: '#/components/parameters/EndDateQueryRequired'
+          description: >-
+            Data de fim da busca (data emissão) no formato: yyyy-MM-dd. Exemplo:
+            2017-08-13
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseNfeDocuments'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna as notas fiscais eletrônicas de produto emitidas dentro do
+        intervalo definido por startDate e endDate, ordenadas por data de
+        emissão. É possível paginar os resultados utilizando os parâmetros limit
+        e offset. O formato esperado das datas é yyyy-MM-dd. (REST)
+  /nfes/{nfeKey}:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Notas Fiscais
+      x-audience:
+        - public
+      tags:
+        - Notas Fiscais
+      summary: Consulta nota fiscal pela chave de acesso
+      operationId: loadNfesByNfeKey
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave de acesso da nfe de 44 caracteres
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operação realizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Documents'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna os dados completos de uma nota fiscal eletrônica de produto a
+        partir da sua chave de acesso de 44 dígitos. A chave deve ser informada
+        como parâmetro de path. (REST)
+  /nfes/{nfeKey}/issuers-recipients:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Notas Fiscais
+      x-audience:
+        - public
+      tags:
+        - Notas Fiscais
+      summary: Consulta emitente e destinatário da nota
+      operationId: loadIssuersAndRecipients
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave de acesso da nfe com 44 caracteres
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso na operação de retorno dos dados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Emitente'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna os dados do emitente e do destinatário de uma Nota Fiscal
+        Eletrônica a partir da chave de acesso fornecida no path. Essa operação
+        é útil para identificar as partes envolvidas em uma transação fiscal
+        registrada no sistema. (REST)
+  /nfes/{nfeKey}/payments:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Notas Fiscais
+      x-audience:
+        - public
+      tags:
+        - Notas Fiscais
+      summary: Consulta formas de pagamento da nota
+      operationId: loadPayments
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave de acesso contendo 44 caracteres
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Operação conluida com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponsePagamento'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna as formas de pagamento associadas a uma Nota Fiscal Eletrônica,
+        identificada por sua chave de acesso. (REST)
+  /nfes/{nfeKey}/deliveries:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Notas Fiscais
+      x-audience:
+        - public
+      tags:
+        - Notas Fiscais
+      summary: Consulta locais de entrega e retirada da nota
+      operationId: loadDeliveries
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave de acesso da Nota Fiscal Eletronica contendo 44 caracteres
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Operação bem-sucedida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntregaRetirada'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna os dados dos locais de entrega e de retirada vinculados a uma
+        Nota Fiscal Eletrônica, identificada pela chave de acesso informada no
+        caminho da requisição. (REST)
+  /nfes/{nfeKey}/linked-nfes:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Notas Fiscais
+      x-audience:
+        - public
+      tags:
+        - Notas Fiscais
+      summary: Consulta notas fiscais referenciadas pela nota
+      operationId: loadLinkedNfes
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave de acesso de 44 caracteres
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseNotasReferenciadas'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna as notas fiscais eletrônicas referenciadas pela nota
+        identificada pela chave de acesso informada no caminho da requisição.
+        (REST)
+  /nfes/{nfeKey}/icms:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Notas Fiscais
+      x-audience:
+        - public
+      tags:
+        - Notas Fiscais
+      summary: Consulta total do ICMS da nota fiscal
+      operationId: loadIcmsTotal
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave de acesso da nfe totalizadno 44 caracteres
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Requisição realizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IcmsTotal'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna os dados consolidados do ICMS total da Nota Fiscal Eletrônica
+        identificada pela chave de acesso fornecida. (REST)
+  /nfes/{nfeKey}/carriers:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Notas Fiscais
+      x-audience:
+        - public
+      tags:
+        - Notas Fiscais
+      summary: Consulta dados de transporte da nota fiscal
+      operationId: loadCarriers
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave da nfe contendo 44 caracteres
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Consulta de dados de transporte da nota fiscal realizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transporte'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna as informações de transporte vinculadas à Nota Fiscal
+        Eletrônica, como transportador, modalidade de frete, placa do veículo e
+        demais dados logísticos registrados. (REST)
+  /nfes/{nfeKey}/issqn:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Notas Fiscais
+      x-audience:
+        - public
+      tags:
+        - Notas Fiscais
+      summary: Consulta total de ISSQN da nota fiscal
+      operationId: loadIssqnTotal
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave da nfe com 44 caracteres
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Conclusão bem-sucedida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IssqnTotal'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna os dados consolidados do ISSQN total da Nota Fiscal Eletrônica.
+        As informações incluem valores de base de cálculo, descontos, retenções
+        e regime tributário. (REST)
+  /nfes/{nfeKey}/itens:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Itens
+      x-audience:
+        - public
+      tags:
+        - Itens
+      summary: Consulta itens/produtos da nota fiscal eletrônica
+      operationId: loadAllItens
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave da nota fiscal eletronica com 44 caracteres
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sucesso na requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseProduct'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna a lista de itens ou produtos informados na Nota Fiscal
+        Eletrônica. (REST)
+  /nfes/{nfeKey}/itens/{itemId}/ipi:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Itens
+      x-audience:
+        - public
+      tags:
+        - Itens
+      summary: Retorna os dados de IPI de um item da nota fiscal
+      operationId: loadIpi
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave de acesso da nota fiscal eletronica
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          in: path
+          description: Código identificador do produto/serviço
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sucesso na operação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdutosIpi'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna as informações do Imposto sobre Produtos Industrializados (IPI)
+        referentes a um produto ou serviço específico presente em uma Nota
+        Fiscal Eletrônica identificada pela chave de acesso. (REST)
+  /nfes/{nfeKey}/itens/{itemId}/pis-cofins:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Itens
+      x-audience:
+        - public
+      tags:
+        - Itens
+      summary: Consulta os dados de PIS/COFINS de um item da nota fiscal
+      operationId: loadPisCofins
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave da nota contendo 44 caracteres
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          in: path
+          description: Código identificador do produto ou serviço
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Retornado corretamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdutosPis'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna as informações dos tributos PIS e COFINS referentes a um produto
+        ou serviço específico presente em uma Nota Fiscal Eletrônica,
+        identificado pela chave de acesso e código do item. (REST)
+  /nfes/{nfeKey}/itens/{itemId}/simplified-icms:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Itens
+      x-audience:
+        - public
+      tags:
+        - Itens
+      summary: Consulta os dados de ICMS de um item da nota fiscal
+      operationId: loadSimplifiedIcms
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave de acesso da nfe
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          in: path
+          description: Código de identificação do produto/serviço
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dados retornados com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdutosIcmssn'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna as informações de ICMS aplicável ao Simples Nacional, referente
+        a um produto ou serviço específico de uma Nota Fiscal Eletrônica,
+        identificado pela chave de acesso e código do item. (REST)
+  /nfes/{nfeKey}/itens/{itemId}/issqn:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Itens
+      x-audience:
+        - public
+      tags:
+        - Itens
+      summary: Consulta os dados de ISS de um item da nota fiscal
+      operationId: loadIssqn
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave de acesso da nfe. Precisa ter 44 caracteres
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          in: path
+          description: Código de identificação do produto ou serviço
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Dados retornados com êxito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdutosIssqn'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna as informações do Imposto Sobre Serviços de Qualquer Natureza de
+        um produto ou serviço específico da Nota Fiscal Eletrônica, identificado
+        pela chave de acesso e código do item. (REST)
+  /nfes/{nfeKey}/itens/{itemId}/icms:
+    get:
+      x-original-file: nfe-api-v1.yaml
+      x-section: Itens
+      x-audience:
+        - public
+      tags:
+        - Itens
+      summary: Consulta o ICMS de determinado produto ou serviço
+      operationId: loadIcms
+      parameters:
+        - name: nfeKey
+          in: path
+          description: Chave de acesso da nfe contendo 44 caracteres
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          in: path
+          description: Código do produto/serviço
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Resultado disponível com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProdutosIcms'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna os detalhes do ICMS referentes ao produto ou serviço
+        especificado na nota fiscal, identificado pela chave de acesso e código
+        do item. (REST)
+components:
+  schemas:
+    GetResponseNfeDocuments:
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      description: Lista de Notas fiscais retornadas como resultado da pesquisa
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Documents'
+          example:
+            - codigoNumericoNota: 677
+              codigoUfEmitente: 42
+              chaveAcessoNota: '42170182845322000104557880000006331000006772'
+              naturezaDaOperacao: teste
+              codigoModeloNfe: 55
+              modeloDocumentoFiscal: NF-e emitida em substituição ao modelo 1 ou 1A
+              serieDocumentoFiscal: 788
+              numeroDocumentoFiscal: 633
+              dataEmissaoDocumentoFiscal: 25/12/2017
+              dataSaidaEntradaMercadoria: 25/12/2017
+              codigoTipoOperacao: 1
+              tipoOperacao: Saída
+              codigoDestinoOperacao: 1
+              localDestinoOperacao: Operação interna
+              codigoFinalidadeDeEmissao: 4
+              finalidadeEmissao: Devolução de mercadoria
+              codigoIndicadorPresencaComprador: 0
+              indicadorPresencaComprador: Não se aplica complementar ou de ajuste
+              codigoProcessoEmissaoNfe: 0
+              processoEmissao: Emissão de NF-e com aplicativo do contribuinte
+              codigoTipoAmbiente: 2
+              tipoAmbiente: Homologação
+              ufAtendeuSolicitacao: Santa Catarina
+              codigoStatusRespostaLote: 100
+              statusRespostaLote: Autorizado o uso da NF-e
+              codigoMunicipioFatoGerador: 100
+              municipioFatoGerador: Florianópolis
+              codigoOperacaoConsumidor: 0
+              links:
+                - rel: issuers-recipients
+                  href: >-
+                    /nfe/documents/42161182845322000104550300000000621660000100/issuers-recipients
+    Documents:
+      type: object
+      description: >-
+        Informação de Hypermedia contendo o link para outros endpoint associados
+        a nota
+      properties:
+        codigoNumericoNota:
+          type: integer
+          format: int64
+          example: 677
+        codigoUfEmitente:
+          type: integer
+          format: int64
+          example: 42
+        chaveAcessoNota:
+          type: string
+          example: '42170182845322000104557880000006331000006772'
+        naturezaDaOperacao:
+          type: string
+          example: teste
+        codigoModeloNfe:
+          type: integer
+          format: int64
+          example: 55
+        modeloDocumentoFiscal:
+          type: string
+          example: NF-e emitida em substituição ao modelo 1 ou 1A
+        serieDocumentoFiscal:
+          type: integer
+          format: int64
+          example: 788
+        numeroDocumentoFiscal:
+          type: integer
+          format: int64
+          example: 633
+        dataEmissaoDocumentoFiscal:
+          type: string
+          example: 25/12/2017
+        dataSaidaEntradaMercadoria:
+          type: string
+          example: 25/12/2017
+        codigoTipoOperacao:
+          $ref: '#/components/schemas/OperationTypeEnum'
+        tipoOperacao:
+          type: string
+          example: Saída
+        codigoDestinoOperacao:
+          $ref: '#/components/schemas/DestinationOperationEnum'
+        localDestinoOperacao:
+          type: string
+          example: Operação interna
+        codigoFinalidadeDeEmissao:
+          $ref: '#/components/schemas/EmissionPurposeEnum'
+        finalidadeEmissao:
+          type: string
+          example: Devolução de mercadoria
+        codigoIndicadorPresencaComprador:
+          $ref: '#/components/schemas/BuyerPresenceIndicatorEnum'
+        indicadorPresencaComprador:
+          type: string
+          example: Não se aplica complementar ou de ajuste
+        codigoProcessoEmissaoNfe:
+          $ref: '#/components/schemas/EmissionProcessEnum'
+        processoEmissao:
+          type: string
+          example: Emissão de NF-e com aplicativo do contribuinte
+        codigoTipoAmbiente:
+          $ref: '#/components/schemas/EnvironmentTypeEnum'
+        tipoAmbiente:
+          type: string
+          example: Homologação
+        ufAtendeuSolicitacao:
+          type: string
+          example: Santa Catarina
+        codigoStatusRespostaLote:
+          type: integer
+          format: int64
+          example: 100
+        statusRespostaLote:
+          type: string
+          example: Autorizado o uso da NF-e
+        codigoMunicipioFatoGerador:
+          type: integer
+          format: int64
+          example: 100
+        municipioFatoGerador:
+          type: string
+          example: Florianópolis
+        codigoOperacaoConsumidor:
+          type: integer
+          format: int64
+          example: 0
+        links:
+          $ref: '#/components/schemas/Links'
+    Emitente:
+      type: object
+      description: >-
+        Dados cadastrais do emitente e do destinatário da nota fiscal, incluindo
+        CNPJ, nome, município, UF, país e regime tributário do emitente
+      properties:
+        cnpjEmitente:
+          type: string
+          example: '77173354000162'
+        municipioEmitente:
+          type: string
+          example: Florianopolis
+        uf_emitente:
+          type: string
+          example: SC
+        paisEmitente:
+          type: string
+          example: Brasil
+        cnpjDestinatario:
+          type: string
+          example: '77173354000162'
+        municipioDestinatario:
+          type: string
+          example: Florianopolis
+        paisDestinatario:
+          type: string
+          example: Brasil
+        ufDestinatario:
+          type: string
+          example: SC
+        nomeEmitente:
+          type: string
+          example: Emitente nome
+        nomeDestinatario:
+          type: string
+          example: NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL
+        crtEmitente:
+          type: integer
+          format: int64
+          example: 3
+    GetResponsePagamento:
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      description: Lista de Notas fiscais retornadas no resultado da pesquisa
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pagamento'
+      example:
+        resultSetMetadata:
+          count: 1
+          limit: 10
+          offset: 0
+        results:
+          - codigoTipoPagamento: '03'
+            valorPagamento: 86
+            cnpjCredenciadoraCartao: '77173354000162'
+            codigoBandeiraCartao: '01'
+            numeroAutorizacaoOperacaoCartao: '123456789012'
+            tipoPagamento: Cartão de crédito
+            bandeiraCartao: Visa
+    EntregaRetirada:
+      type: object
+      description: >-
+        Dados cadastrais dos locais de entrega e retirada, incluindo CPF/CNPJ,
+        município, UF e país
+      properties:
+        cpfEntrega:
+          type: string
+          example: '83504612096'
+        cnpjEntrega:
+          type: string
+          example: '69914111000100'
+        municipioEntrega:
+          type: string
+          example: Porto Alegre
+        ufEntrega:
+          type: string
+          example: RS
+        paisEntrega:
+          type: string
+          example: Brasil
+        cpfRetirada:
+          type: string
+          example: '83504612096'
+        cnpjRetirada:
+          type: string
+          example: '54378644000147'
+        municipioRetirada;:
+          type: string
+          example: Porto Alegre
+        ufRetirada;:
+          type: string
+          example: RS
+        paisRetirada;:
+          type: string
+          example: Brasil
+    GetResponseNotasReferenciadas:
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      description: Lista de Notas fiscais retornadas para a pesquisa
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotasReferenciadas'
+      example:
+        resultSetMetadata:
+          count: 1
+          limit: 10
+          offset: 0
+        results:
+          - codigoUf: 42
+            mesAnoEmissao: 12/15
+            cnpj: '69914111000100'
+            codigoModalidade: 1
+            numeroSerie: 746
+            numeroNotaFIscal: 54654
+            uf: Santa Catarina
+    IcmsTotal:
+      type: object
+      description: >-
+        Valores totais relacionados ao ICMS, impostos relacionados, frete,
+        descontos e outras despesas de uma nota fiscal
+      properties:
+        valorBaseCalculoIcms:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 87.00'
+          example: 87
+        valorIcms:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 7.00'
+          example: 7
+        valorIcmsDesonerado:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 4.00'
+          example: 4
+        vlBaseCalculoSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 95.00'
+          example: 95
+        valorTotalIcmsST:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 12.00'
+          example: 12
+        totalProdutosEServiços:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 7.70'
+          example: 7.7
+        totalFrete:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 8.00'
+          example: 8
+        totalDesconto:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 9.00'
+          example: 9
+        totalImpostoImportacao:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 29.50'
+          example: 29.5
+        totalIpi:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 11.00'
+          example: 11
+        totalPis:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 12.50'
+          example: 12.5
+        valorCofins:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 13.00'
+          example: 13
+        outrasDespesas:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 14.00'
+          example: 14
+        totalNotaFiscal:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 15.00'
+          example: 15
+        totalTributosFederais:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 16.00'
+          example: 16
+    Transporte:
+      type: object
+      description: >-
+        Informações detalhadas sobre o serviço de transporte, incluindo dados do
+        transportador, valores do serviço, retenções fiscais, veículo e local do
+        fato gerador
+      properties:
+        codigoModalidadeFrete:
+          type: integer
+          format: int64
+          example: 0
+        cpnjTransportador:
+          type: string
+          example: '69914111000100'
+        cpfTransportador:
+          type: string
+          example: '83504612096'
+        nomeTransporatador:
+          type: string
+          example: Nome transportador
+        ieTransportador:
+          type: string
+          example: '4992448673'
+        enderecoTransportador:
+          type: string
+          example: Rua Exemplo
+        municipioTranportador:
+          type: string
+          example: Florianópolis
+        ufTransportador:
+          type: string
+          example: SC
+        valorServico:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 97.00'
+          example: 97
+        baseCalculoRetencaoIcms:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 127.00'
+          example: 127
+        aliquotaRetencao:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 12.90'
+          example: 12.9
+        valorIcmsRetido:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 91.00'
+          example: 91
+        cfopServicoTransporte:
+          type: integer
+          format: int64
+          example: 2233
+        codigoMunicipioFatoGeradorIcmsTransporte:
+          type: integer
+          format: int64
+          example: 3021
+        placaVeiculo:
+          type: string
+          example: EEE-AAADDD
+        uF:
+          type: string
+          example: SC
+        registroNacionalTransportadorCarga:
+          type: string
+          example: '1234556'
+        municipioFatoGerador:
+          type: string
+          example: Florianópolis
+        modalidadeFrete;:
+          type: string
+          example: Modalidade Exemplo
+    IssqnTotal:
+      type: object
+      description: >-
+        Valores totais e informações fiscais relacionadas ao ISS de qualquer
+        natureza, incluindo base de cálculo, descontos, retenções e regime
+        tributário
+      properties:
+        valorTotalServicos:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 101.00'
+          example: 101
+        totalBaseCalculoIss:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 22.00'
+          example: 22
+        valorTotalIss:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 23.00'
+          example: 23
+        valorTotalPis:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 24.00'
+          example: 24
+        valorTotalCofinsSobreServicos:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 25.00'
+          example: 25
+        dataPrestacaoServiço:
+          type: string
+          example: 25/10/2017
+        valorTotalDeducaoBaseCalculo:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 26.00'
+          example: 26
+        valorTotalOutrasRetencoes:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 27.00'
+          example: 27
+        valorTotalDescontoIncondicionado:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 28.00'
+          example: 28
+        valorTotalDescontoCondicionado:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 29.00'
+          example: 29
+        valorTotalRetencaoIss:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 30.00'
+          example: 30
+        codigoRegimeTributacao:
+          type: string
+          example: '123456'
+    GetResponseProduct:
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      description: Lista dos produtos retornados como resultado da pesquisa
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Produtos'
+      example:
+        resultSetMetadata:
+          count: 8
+          offset: 0
+          limit: 100
+        results:
+          - codigoProdutoOuServico: '123456123'
+            codigoEan: '123456'
+            descricaoProdutoOuServico: Descrição produto ou serviço
+            codigoNcm: 12345
+            exTipi: 12345
+            codigoFiscalDeOperacoes: 12345
+            unidadeComercial: Unidade comercial
+            quantidadeComercial: 1000.1234
+            valorUnitarioComercializacao: 1000.5678
+            valorTotalBrutoProdutosOuServicos: 31
+            codigoEanUnidadeTributavel: '123456'
+            unidadeTributavel: '123456'
+            quantidadeTributavel: 2000.1234
+            valorUnitarioTributacao: 32
+            valorTotalFrete: 33
+            valorTotalSeguro: 34
+            valorDesconto: 35
+            valorOutrasDespesas: 36
+            valorItemCompoeTotalNota: 1
+            valorTotalTributos: 37
+            numeroPedido: '123456'
+            numeroItemPedido: 1
+            links:
+              - rel: simplified-icms
+                href: >-
+                  /nfe/documents/42151282845322000104552350000009111000003156/products/62/simplified-icms
+    ProdutosIpi:
+      type: object
+      description: >-
+        Informações detalhadas sobre o IPI, incluindo códigos de situação
+        tributária, base de cálculo, valores e quantidades
+      properties:
+        codigoSituacaoTributaria:
+          type: string
+          example: '1234'
+        percentualIpi:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 38.00'
+          example: 38
+        valorBaseCalculo:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 39.00'
+          example: 39
+        valorIpi:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 40.00'
+          example: 40
+        qtUnid:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 41.00'
+          example: 41
+        classeEnquadramento:
+          type: string
+          example: Classe enquadramento
+    ProdutosPis:
+      type: object
+      description: >-
+        Informações detalhadas sobre os tributos PIS e COFINS, incluindo códigos
+        de situação tributária, bases de cálculo, alíquotas, valores e
+        quantidades vendidas
+      properties:
+        codigoSituacaoTributariaCofins:
+          type: string
+          example: '1234'
+        valorBaseCalculoCofins:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 42.00'
+          example: 42
+        aliquotaPercentualCofins:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 1.60'
+          example: 1.6
+        valorCofins:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 43.00'
+          example: 43
+        codigoSituacaoTributariaPis:
+          type: string
+          example: '1234'
+        valorBaseCalculoPis:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 44.00'
+          example: 44
+        aliquotaPercentualPis:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 0.60'
+          example: 0.6
+        valorPis:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 45.00'
+          example: 45
+        quantidadeVendidaPis:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 46.00'
+          example: 46
+        valorAliquotaPis:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 1,000.50'
+          example: 1000.5
+        quantidadeVendidaCofins:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 47.00'
+          example: 47
+        valorAliquotaCofins:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 3.00'
+          example: 3
+    ProdutosIcmssn:
+      type: object
+      description: >-
+        Informações detalhadas sobre o ICMS no regime do Simples Nacional,
+        incluindo bases de cálculo, alíquotas, créditos e valores retidos
+        referentes ao produto
+      properties:
+        codigoOrigem:
+          type: integer
+          format: int64
+          example: 1234
+        codigoSituacaoOperacao:
+          type: string
+          example: '10'
+        codigoModalidadeDeterminacaoBc:
+          type: integer
+          format: int64
+          example: 1
+        valorBaseCalculo:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 48.00'
+          example: 48
+        percentualReducaoBaseCalculo:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 2.40'
+          example: 2.4
+        aliquotaIcmsPercentual:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 18.00'
+          example: 18
+        codigoModalidadeDeterminacaoBcSt:
+          type: integer
+          format: int64
+          example: 2
+        peMargemVast:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 2.50'
+          example: 2.5
+        margemValorAdicionadoStPercentual:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 1.23'
+          example: 1
+        valorBaseCalculoSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 49.00'
+          example: 49
+        aliquotaIcmsSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 20.00'
+          example: 20
+        aliquotaAplicavelCalculoCredito:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 7.60'
+          example: 7.6
+        valorCreditoIcmsSn:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 50.00'
+          example: 50
+        valorIcmsst:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 51.00'
+          example: 51
+        percentualIcmsSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 19.50'
+          example: 19.5
+        percentualFcpStRetido:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 11.50'
+          example: 11.5
+        percentualSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 7.50'
+          example: 7.5
+        valorBaseCalculoFcpSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 53.00'
+          example: 53
+        valorFcpSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 54.00'
+          example: 54
+        valorBaseCalculoFcpRetido:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 55.00'
+          example: 55
+        valorBcIcmsRetido:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 56.00'
+          example: 56
+        valorFcpStRetido:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 57.00'
+          example: 57
+        valorIcmsSTRetido:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 58.00'
+          example: 58
+        valorIcms:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 59.00'
+          example: 59
+    ProdutosIssqn:
+      type: object
+      description: >-
+        Detalhes do ISS de qualquer natureza, incluindo bases de cálculo,
+        alíquotas, deduções, retenções e códigos fiscais relacionados
+      properties:
+        valorBaseCalculo:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 60.00'
+          example: 60
+        percentualAliquota:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 4.60'
+          example: 4.6
+        valorIssqn:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 61.00'
+          example: 61
+        codigoMunicipioFatoGerador:
+          type: integer
+          format: int64
+          example: 10
+        codigoItemListaServicos:
+          type: integer
+          format: int64
+          example: 10
+        valorDeducao:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 62.00'
+          example: 62
+        valorOutrasRetencoes:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 63.00'
+          example: 63
+        valorDescontoCondicionado:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 64.00'
+          example: 64
+        valorDescontoIncondicionado:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 65.00'
+          example: 65
+        valorRetencaoIss:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 66.00'
+          example: 66
+        codigoIndicadorExigibilidadeIss:
+          type: integer
+          format: int64
+          example: 1
+        descricaoIndicadorExigibilidadeIss:
+          type: string
+          example: Descrição
+        codigoServico:
+          type: string
+          example: '123'
+        codigoMunicipioIncideImposto:
+          type: integer
+          format: int64
+          example: 1
+        cdPais:
+          type: integer
+          format: int64
+          example: 1
+        nuProcesso:
+          type: string
+          example: '12345'
+        cdIndIncentivo:
+          type: integer
+          format: int64
+          example: 1
+        deIndIncentivo:
+          type: string
+          example: Descrição
+        deMun:
+          type: string
+          example: Descrição
+        descricaoMunicipioFatoGerador:
+          type: string
+          example: Descrição
+    ProdutosIcms:
+      type: object
+      description: >-
+        Informações detalhadas de ICMS, incluindo modalidades de cálculo,
+        valores de base, alíquotas, desonerações, substituição tributária (ST),
+        Fundo de Combate à Pobreza (FCP) e partilhas interestaduais
+      properties:
+        codigoOrigemMercadoria:
+          type: integer
+          format: int64
+          example: 1
+        cdCst:
+          type: string
+          example: '234'
+        codigoModalidadeBaseCalculo:
+          type: integer
+          format: int64
+          example: 2
+        valorBaseCalculo:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 67.00'
+          example: 67
+        percentualAliquotaIcms:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 20.50'
+          example: 20.5
+        valorIcms:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 68.00'
+          example: 68
+        codigoModalidadeBaseCalculoST:
+          type: integer
+          format: int64
+          example: 2
+        peMargemVast:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 2.70'
+          example: 2.7
+        peVast:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 2.80'
+          example: 2.8
+        percentualReducaoBaseCalculoSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 3.30'
+          example: 3.3
+        valorIcmsSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 69.00'
+          example: 69
+        percentualReducaoBaseCalculo:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 3.80'
+          example: 3.8
+        valorBaseCalculoSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 70.00'
+          example: 70
+        percentualDiferimento:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 9.50'
+          example: 9.5
+        valorIcmsDesonerado:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 71.00'
+          example: 71
+        codigoMotivoDesoneracao:
+          type: string
+          example: '1234'
+        peMargemBcSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 21.50'
+          example: 21.5
+        percentualFcp:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 14.50'
+          example: 14.5
+        valorBaseCalculoFcp:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 72.00'
+          example: 72
+        percentualFcpSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 2.30'
+          example: 2.3
+        valorBaseCalculoFcpSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 73.00'
+          example: 73
+        valorFcp:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 74.00'
+          example: 74
+        valorFcpSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 75.00'
+          example: 75
+        valorBaseCalculoFcpStRetido:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 76.00'
+          example: 76
+        percentualFcpStRetido:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 1.50'
+          example: 1.5
+        valorFcpStRetido:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 77.00'
+          example: 77
+        percentualAliquotaIcmsSt:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 21.00'
+          example: 21
+        cdMotDesIcms:
+          type: integer
+          example: 12
+        valorIcmsStRetido:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 78.00'
+          example: 78
+        valorIcmsDiferido:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 79.00'
+          example: 79
+        valorIcmsOperacao:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 80.00'
+          example: 80
+        percentualBaseCalculoOperacaoPropria:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 1.80'
+          example: 1.8
+        unidadeFederacaoSt:
+          type: string
+          example: SC
+        percentualFcpUnidadeFederacaoDestino:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 2.60'
+          example: 2.6
+        percentualAliquotaIcmsUnidadeFederacaoDestino:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 22.50'
+          example: 22.5
+        percentualAliquotaIcmsInterestadual:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 17.00'
+          example: 17
+        percentualAliquotaIcmsIterestadualPartilha:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 19.00'
+          example: 19
+        valorBaseCalculoUnidadeFederacaoDestino:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 81.00'
+          example: 81
+        valorBaseCalculoFcpUniddeFederacaoDestino:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 82.00'
+          example: 82
+        valorFcpUnidadeUnidadeFederacaoDestino:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 83.00'
+          example: 83
+        valorIcmsUnidadeFederacaoDestino:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 84.00'
+          example: 84
+        valorIcmsUnidadeFederacaoRemetente:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 85.00'
+          example: 85
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    OperationTypeEnum:
+      type: integer
+      enum:
+        - 0
+        - 1
+      description: |
+        Tipo de operação:
+        * 0 - Entrada
+        * 1 - Saída
+      example: 1
+    DestinationOperationEnum:
+      type: integer
+      enum:
+        - 1
+        - 2
+        - 3
+      description: |
+        Destino da operação:
+        * 1 - Operação interna
+        * 2 - Operação interestadual
+        * 3 - Operação com exterior
+      example: 1
+    EmissionPurposeEnum:
+      type: integer
+      enum:
+        - 1
+        - 2
+        - 3
+        - 4
+      description: |
+        Finalidade de emissão:
+        * 1 - NF-e normal
+        * 2 - NF-e complementar
+        * 3 - NF-e de ajuste
+        * 4 - Devolução de mercadoria
+      example: 4
+    BuyerPresenceIndicatorEnum:
+      type: integer
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 9
+      description: |
+        Indicador de presença do comprador:
+        * 0 - Não se aplica
+        * 1 - Operação presencial
+        * 2 - Operação não presencial, pela Internet
+        * 3 - Operação não presencial, Teleatendimento
+        * 4 - NFC-e em operação com entrega a domicílio
+        * 5 - Operação presencial, fora do estabelecimento
+        * 9 - Operação não presencial, outros
+      example: 0
+    EmissionProcessEnum:
+      type: integer
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+      description: >
+        Processo de emissão da NF-e:
+
+        * 0 - Emissão de NF-e com aplicativo do contribuinte
+
+        * 1 - Emissão de NF-e avulsa pelo Fisco
+
+        * 2 - Emissão de NF-e avulsa, pelo contribuinte com seu certificado
+        digital, através do site do Fisco
+
+        * 3 - Emissão NF-e pelo contribuinte com aplicativo fornecido pelo Fisco
+      example: 0
+    EnvironmentTypeEnum:
+      type: integer
+      enum:
+        - 1
+        - 2
+      description: |
+        Tipo de ambiente:
+        * 1 - Produção
+        * 2 - Homologação
+      example: 2
+    Links:
+      description: Links para acessar outros recursos
+      example:
+        - href: https://../v1/purchase-..
+          rel: Recurso
+      items:
+        $ref: '#/components/schemas/Link'
+      type: array
+    Pagamento:
+      type: object
+      description: >-
+        Estrutura com informações relacionadas ao pagamento associado ao
+        documento fiscal
+      properties:
+        codigoTipoPagamento:
+          type: string
+          example: '03'
+        valorPagamento:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 86.00'
+          example: 86
+        cnpjCredenciadoraCartao:
+          type: string
+          example: '7717335'
+        codigoBandeiraCartao:
+          type: string
+          example: '01'
+        numeroAutorizacaoOperacaoCartao:
+          type: string
+          example: '77173354000162'
+        tipoPagamento:
+          type: string
+          example: Cartão de crédito
+        bandeiraCartao:
+          type: string
+          example: Visa
+    NotasReferenciadas:
+      type: object
+      description: >-
+        Dados de uma nota fiscal referenciada, incluindo código da UF, período
+        de emissão, CNPJ, modalidade, série, número da nota e UF
+      properties:
+        codigoUf:
+          type: integer
+          format: int64
+          example: 42
+        mesAnoEmissao:
+          type: string
+          example: 12/15
+        cnpj:
+          type: string
+          example: '69914111000100'
+        codigoModalidade:
+          type: integer
+          format: int64
+          example: 1
+        numeroSerie:
+          type: integer
+          format: int64
+          example: 746
+        numeroNotaFIscal:
+          type: integer
+          format: int64
+          example: 54654
+        uf:
+          type: string
+          example: Santa Catarina
+    Produtos:
+      type: object
+      description: >-
+        Detalhes do produto ou serviço, incluindo códigos fiscais, quantidades,
+        valores e links para recursos relacionados
+      properties:
+        codigoProdutoOuServico;:
+          type: string
+          example: '123456123'
+        codigoEan:
+          type: string
+          example: '123456'
+        descricaoProdutoOuServico:
+          type: string
+          example: Descrição produto ou serviço
+        codigoNcm:
+          type: integer
+          format: int64
+          example: 12345
+        exTipi:
+          type: integer
+          format: int64
+          example: 12345
+        codigoFiscalDeOperacoes:
+          type: integer
+          format: int64
+          example: 12345
+        unidadeComercial:
+          type: string
+          example: Unidade comercial
+        quantidadeComercial:
+          type: number
+          description: 'Valor exibido com até quatro casas decimais. Exemplo: 1000.1234'
+          example: 1000.1234
+        valorUnitarioComercializacao:
+          type: number
+          description: 'Valor exibido com até quatro casas decimais. Exemplo: 1000.5678'
+          example: 1000.5678
+        valorTotalBrutoProdutosOuServicos:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 31.00'
+          example: 31
+        codigoEanUnidadeTributavel:
+          type: string
+          example: '123456'
+        unidadeTributavel:
+          type: string
+          example: '123456'
+        quantidadeTributavel:
+          type: number
+          description: 'Valor exibido com até quatro casas decimais. Exemplo: 2000.1234'
+          example: 2000.1234
+        valorUnitarioTributacao:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 32.00'
+          example: 32
+        valorTotalFrete:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 33.00'
+          example: 33
+        valorTotalSeguro:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 34.00'
+          example: 34
+        valorDesconto:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 35.00'
+          example: 35
+        valorOutrasDespesas:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 36.00'
+          example: 36
+        valorItemCompoeTotalNota:
+          type: integer
+          format: int64
+          example: 1
+        valorTotalTributos:
+          type: number
+          description: 'Valor exibido com até duas casas decimais. Exemplo: 37.00'
+          example: 37
+        numeroPedido:
+          type: string
+          example: '123456'
+        numeroItemPedido:
+          type: integer
+          format: int64
+          example: 1
+        links:
+          $ref: '#/components/schemas/Links'
+    Link:
+      description: Representa um link para outro recurso.
+      properties:
+        href:
+          description: URL do recurso associado
+          example: https://../v1/purchase-..
+          type: string
+        rel:
+          description: Nome da recurso associado
+          example: Recurso
+          type: string
+      type: object
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    StartDateQueryRequired:
+      description: Data inicial para filtro de período
+      in: query
+      name: startDate
+      required: true
+      schema:
+        example: '2023-01-01'
+        format: date
+        type: string
+    EndDateQueryRequired:
+      description: Data final para filtro de período
+      in: query
+      name: endDate
+      required: true
+      schema:
+        example: '2023-01-31'
+        format: date
+        type: string
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

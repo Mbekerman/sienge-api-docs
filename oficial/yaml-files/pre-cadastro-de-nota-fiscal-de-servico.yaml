@@ -1,0 +1,1297 @@
+openapi: 3.1.1
+info:
+  title: Pré-Cadastro de Nota Fiscal de Serviço
+  version: 1.24.0
+  description: API para pré-cadastro de notas fiscais de serviço
+paths:
+  /service-invoice/pre-registration:
+    post:
+      tags:
+        - Pré-Cadastro de Nota Fiscal de Serviço
+      summary: Cria um pré-cadastro de nota fiscal de serviço
+      operationId: salvarPreCadastroNotaFiscalServico
+      requestBody:
+        description: Cadastro de um pré-cadastro de nota fiscal de serviço
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostPreCadastroNotaFiscalServicoDto'
+            example:
+              companyId: 1
+              takerId: 1
+              provisionCityId: 1
+              incidence: 1
+              incidenceCityId: 1
+              invoiceValue: 1500
+              configurationId: 1
+              amountInstallment: 1
+              dueDate: '2023-01-01'
+              serviceId: 1
+              description: Serviço de consultoria em tecnologia da informação
+              quantity: 1
+              serviceValue: 1500
+              issTaxNature: 1
+              issChargeability: 1
+        required: true
+      responses:
+        '201':
+          description: Pré-cadastro criado com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-audience:
+        - public
+      description: ' (REST)'
+components:
+  schemas:
+    PostPreCadastroNotaFiscalServicoDto:
+      description: Objeto para criação de um Pré-cadastro de nota fiscal de serviço
+      type: object
+      example:
+        companyId: 1
+        takerId: 1
+        provisionCityId: 1
+        incidence: 1
+        incidenceCityId: 1
+        invoiceValue: 1500
+        configurationId: 1
+        amountInstallment: 1
+        dueDate: '2023-01-01'
+        serviceId: 1
+        description: Serviço de consultoria em tecnologia da informação
+        quantity: 1
+        serviceValue: 1500
+        issTaxNature: 1
+        issChargeability: 1
+      required:
+        - companyId
+        - takerId
+        - provisionCityId
+        - incidence
+        - incidenceCityId
+        - invoiceValue
+        - configurationId
+        - amountInstallment
+        - dueDate
+        - serviceId
+        - description
+        - quantity
+        - serviceValue
+        - issTaxNature
+        - issChargeability
+      properties:
+        companyId:
+          type: integer
+          format: int32
+          description: Código da empresa prestadora
+          example: 1
+        takerId:
+          type: integer
+          format: int32
+          description: Código do cliente tomador
+          example: 100
+        operationType:
+          type: integer
+          format: int32
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+          description: >-
+            Tipo de operação governamental. Valores possíveis: 1 - Fornecimento
+            com pagamento posterior; 2 - Recebimento do pagamento com
+            fornecimento já realizado; 3 - Fornecimento com pagamento já
+            realizado; 4 - Recebimento do pagamento com fornecimento posterior;
+            5 - Fornecimento e recebimento do pagamento concomitantes.
+          example: 1
+        municipalBenefitCode:
+          type: string
+          description: Código do benefício municipal
+          example: '505'
+        provisionCityId:
+          type: integer
+          format: int32
+          description: Código do município de prestação do serviço
+          example: 29
+        issWithheldType:
+          type: boolean
+          description: Indica se o ISS é retido na fonte
+          example: false
+          default: false
+        incidence:
+          type: integer
+          format: int32
+          enum:
+            - 1
+            - 2
+            - 3
+          description: >-
+            Incidência do serviço. Valores possíveis: 1 - Serviço prestado no
+            município; 2 - Serviço prestado fora do município; 3 - Serviço
+            prestado no exterior.
+          example: 1
+        incidenceCityId:
+          type: integer
+          format: int32
+          description: Código do município de incidência do ISS
+          example: 30
+        invoiceValue:
+          type: number
+          format: double
+          description: Valor total da nota fiscal
+          example: 1500
+        additionalInfo:
+          type: string
+          description: >-
+            Informações complementares da nota fiscal. Caso queira colocar uma
+            quebra de linha, adicione o caractere \n, como no exemplo. Não
+            coloque nenhum outro caractere especial além deste.
+          example: |-
+            Serviço prestado conforme contrato nº 123
+            O serviço deve seguir as especificações previstas no contrato
+        configurationId:
+          type: integer
+          format: int32
+          description: Código da configuração para geração do título
+          example: 5
+        amountInstallment:
+          type: integer
+          format: int32
+          description: Quantidade de parcelas
+          example: 3
+        dueDate:
+          type: string
+          format: date
+          description: Data do primeiro vencimento no formato yyyy-mm-dd
+          example: '2025-12-31'
+        serviceId:
+          type: integer
+          format: int32
+          description: Código do serviço (produto fiscal)
+          example: 42
+        description:
+          type: string
+          description: >-
+            Descrição do serviço prestado. Caso queira colocar uma quebra de
+            linha, adicione o caractere \n, como no exemplo. Não coloque nenhum
+            outro caractere especial além deste.
+          example: |-
+            Serviço de consultoria em tecnologia da informação
+            Item1: Implantação do sistema
+            Item2: Suporte ao sistema
+        quantity:
+          type: integer
+          format: int32
+          description: Quantidade do serviço
+          example: 1
+        serviceValue:
+          type: number
+          format: double
+          description: Valor do serviço
+          example: 1500
+        withholdingValue:
+          type: number
+          format: double
+          description: Valor de outras retenções
+          example: 50
+          default: 0
+        issCalculationBasis:
+          type: number
+          format: double
+          description: Base de cálculo do ISS
+          example: 1500
+          default: 0
+        issRate:
+          type: number
+          format: double
+          description: Alíquota do ISS (percentual)
+          example: 5
+          default: 0
+        issIncidenceRate:
+          type: number
+          format: double
+          description: Percentual de incidência do ISS
+          example: 100
+          default: 0
+        issValue:
+          type: number
+          format: double
+          description: Valor do ISS
+          example: 75
+          default: 0
+        pisCalculationBasis:
+          type: number
+          format: double
+          description: Base de cálculo do PIS
+          example: 1500
+          default: 0
+        pisRate:
+          type: number
+          format: double
+          description: Alíquota do PIS (percentual)
+          example: 0.65
+          default: 0
+        pisIncidenceRate:
+          type: number
+          format: double
+          description: Percentual de incidência do PIS
+          example: 100
+          default: 0
+        pisValue:
+          type: number
+          format: double
+          description: Valor do PIS
+          example: 9.75
+          default: 0
+        cofinsCalculationBasis:
+          type: number
+          format: double
+          description: Base de cálculo do COFINS
+          example: 1500
+          default: 0
+        cofinsRate:
+          type: number
+          format: double
+          description: Alíquota do COFINS (percentual)
+          example: 3
+          default: 0
+        cofinsIncidenceRate:
+          type: number
+          format: double
+          description: Percentual de incidência do COFINS
+          example: 100
+          default: 0
+        cofinsValue:
+          type: number
+          format: double
+          description: Valor do COFINS
+          example: 45
+          default: 0
+        inssCalculationBasis:
+          type: number
+          format: double
+          description: Base de cálculo do INSS
+          example: 1500
+          default: 0
+        inssRate:
+          type: number
+          format: double
+          description: Alíquota do INSS (percentual)
+          example: 11
+          default: 0
+        inssIncidenceRate:
+          type: number
+          format: double
+          description: Percentual de incidência do INSS
+          example: 100
+          default: 0
+        inssValue:
+          type: number
+          format: double
+          description: Valor do INSS
+          example: 165
+          default: 0
+        csllCalculationBasis:
+          type: number
+          format: double
+          description: Base de cálculo do CSLL
+          example: 1500
+          default: 0
+        csllRate:
+          type: number
+          format: double
+          description: Alíquota do CSLL (percentual)
+          example: 1
+          default: 0
+        csllIncidenceRate:
+          type: number
+          format: double
+          description: Percentual de incidência do CSLL
+          example: 100
+          default: 0
+        csllValue:
+          type: number
+          format: double
+          description: Valor do CSLL
+          example: 15
+          default: 0
+        irpjCalculationBasis:
+          type: number
+          format: double
+          description: Base de cálculo do IRPJ
+          example: 1500
+          default: 0
+        irpjRate:
+          type: number
+          format: double
+          description: Alíquota do IRPJ (percentual)
+          example: 1.5
+          default: 0
+        irpjIncidenceRate:
+          type: number
+          format: double
+          description: Percentual de incidência do IRPJ
+          example: 100
+          default: 0
+        irpjValue:
+          type: number
+          format: double
+          description: Valor do IRPJ
+          example: 22.5
+          default: 0
+        pisSelfAssessedCalculationBasis:
+          type: number
+          format: double
+          description: Base de cálculo do PIS de apuração própria
+          example: 1500
+          default: 0
+        pisSelfAssessedRate:
+          type: number
+          format: double
+          description: Alíquota do PIS de apuração própria (percentual)
+          example: 1.65
+          default: 0
+        pisSelfAssessedIncidenceRate:
+          type: number
+          format: double
+          description: Percentual de incidência do PIS de apuração própria
+          example: 100
+          default: 0
+        pisSelfAssessedValue:
+          type: number
+          format: double
+          description: Valor do PIS de apuração própria
+          example: 24.75
+          default: 0
+        cofinsSelfAssessedCalculationBasis:
+          type: number
+          format: double
+          description: Base de cálculo do COFINS de apuração própria
+          example: 1500
+          default: 0
+        cofinsSelfAssessedRate:
+          type: number
+          format: double
+          description: Alíquota do COFINS de apuração própria (percentual)
+          example: 7.6
+          default: 0
+        cofinsSelfAssessedIncidenceRate:
+          type: number
+          format: double
+          description: Percentual de incidência do COFINS de apuração própria
+          example: 100
+          default: 0
+        cofinsSelfAssessedValue:
+          type: number
+          format: double
+          description: Valor do COFINS de apuração própria
+          example: 114
+          default: 0
+        buildingId:
+          type: integer
+          format: int32
+          description: Código da obra onde o serviço foi prestado
+          example: 10
+        sendPropertyInformation:
+          type: boolean
+          description: >-
+            Indica se deve enviar informações do imóvel. Relevante apenas quando
+            'buldingId' é informado.
+          example: false
+          default: false
+        sendCibCode:
+          type: boolean
+          description: >-
+            Indica se deve enviar o código CIB. Relevante apenas quando
+            'sendPropertyInformation' é true.
+          example: false
+          default: false
+        issTaxNature:
+          type: integer
+          format: int32
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+          description: >-
+            Natureza de tributação do ISS. Valores possíveis: 0 - Não Informar;
+            1 - Simples Nacional; 2 - Fixo; 3 - Depósito em Juízo; 4 -
+            Exigibilidade suspensa por decisão judicial; 5 - Exigibilidade
+            suspensa por procedimento administrativo; 6 - Isenção parcial.
+          example: 1
+        issChargeability:
+          type: integer
+          format: int32
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+          description: >-
+            Exigibilidade do ISS. Valores possíveis: 1 - Exigível; 2 - Não
+            incidência; 3 - Isenção; 4 - Exportação; 5 - Imunidade; 6 -
+            Exigibilidade Suspensa por Decisão Judicial; 7 - Exigibilidade
+            Suspensa por Processo Administrativo.
+          example: 1
+        suspensionProcessNumber:
+          type: string
+          description: >-
+            Número do processo de suspensão da exigibilidade do ISS. Obrigatória
+            quando 'issChargeability' é 6 ou 7
+          example: 0001234-12.2025.8.26.0000
+        doNotSendIssRate:
+          type: boolean
+          description: Indica se a alíquota do ISS não deve ser enviada
+          example: false
+          default: false
+        encapsulationNumber:
+          type: string
+          description: Número de encapsulamento
+          example: ENC-2025-001
+        cstId:
+          type: string
+          description: Código da situação tributária (CST)
+          example: '000'
+        taxClassificationId:
+          type: string
+          description: Código da classificação tributária
+          example: '000001'
+        regularTaxationCstId:
+          type: string
+          description: Código da situação tributária (CST) regular
+          example: '000'
+        regularTaxClassificationId:
+          type: string
+          description: Código de classificação de tributária regular
+          example: '000001'
+        presumedCreditId:
+          type: string
+          description: Código de crédito presumido
+          example: '1'
+        ibsCbsCalculationBasis:
+          type: number
+          format: double
+          description: Base de cálculo do IBS/CBS
+          example: 1500
+          default: 0
+        ibsCbsIncidenceLocationCode:
+          type: integer
+          format: int32
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+          description: >-
+            Local de incidência do IBS/CBS. Valores possíveis: 1 - Domicílio
+            principal do adquirente; 2 - Local da entrega ou disponibilização; 3
+            - Local da prestação; 4 - Local do evento; 5 - Local do imóvel; 6 -
+            Local incidência IBS; 7 - Via explorada.
+          example: 3
+        percentageDeferralIbsState:
+          type: number
+          format: double
+          description: Percentual de diferimento do IBS estadual
+          example: 0
+          default: 0
+        percentageDeferralIbsMunicipal:
+          type: number
+          format: double
+          description: Percentual de diferimento do IBS municipal
+          example: 0
+          default: 0
+        percentageDeferralCbs:
+          type: number
+          format: double
+          description: Percentual de diferimento do CBS
+          example: 0
+          default: 0
+        stateIbsRate:
+          type: number
+          format: double
+          description: Alíquota do IBS estadual (percentual)
+          example: 0
+          default: 0
+        stateIbsReducedRate:
+          type: number
+          format: double
+          description: Alíquota de redução do IBS estadual (percentual)
+          example: 0
+          default: 0
+        stateIbsEffectiveRate:
+          type: number
+          format: double
+          description: Alíquota efetiva do IBS estadual (percentual)
+          example: 0
+          default: 0
+        stateIbsDeferralValue:
+          type: number
+          format: double
+          description: Valor de diferimento do IBS estadual
+          example: 0
+          default: 0
+        stateIbsValue:
+          type: number
+          format: double
+          description: Valor do IBS estadual tributado
+          example: 0
+          default: 0
+        municipalIbsRate:
+          type: number
+          format: double
+          description: Alíquota do IBS municipal (percentual)
+          example: 0
+          default: 0
+        municipalIbsReducedRate:
+          type: number
+          format: double
+          description: Alíquota de redução do IBS municipal (percentual)
+          example: 0
+          default: 0
+        municipalIbsEffectiveRate:
+          type: number
+          format: double
+          description: Alíquota efetiva do IBS municipal (percentual)
+          example: 0
+          default: 0
+        municipalIbsDeferralValue:
+          type: number
+          format: double
+          description: Valor de diferimento do IBS municipal
+          example: 0
+          default: 0
+        municipalIbsValue:
+          type: number
+          format: double
+          description: Valor do IBS municipal tributado
+          example: 0
+          default: 0
+        percentageIbsPresumedCredit:
+          type: number
+          format: double
+          description: Percentual de crédito presumido do IBS
+          example: 0
+          default: 0
+        ibsPresumedCreditValue:
+          type: number
+          format: double
+          description: Valor de crédito presumido do IBS
+          example: 0
+          default: 0
+        cbsRate:
+          type: number
+          format: double
+          description: Alíquota do CBS (percentual)
+          example: 0
+          default: 0
+        cbsReducedRate:
+          type: number
+          format: double
+          description: Alíquota de redução do CBS (percentual)
+          example: 0
+          default: 0
+        cbsEffectiveRate:
+          type: number
+          format: double
+          description: Alíquota efetiva do CBS (percentual)
+          example: 0
+          default: 0
+        cbsValue:
+          type: number
+          format: double
+          description: Valor do CBS tributado
+          example: 0
+          default: 0
+        cbsDeferralValue:
+          type: number
+          format: double
+          description: Valor de diferimento do CBS
+          example: 0
+          default: 0
+        percentageCbsPresumedCredit:
+          type: number
+          format: double
+          description: Percentual de crédito presumido do CBS
+          example: 0
+          default: 0
+        cbsPresumedCreditValue:
+          type: number
+          format: double
+          description: Valor de crédito presumido do CBS
+          example: 0
+          default: 0
+        regularStateIbsEffectiveRate:
+          type: number
+          format: double
+          description: Alíquota efetiva regular do IBS estadual (percentual)
+          example: 0
+          default: 0
+        regularStateIbsValue:
+          type: number
+          format: double
+          description: Valor regular do IBS estadual
+          example: 0
+          default: 0
+        regularMunicipalIbsEffectiveRate:
+          type: number
+          format: double
+          description: Alíquota efetiva regular do IBS municipal (percentual)
+          example: 0
+          default: 0
+        regularMunicipalIbsValue:
+          type: number
+          format: double
+          description: Valor regular do IBS municipal
+          example: 0
+          default: 0
+        regularCbsEffectiveRate:
+          type: number
+          format: double
+          description: Alíquota efetiva regular do CBS (percentual)
+          example: 0
+          default: 0
+        regularCbsValue:
+          type: number
+          format: double
+          description: Valor regular do CBS
+          example: 0
+          default: 0
+        takerIsNotRecipient:
+          type: boolean
+          description: Indica se o tomador não é o destinatário
+          example: false
+          default: false
+        recipientId:
+          type: integer
+          format: int32
+          description: >-
+            Código do destinatário. Obrigatório quando 'takeIsNotRecipient' é
+            true.
+          example: 100
+        event:
+          $ref: '#/components/schemas/PostEventoPreCadastroNotaFiscalServicoDto'
+        deductions:
+          type: array
+          description: Lista de deduções da nota fiscal de serviço
+          items:
+            $ref: '#/components/schemas/PostDeducaoPreCadastroNotaFiscalServicoDto'
+          example:
+            - billId: 1001
+              deductionValue: 200
+        referencedInvoices:
+          type: array
+          description: Lista de notas fiscais referenciadas
+          example:
+            - referencedInvoiceKey: '42170182845322000104557880000006331000006772'
+          items:
+            $ref: >-
+              #/components/schemas/PostNotaReferenciadaPreCadastroNotaFiscalServicoDto
+        referencedDocuments:
+          type: array
+          description: >-
+            Lista de documentos referenciados de operações de terceiros
+            (repasses, reembolsos e ressarcimentos). Com algum documento
+            informado, o 'cstId' passa a ser obrigatório, porque o grupo IBS/CBS
+            só é enviado com o CST.
+          items:
+            $ref: >-
+              #/components/schemas/PostDocumentoReferenciadoPreCadastroNotaFiscalServicoDto
+          example:
+            - documentType: 1
+              keyType: 2
+              key: '41260800001234560001550010000010001000010009'
+              supplierCpfCnpj: '22333444000155'
+              supplierName: Hotel Exemplo Ltda
+              issueDate: '2026-07-15'
+              competenceDate: '2026-07-01'
+              operationType: '02'
+              operationDescription: Repasse de hospedagem ao fornecedor
+              operationValue: 3200
+            - documentType: 2
+              documentCityId: 29
+              documentNumber: '55'
+              documentDescription: Nota de hospedagem
+              issueDate: '2026-07-15'
+              competenceDate: '2026-07-01'
+              operationType: '99'
+              operationValue: 150
+            - documentType: 3
+              documentNumber: '200'
+              documentDescription: Recibo de condomínio
+              issueDate: '2026-07-15'
+              competenceDate: '2026-07-01'
+              operationType: '99'
+              operationValue: 80
+        movableAssets:
+          type: array
+          maxItems: 1000
+          description: >-
+            Lista de bens móveis locados no serviço, no máximo 1000. Só é aceita
+            para serviço de locação de bens móveis de empresa que emite pelo
+            ambiente nacional; as condições estão no schema do bem.
+          items:
+            $ref: '#/components/schemas/PostBemMovelPreCadastroNotaFiscalServicoDto'
+          example:
+            - ncmCode: '84295199'
+              description: Pá carregadeira sobre rodas
+              quantity: 1
+            - ncmCode: '84271019'
+              description: Empilhadeira elétrica
+              quantity: 2
+    PostEventoPreCadastroNotaFiscalServicoDto:
+      type: object
+      description: >-
+        Evento do serviço, enviado no grupo Atividade/Evento da NFS-e Nacional
+        sempre que informado, em qualquer serviço. A NFS-e Nacional exige o
+        grupo para os serviços do item 12 da lista de serviços (códigos 1201 a
+        1217). Informar e completar o evento fica a critério do integrador: o
+        Sienge não confere se ele está completo, e a rejeição por falta, excesso
+        ou campo vazio vem na emissão. Para o grupo ser aceito, informe o código
+        da atividade, a descrição e as datas. O endereço só é enviado quando
+        'cityId' é informado e, nesse caso, também precisa de tipo de
+        logradouro, logradouro, número, bairro e CEP.
+      example:
+        activityCode: EVT-2026-001
+        description: Show de música
+        startDate: '2026-10-01'
+        endDate: '2026-10-20'
+        cityId: 29
+        streetType: 11
+        street: Barão do Rio Branco
+        number: '123'
+        complement: Sala 5
+        neighborhood: Centro
+        zipCode: 87020-100
+      properties:
+        activityCode:
+          type: string
+          description: Código da atividade do evento, determinado pela prefeitura
+          example: EVT-2026-001
+        description:
+          type: string
+          description: Descrição do evento
+          example: Show de música
+        startDate:
+          type: string
+          format: date
+          description: Data de início do evento no formato yyyy-mm-dd
+          example: '2026-10-01'
+        endDate:
+          type: string
+          format: date
+          description: >-
+            Data de fim do evento no formato yyyy-mm-dd, não menor que a data de
+            início
+          example: '2026-10-20'
+        cityId:
+          type: integer
+          format: int32
+          description: >-
+            Código do município do endereço do evento. Sem o município, o
+            endereço não é enviado.
+          example: 29
+        streetType:
+          type: integer
+          format: int32
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+            - 10
+            - 11
+            - 12
+            - 13
+            - 14
+            - 15
+          description: >-
+            Tipo de logradouro do endereço do evento. Valores possíveis: 0 -
+            Alameda; 1 - Avenida; 2 - Chácara; 3 - Colônia; 4 - Condomínio; 5 -
+            Estância; 6 - Estrada; 7 - Fazenda; 8 - Praça; 9 - Prolongamento; 10
+            - Rodovia; 11 - Rua; 12 - Sítio; 13 - Travessa; 14 - Vicinal; 15 -
+            Eqnp.
+          example: 11
+        street:
+          type: string
+          description: Logradouro do endereço do evento
+          example: Barão do Rio Branco
+        number:
+          type: string
+          description: Número do endereço do evento
+          example: '123'
+        complement:
+          type: string
+          description: Complemento do endereço do evento
+          example: Sala 5
+        neighborhood:
+          type: string
+          description: Bairro do endereço do evento
+          example: Centro
+        zipCode:
+          type: string
+          description: CEP do endereço do evento, com ou sem hífen
+          example: 87020-100
+    PostDeducaoPreCadastroNotaFiscalServicoDto:
+      type: object
+      description: Dedução da nota fiscal de serviço
+      required:
+        - billId
+        - deductionValue
+      properties:
+        billId:
+          type: integer
+          format: int32
+          description: Número do título vinculado à dedução
+          example: 1001
+        deductionValue:
+          type: number
+          format: double
+          description: Valor a deduzir
+          example: 200
+    PostNotaReferenciadaPreCadastroNotaFiscalServicoDto:
+      type: object
+      description: Nota referenciada da nota fiscal de serviço
+      example:
+        referencedInvoiceKey: '42170182845322000104557880000006331000006772'
+      required:
+        - referencedInvoiceKey
+      properties:
+        referencedInvoiceKey:
+          type: string
+          description: Chave de acesso da nota fiscal referenciada
+          example: '42170182845322000104557880000006331000006772'
+    PostDocumentoReferenciadoPreCadastroNotaFiscalServicoDto:
+      type: object
+      description: >-
+        Documento de terceiro referenciado na operação. O 'documentType' define
+        onde o documento está registrado e quais campos de identificação podem
+        ser informados, que são mutuamente exclusivos: 1 (repositório nacional)
+        aceita só 'keyType', 'key' e 'keyDescription'; 2 (documento fiscal fora
+        do repositório nacional) aceita só 'documentCityId', 'documentNumber' e
+        'documentDescription'; 3 (documento não fiscal) aceita só
+        'documentNumber' e 'documentDescription'. Campo de outro tipo é
+        recusado. Os dados do fornecedor são opcionais e a sua completude é
+        validada na emissão. Empresa que emite pelo ambiente nacional não pode
+        informar 'supplierNif' nem o endereço do fornecedor ('supplierCityId',
+        'supplierStreet', 'supplierNumber', 'supplierComplement',
+        'supplierNeighborhood' e 'supplierZipCode'), porque o leiaute da NFS-e
+        Nacional não tem esses campos.
+      required:
+        - documentType
+        - issueDate
+        - competenceDate
+        - operationType
+        - operationValue
+      example:
+        documentType: 2
+        documentCityId: 29
+        documentNumber: '55'
+        documentDescription: Nota de hospedagem
+        supplierCpfCnpj: '22333444000155'
+        supplierName: Hotel Exemplo Ltda
+        supplierCityId: 29
+        supplierStreet: Av. Central
+        supplierNumber: '500'
+        supplierNeighborhood: Centro
+        supplierZipCode: 87010-000
+        issueDate: '2026-07-15'
+        competenceDate: '2026-07-01'
+        operationType: '02'
+        operationDescription: Repasse de hospedagem ao fornecedor
+        operationValue: 3200
+      properties:
+        documentType:
+          type: integer
+          format: int32
+          enum:
+            - 1
+            - 2
+            - 3
+          description: >-
+            Onde o documento está registrado. Valores possíveis: 1 - Repositório
+            nacional (NFS-e, NF-e, CT-e ou outro); 2 - Documento fiscal fora do
+            repositório nacional; 3 - Documento não fiscal (recibo, fatura,
+            comprovante de repasse).
+          example: 2
+        keyType:
+          type: integer
+          format: int32
+          enum:
+            - 1
+            - 2
+            - 3
+            - 9
+          description: >-
+            Tipo da chave do documento do repositório nacional. Obrigatório
+            quando 'documentType' é 1. Valores possíveis: 1 - NFS-e; 2 - NF-e; 3
+            - CT-e; 9 - Outro.
+          example: 2
+        key:
+          type: string
+          description: >-
+            Chave de acesso do documento do repositório nacional. Obrigatória
+            com 'keyType' 1, 2 ou 3. Sem a chave, use o 'keyType' 9.
+          example: '41260800001234560001550010000010001000010009'
+        keyDescription:
+          type: string
+          description: >-
+            Descrição da chave, com o documento e o emitente. Obrigatória com
+            'keyType' 9.
+          example: Fatura 123 do Hotel Exemplo Ltda
+        documentCityId:
+          type: integer
+          format: int32
+          description: >-
+            Código do município emissor do documento fiscal. Obrigatório quando
+            'documentType' é 2.
+          example: 29
+        documentNumber:
+          type: string
+          description: Número do documento. Obrigatório quando 'documentType' é 2 ou 3.
+          example: '55'
+        documentDescription:
+          type: string
+          description: >-
+            Descrição do documento. Obrigatória quando 'documentType' é 3 e
+            opcional quando é 2.
+          example: Nota de hospedagem
+        supplierCpfCnpj:
+          type: string
+          description: CPF ou CNPJ do fornecedor que emitiu o documento, com ou sem máscara
+          example: '22333444000155'
+        supplierName:
+          type: string
+          description: Razão social ou nome do fornecedor
+          example: Hotel Exemplo Ltda
+        supplierNif:
+          type: string
+          description: >-
+            Número de identificação fiscal do fornecedor estrangeiro, somente
+            números. NIF com letras não é enviado na emissão
+          example: '123456789'
+        supplierForeignCode:
+          type: string
+          description: Código de estrangeiro do fornecedor
+          example: EST-01
+        supplierNoNifReason:
+          type: integer
+          format: int32
+          enum:
+            - 0
+            - 1
+            - 2
+          description: >-
+            Motivo de não informar o NIF do fornecedor. Valores possíveis: 0 -
+            Não informado na nota de origem; 1 - Dispensado do NIF; 2 - Não
+            exigência do NIF.
+          example: 1
+        supplierCityId:
+          type: integer
+          format: int32
+          description: Código do município do endereço do fornecedor
+          example: 29
+        supplierStreet:
+          type: string
+          description: Logradouro do endereço do fornecedor
+          example: Av. Central
+        supplierNumber:
+          type: string
+          description: Número do endereço do fornecedor
+          example: '500'
+        supplierComplement:
+          type: string
+          description: Complemento do endereço do fornecedor
+          example: Bloco B
+        supplierNeighborhood:
+          type: string
+          description: Bairro do endereço do fornecedor
+          example: Centro
+        supplierZipCode:
+          type: string
+          description: CEP do endereço do fornecedor, com ou sem hífen
+          example: 87010-000
+        issueDate:
+          type: string
+          format: date
+          description: Data de emissão do documento no formato yyyy-mm-dd
+          example: '2026-07-15'
+        competenceDate:
+          type: string
+          format: date
+          description: Data de competência do documento no formato yyyy-mm-dd
+          example: '2026-07-01'
+        operationType:
+          type: string
+          enum:
+            - '01'
+            - '02'
+            - '03'
+            - '04'
+            - '99'
+          description: >-
+            Tipo da operação com o documento referenciado. Valores possíveis: 01
+            - Repasse de remuneração por intermediação de imóveis a demais
+            corretores; 02 - Repasse a fornecedor via agência de turismo; 03 -
+            Reembolso a agência de propaganda por serviços de produção externa;
+            04 - Reembolso a agência de propaganda por serviços de mídia; 99 -
+            Outros reembolsos ou ressarcimentos.
+          example: '02'
+        operationDescription:
+          type: string
+          description: Descrição da operação com o documento referenciado
+          example: Repasse de hospedagem ao fornecedor
+        operationValue:
+          type: number
+          format: double
+          description: Valor da operação, maior que zero
+          example: 3200
+    PostBemMovelPreCadastroNotaFiscalServicoDto:
+      type: object
+      description: >-
+        Bem móvel objeto da locação. Os bens só são aceitos quando a empresa
+        emite pelo ambiente nacional e o serviço é de locação de bens móveis, ou
+        seja, o produto fiscal do 'serviceId' é do tipo serviço, tem NBS de
+        locação de bens móveis (1.1101.11.00, 1.1101.12.00, 1.1101.13.00,
+        1.1101.14.00, 1.1101.15.00, 1.1101.16.00, 1.1101.17.00, 1.1101.20.00,
+        1.1101.30.00, 1.1101.40.00, 1.1101.50.00, 1.1101.60.00, 1.1101.90.00,
+        1.1102.10.00, 1.1102.20.00, 1.1102.30.00, 1.1102.40.00, 1.1102.50.00,
+        1.1102.60.00 ou 1.1102.90.00) e código de tributação nacional (CFPS -
+        LC116) do item 99. Fora dessas condições a lista é recusada.
+      required:
+        - ncmCode
+        - description
+        - quantity
+      example:
+        ncmCode: '84295199'
+        description: Pá carregadeira sobre rodas
+        quantity: 1
+      properties:
+        ncmCode:
+          type: string
+          description: Código NCM do bem móvel, com até 8 caracteres e sem pontos.
+          example: '84295199'
+        description:
+          type: string
+          description: Descrição do bem móvel, de 1 a 150 caracteres.
+          example: Pá carregadeira sobre rodas
+        quantity:
+          type: integer
+          format: int32
+          description: Quantidade do bem móvel, de 1 a 999.
+          example: 1
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

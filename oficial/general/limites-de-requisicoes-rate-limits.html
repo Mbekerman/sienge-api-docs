@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Limites de Requisições - Rate-Limits · Documentação de APIs</title>
+    <link href="../fonts.css" rel="stylesheet" />
+    <link href="../general-page.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>Limites de Requisições - Rate-Limits</h1>
+    <p>Para garantir a estabilidade e a segurança da plataforma, as APIs do Sienge Plataforma possuem dois tipos de limites de requisições: um limite por <strong>segurança</strong> (por minuto) e um limite por <strong>pacote contratado</strong> (por dia).</p>
+<h4>Limites de Segurança</h4>
+<p>O limite de segurança é aplicado por cliente (subdomínio) e controla o volume total de requisições por minuto, independentemente de quantos usuários ou sistemas estejam fazendo chamadas simultaneamente.</p>
+<p>Ao atingir esse limite, a API retornará o status <code>429 Too Many Requests</code> até que a janela de tempo seja renovada.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Limite</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>REST</td>
+<td>200 / minuto</td>
+</tr>
+<tr>
+<td>BULK</td>
+<td>20 / minuto</td>
+</tr>
+</tbody></table></div>
+<h4>Limites por Pacotes de API</h4>
+<p>Além do limite por minuto, cada pacote contratado define um número máximo de requisições por dia. Os pacotes marcados com <code>*</code> possuem <strong>bloqueio</strong>: ao atingir a cota diária, as requisições serão recusadas com <code>429 Too Many Requests</code> até a renovação no dia seguinte.</p>
+
+  </body>
+</html>

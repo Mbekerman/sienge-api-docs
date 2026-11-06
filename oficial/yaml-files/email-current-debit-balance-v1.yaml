@@ -1,0 +1,303 @@
+openapi: 3.1.1
+info:
+  title: Saldo Devedor Presente
+  version: 1.24.0
+  description: API para envio do Relatório Saldo Devedor Presente por e-mail.
+paths:
+  /email-current-debit-balance:
+    post:
+      tags:
+        - Saldo Devedor Presente
+      summary: Envia relatório de Saldo Devedor Presente por e-mail.
+      description: Envia relatório de Saldo Devedor Presente do cliente por e-mail. (REST)
+      operationId: postEmailCurrentDebitBalance
+      requestBody:
+        description: >-
+          Dados do corpo da requisição para envio do relatório de Saldo Devedor
+          Presente por e-mail
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/EmailCurrentDebitBalanceFilter'
+            example:
+              customerId: 12345
+              email: exemplo@email.com
+              subject: Relatório de Saldo Devedor Presente
+              message: Exemplo de corpo de email
+              fileName: relatorio_saldo_devedor.pdf
+              conditionIdIn:
+                - AT
+                - PM
+              conditionIdNotIn:
+                - AT
+                - PM
+        required: false
+      responses:
+        '201':
+          description: >-
+            Relatório gerado com sucesso. O envio de e-mails pra esse relatório
+            é assincrono, favor consultar o relatório de envio de e-mails de
+            Contas a Receber para verificar se houve falha ao enviar.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-codegen-request-body-name: filter
+      x-original-file: email-current-debit-balance-v1.yaml
+      x-audience:
+        - public
+components:
+  schemas:
+    EmailCurrentDebitBalanceFilter:
+      type: object
+      description: Corpo da requisição para envio do relatório de Saldo Devedor Presente
+      properties:
+        customerId:
+          type: integer
+          description: Código do cliente - <b>preenchimento obrigatório</b>.
+          example: 12345
+        email:
+          type: string
+          description: >-
+            E-mail do destinatário - <b>preenchimento obrigatório</b> (pode
+            conter mais de um e-mail se for separado por ponto-e-virgula ';')
+          example: exemplo@email.com
+        subject:
+          type: string
+          description: Assunto do e-mail.
+          example: Relatório de Saldo Devedor Presente
+        message:
+          type: string
+          description: >-
+            Texto do corpo do e-mail (pode ser usada a tag HTML '<_br_>' para
+            quebra de linhas).
+          example: Exemplo de corpo de email
+        fileName:
+          type: string
+          description: Nome personalizado do arquivo PDF do relatório anexado ao e-mail.
+          example: relatorio_saldo_devedor.pdf
+        conditionIdIn:
+          $ref: '#/components/schemas/ConditionIdInArray'
+        conditionIdNotIn:
+          $ref: '#/components/schemas/ConditionIdNotInArray'
+    ConditionIdInArray:
+      description: >-
+        Id das condições de pagamento para incluir na consulta (Exemplo: AT, PM)
+        | Preenchendo este parâmetro serão consideradas somente as parcelas
+        cadastradas com as mesmas condições de pagamento informadas no
+        parâmetro.
+      example:
+        - AT
+        - PM
+      items:
+        type: string
+      type: array
+    ConditionIdNotInArray:
+      description: >-
+        Id das condições de pagamento para excluir na consulta (Exemplo: AT, PM)
+        | Preenchendo este parâmetro serão consideradas somente as parcelas
+        cadastradas com as mesmas condições de pagamento informadas no
+        parâmetro.
+      example:
+        - AT
+        - PM
+      items:
+        type: string
+      type: array
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

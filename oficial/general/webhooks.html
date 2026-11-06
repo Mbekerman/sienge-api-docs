@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Webhooks · Documentação de APIs</title>
+    <link href="../fonts.css" rel="stylesheet" />
+    <link href="../general-page.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>Webhooks</h1>
+    <p>Um Webhook é uma notificação automática enviada pelo Sienge para um servidor externo sempre que um evento ocorre na plataforma. Em vez do seu sistema ficar consultando a API periodicamente para verificar se algo mudou, você registra um webhook e o Sienge avisa proativamente quando o evento acontece.</p>
+<p><strong>Exemplo prático:</strong> se você precisar ser notificado toda vez que um novo contrato de venda for criado no Sienge, basta cadastrar um webhook para o evento de criação de contrato e informar o endpoint do seu servidor que receberá a notificação.</p>
+<h4>O que é necessário?</h4>
+<p>Você precisa de um servidor com um endpoint que aceite requisições <strong>POST</strong>. Esse endpoint ficará responsável por receber e processar as notificações enviadas pelo Sienge.</p>
+<h4>Funcionamento</h4>
+<p>Após o cadastro de um webhook pelas APIs de gerenciamento, sempre que o evento configurado ocorrer no Sienge:</p>
+<ol>
+<li>O serviço de webhooks é acionado de forma instantânea.</li>
+<li>Uma requisição POST é enviada para a URL cadastrada com o payload do evento.</li>
+<li>O Sienge aguarda a resposta do servidor por até <strong>2,5 segundos</strong>. Se não houver resposta a tempo, o evento é encaminhado para o mecanismo de retry.</li>
+</ol>
+<h4>Retry</h4>
+<p>Caso a notificação não seja entregue (servidor offline, erro ou timeout), o Sienge tentará reenviar nos seguintes intervalos:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Tentativa</th>
+<th>Intervalo após tentativa anterior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1ª</td>
+<td>10 minutos</td>
+</tr>
+<tr>
+<td>2ª</td>
+<td>30 minutos</td>
+</tr>
+<tr>
+<td>3ª</td>
+<td>60 minutos (1 hora)</td>
+</tr>
+<tr>
+<td>4ª</td>
+<td>180 minutos (3 horas)</td>
+</tr>
+<tr>
+<td>5ª</td>
+<td>300 minutos (5 horas)</td>
+</tr>
+</tbody></table></div>
+<p>Após a quinta tentativa, o Sienge considera a notificação como não entregue e encerra as tentativas. O tempo total percorrido até esse ponto é de aproximadamente <strong>10 horas</strong>.</p>
+<h4>Headers enviados nas notificações</h4>
+<p>Cada notificação de webhook inclui os seguintes headers para identificação:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Header</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>x-sienge-tenant</code></td>
+<td>Subdomínio do Sienge que originou o evento</td>
+</tr>
+<tr>
+<td><code>x-sienge-event</code></td>
+<td>Tipo do evento que disparou a notificação</td>
+</tr>
+<tr>
+<td><code>x-sienge-hook-id</code></td>
+<td>Identificador do cadastro do webhook na base do Sienge</td>
+</tr>
+<tr>
+<td><code>x-sienge-id</code></td>
+<td>Identificador único do evento — pode ser usado para operações idempotentes</td>
+</tr>
+<tr>
+<td><code>user-agent</code></td>
+<td>Sempre será <code>sienge-hooks</code></td>
+</tr>
+</tbody></table></div>
+
+  </body>
+</html>

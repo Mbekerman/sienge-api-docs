@@ -1,0 +1,703 @@
+openapi: 3.1.1
+info:
+  title: Orçamentos de Obra
+  version: 1.24.0
+  description: Dados de planilhas de orçamento de obra.
+paths:
+  /building-cost-estimations/{buildingId}/sheets:
+    get:
+      description: >-
+        Lista as planilhas (unidades construtivas) da versão vigente do
+        orçamento da obra informada, retornando metadados de paginação e o
+        conjunto de planilhas existentes. (REST)
+      tags:
+        - Planilhas
+      operationId: getBuildingCostEstimationsSheets
+      x-section: Planilhas
+      x-original-file: building-cost-estimations-v1.yaml
+      summary: Lista planilhas do orçamento
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: >-
+            Retorna um array com as planilhas da versão atual do orçamento da
+            respectiva obra, sendo uma planilha para cada unidade construtiva
+            (building unit). Caso não haja planilhas, será retornada uma coleção
+            vazia.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseSheet'
+              example:
+                resultSetMetadata:
+                  count: 2
+                  offset: 0
+                  limit: 100
+                results:
+                  - id: 1
+                    description: Incorporação
+                    status: LOCKED
+                  - id: 2
+                    description: Estrutura
+                    status: UNLOCKED
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /building-cost-estimations/{buildingId}/sheets/{building_unit_id}/items:
+    get:
+      description: >-
+        Retorna os itens detalhados da planilha especificada (pela unidade
+        construtiva) na versão vigente do orçamento da obra, com suporte a
+        paginação. (REST)
+      tags:
+        - Itens da Planilha
+      operationId: getBuildingCostEstimationsSheetsItems
+      x-section: Itens da Planilha
+      x-original-file: building-cost-estimations-v1.yaml
+      summary: Lista itens da planilha
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/BuildingIdPath'
+        - in: path
+          name: building_unit_id
+          description: Código da unidade construtiva da obra, que identifica a planilha
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - $ref: '#/components/parameters/Offset'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: >-
+            Retorna um array com os itens da respectiva planilha da versão atual
+            do orçamento da obra. Quando não houver itens para a planilha, o
+            retorno será uma lista vazia.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseSheetItems'
+              example:
+                resultSetMetadata:
+                  count: 2
+                  offset: 0
+                  limit: 100
+                results:
+                  - id: a1b2c3
+                    wbsCode: 01.001.000.001
+                    workItemId: 9
+                    description: Alvenaria de Tijolo Furado
+                    unitOfMeasure: m2
+                    quantity: 23.3205
+                    unitPrice: 9.0009
+                    totalPrice: 209.91
+                    pricesByCategory:
+                      - category: MATERIAL
+                        unitPrice: 5.5005
+                        totalPrice: 128.65
+                      - category: LABOR
+                        unitPrice: 3.5004
+                        totalPrice: 81.26
+                  - id: d4e5f6
+                    wbsCode: 01.002.000.001
+                    workItemId: 10
+                    description: Concretagem
+                    unitOfMeasure: m3
+                    quantity: 12
+                    unitPrice: 15.25
+                    totalPrice: 183
+                    pricesByCategory:
+                      - category: MATERIAL
+                        unitPrice: 12
+                        totalPrice: 144
+                      - category: LABOR
+                        unitPrice: 3.25
+                        totalPrice: 39
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    GetResponseSheet:
+      description: >-
+        Envelope da resposta para a consulta de planilhas (sheets) do orçamento
+        da obra. Contém os metadados do conjunto de resultados e a lista de
+        unidades construtivas retornadas.
+      type: object
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          description: Lista de planilhas (unidades construtivas) retornadas.
+          type: array
+          items:
+            $ref: '#/components/schemas/SheetDTO'
+          example:
+            - id: 1
+              description: Incorporação
+              status: LOCKED
+            - id: 2
+              description: Estrutura
+              status: UNLOCKED
+    GetResponseSheetItems:
+      description: >-
+        Envelope da resposta para a consulta dos itens de uma planilha do
+        orçamento da obra. Inclui os metadados do conjunto de resultados e a
+        lista de itens retornados para a planilha selecionada.
+      type: object
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          description: Lista de itens da planilha retornados.
+          type: array
+          items:
+            $ref: '#/components/schemas/SheetItemsDTO'
+          example:
+            - id: a1b2c3
+              wbsCode: 01.001.000.001
+              workItemId: 9
+              description: Alvenaria de Tijolo Furado
+              unitOfMeasure: m2
+              quantity: 23.3205
+              unitPrice: 9.0009
+              totalPrice: 209.91
+              pricesByCategory:
+                - category: MATERIAL
+                  unitPrice: 5.5005
+                  totalPrice: 128.65
+                - category: LABOR
+                  unitPrice: 3.5004
+                  totalPrice: 81.26
+            - id: d4e5f6
+              wbsCode: 01.002.000.001
+              workItemId: 10
+              description: Concretagem
+              unitOfMeasure: m3
+              quantity: 12
+              unitPrice: 15.25
+              totalPrice: 183
+              pricesByCategory:
+                - category: MATERIAL
+                  unitPrice: 12
+                  totalPrice: 144
+                - category: LABOR
+                  unitPrice: 3.25
+                  totalPrice: 39
+    BuildingCostEstimationsVersionCreatedEvent:
+      description: Evento gerado quando uma nova versão do orçamento é criada.
+      type: object
+      required:
+        - buildingId
+        - buildingStatus
+        - creationDate
+        - versionNumber
+      properties:
+        buildingId:
+          description: Código da obra (escopo orçamentos)
+          type: integer
+          format: int32
+          minimum: 0
+          example: 100
+        buildingStatus:
+          description: Situação da obra no momento da criação da versão
+          type: string
+          enum:
+            - COST_ESTIMATING
+            - IN_PROGRESS
+            - FINISHED_WITH_FINANCIAL_PENDENCIES
+            - FINISHED_WITHOUT_FINANCIAL_PENDENCIES
+          example: COST_ESTIMATING
+        creationDate:
+          description: Data e hora da criação da versão
+          type: string
+          format: date-time
+          example: '2025-01-01T12:00:00Z'
+        versionNumber:
+          description: Número da versão criada
+          type: integer
+          format: int32
+          minimum: 0
+          example: 3
+    BuildingCostEstimationUpdatedEvent:
+      description: Evento gerado quando um item de orçamento é criado ou removido.
+      type: object
+      required:
+        - buildingId
+        - buildingUnitId
+        - updatedAt
+        - user
+      properties:
+        buildingId:
+          description: Código da obra (escopo orçamentos)
+          type: integer
+          format: int32
+          minimum: 0
+          example: 100
+        buildingUnitId:
+          description: Código da unidade construtiva
+          example: 123
+          format: int32
+          type: integer
+        updatedAt:
+          description: Data e hora da atualização
+          example: '2025-01-01T12:00:00Z'
+          format: date-time
+          type: string
+        user:
+          description: Usuário responsável pela alteração
+          example: usuario.sienge
+          type: string
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    SheetDTO:
+      description: >-
+        Representa uma planilha (unidade construtiva) do orçamento da obra, com
+        seu identificador, descrição e status operacional.
+      type: object
+      properties:
+        id:
+          description: Id da unidade construtiva
+          type: integer
+          example: 1
+        description:
+          description: Descrição da unidade construtiva
+          type: string
+          example: Incorporação
+        status:
+          description: Situação operacional da unidade construtiva
+          type: string
+          enum:
+            - LOCKED
+            - UNLOCKED
+          example: LOCKED
+    SheetItemsDTO:
+      description: >-
+        Representa um item da planilha de orçamento da obra, incluindo seus
+        identificadores, descrição, unidade de medida, quantidades e valores
+        (unitário e total), além do detalhamento de preços por categoria de
+        insumo.
+      type: object
+      properties:
+        id:
+          description: Identificador único imutável do item de orçamento
+          type: string
+          example: a1b2c3
+        wbsCode:
+          description: >-
+            Código de referência do item de orçamento,  representando a posição
+            do mesmo na Estrutura de Decomposição do Trabalho (EDT)
+          type: string
+          example: 01.001.000.001
+        workItemId:
+          description: Código do serviço na tabela utilizada na obra.
+          type: integer
+          example: 9
+        description:
+          description: Descrição do item de orçamento
+          type: string
+          example: Alvenaria de Tijolo Furado
+        unitOfMeasure:
+          description: Unidade de medida usada para o item de orçamento
+          type: string
+          example: m2
+        quantity:
+          description: Quantidade orçada para o item de orçamento com precisão de 4 casas
+          type: number
+          example: 23.3205
+        unitPrice:
+          description: >-
+            Preço unitário do item de orçamento com precisão de 4 casas.
+            Equivalente a soma dos preços unitários de cada tipo de preço do
+            serviço
+          type: number
+          example: 9.0009
+        totalPrice:
+          description: >-
+            Preço total do item de orçamento com precisão de 2 casas.
+            Equivalente a soma dos preços totais de cada tipo de preço do
+            serviço
+          type: number
+          example: 209.91
+        pricesByCategory:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceByCategory'
+    PriceByCategory:
+      description: >-
+        Detalhamento de preços do item de orçamento por categoria de insumo (por
+        exemplo, material e mão de obra), contendo preços unitário, total e
+        opcionalmente o preço total base.
+      properties:
+        baseTotalPrice:
+          description: >-
+            Preço total base para o tipo de insumo correspondente com precisão
+            de 2 casas. Neste preço base são considerados apenas os preços
+            "puros" dos insumos e serviços que compõem o item de orçamento, ou
+            seja, neste preço não é aplicado BDI, encargos sociais nem correção
+            por indexador.
+          example: 5000.05
+          type: number
+        category:
+          $ref: '#/components/schemas/ResourceCategoryEnum'
+        totalPrice:
+          description: >-
+            Preço total para o tipo de insumo correspondente com precisão de 2
+            casas
+          example: 209.91
+          type: number
+        unitPrice:
+          description: >-
+            Preço unitário para o tipo de insumo correspondente com precisão de
+            4 casas
+          example: 9.0009
+          type: number
+      type: object
+    ResourceCategoryEnum:
+      description: Categoria do insumo
+      enum:
+        - EQUIPMENT
+        - LABOR
+        - INCREMENTAL_COST_ITEM
+        - MATERIAL
+        - TRANSPORT_ITEM
+        - OTHER
+        - OFFICE_SUPPLY
+        - FUELS_AND_LUBRICANTS
+        - MAINTENANCE_MATERIAL
+      example: MATERIAL
+      type: string
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    BuildingIdPath:
+      description: Identificador único da obra
+      in: path
+      name: buildingId
+      required: true
+      schema:
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1
+webhooks:
+  BUILDING_COST_ESTIMATIONS_VERSION_CREATED:
+    post:
+      tags:
+        - Webhooks - Orçamentos de Obra
+      operationId: webhookBuildingCostEstimationsVersionCreated
+      summary: Webhook de nova versão de orçamento criada
+      description: Disparado quando uma nova versão do orçamento é criada.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildingCostEstimationsVersionCreatedEvent'
+      responses:
+        2XX:
+          description: >-
+            O evento BUILDING_COST_ESTIMATIONS_VERSION_CREATED foi recebido com
+            sucesso
+      x-audience:
+        - public
+  BUILDING_COST_ESTIMATION_UPDATED:
+    post:
+      tags:
+        - Webhooks - Orçamentos de Obra
+      operationId: webhookBuildingCostEstimationUpdated
+      summary: Webhook de item de orçamento criado ou removido
+      description: Disparado quando um item de orçamento é criado ou removido.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BuildingCostEstimationUpdatedEvent'
+      responses:
+        2XX:
+          description: O evento BUILDING_COST_ESTIMATION_UPDATED foi recebido com sucesso
+      x-audience:
+        - public

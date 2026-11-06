@@ -1,0 +1,795 @@
+openapi: 3.1.1
+info:
+  title: Bulk-data Extrato Cliente Histórico
+  version: 1.24.0
+  description: >-
+    API  de leitura dos dados apresentados no relatório Extrato Cliente
+    Histórico.
+paths:
+  /customer-extract-history:
+    get:
+      x-original-file: bulk-data-customer-extract-history-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Bulk-data Extrato Cliente Histórico
+      summary: Realiza leitura de dados do extrato de cliente.
+      description: >-
+        Realiza leitura de dados do extrato de cliente histórico e retorna uma
+        lista de títulos. (BULK)
+      operationId: customerExtractHistory
+      parameters:
+        - $ref: '#/components/parameters/StartDueDate'
+        - $ref: '#/components/parameters/EndDueDate'
+        - $ref: '#/components/parameters/CorrectionDate'
+        - $ref: '#/components/parameters/PositionDate'
+        - $ref: '#/components/parameters/BillReceivableId'
+        - $ref: '#/components/parameters/CompanyId'
+        - $ref: '#/components/parameters/OptionalCustomerId'
+        - $ref: '#/components/parameters/CostCenterId'
+        - $ref: '#/components/parameters/UnitNumber'
+        - $ref: '#/components/parameters/DocumentsId'
+        - $ref: '#/components/parameters/BearerId'
+        - $ref: '#/components/parameters/ConditionIdIn'
+        - $ref: '#/components/parameters/IncludeRemadeInstallmentsBoolQuery'
+        - $ref: '#/components/parameters/IncludeCanceledInstallments'
+        - $ref: '#/components/parameters/IncludeRevokedInstallments'
+        - $ref: '#/components/parameters/IncludeRenegotiatedDischarge'
+        - $ref: '#/components/parameters/ConditionIdNotIn'
+        - $ref: '#/components/parameters/ChangeStartDate'
+      responses:
+        '200':
+          description: >-
+            Consulta executada com sucesso: extrato histórico do cliente
+            retornado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCustomerExtractHistory'
+              example:
+                data:
+                  - billReceivableId: 12345
+                    company:
+                      id: 1
+                      name: Empresa Exemplo
+                    costCenter:
+                      id: 10
+                      name: Centro de Custo Exemplo
+                    customer:
+                      id: 100
+                      name: João da Silva
+                      document: 123.456.789-00
+                    emissionDate: '2023-01-10'
+                    dueDate: '2023-02-10'
+                    correctionDate: '2023-01-15'
+                    document: CT.1234
+                    privateArea: 80.5
+                    oldestInstallmentDate: '2023-02-10'
+                    revokedBillReceivableDate: '2023-02-10'
+                    units:
+                      - id: 501
+                        name: A101
+                    installments:
+                      - id: 1
+                        annualCorrection: true
+                        sentToScripturalCharge: false
+                        paymentTerms:
+                          id: PM
+                          descrition: Parcelas Mensais
+                        baseDate: '2023-01-01'
+                        originalValue: 500.25
+                        dueDate: '2023-02-10'
+                        indexerId: 99
+                        calculationDate: '2023-01-15'
+                        currentBalance: 250
+                        currentBalanceWithAddition: 255
+                        generatedBillet: true
+                        installmentSituation: '2'
+                        receipts:
+                          - days: 0
+                            date: '2023-02-10'
+                            value: 500.25
+                            extra: 0
+                            discount: 0
+                            netReceipt: 500.25
+                            type: Recebimento
+                        installmentNumber: '001'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    GetCustomerExtractHistory:
+      required:
+        - data
+      type: object
+      description: Lista de títulos do Extrato Cliente Histórico do cliente.
+      example:
+        data:
+          - billReceivableId: 12345
+            company:
+              id: 1
+              name: Empresa Exemplo
+            costCenter:
+              id: 10
+              name: Centro de Custo Exemplo
+            customer:
+              id: 100
+              name: João da Silva
+              document: 123.456.789-00
+            emissionDate: '2023-01-10'
+            dueDate: '2023-02-10'
+            correctionDate: '2023-01-15'
+            document: CT.1234
+            privateArea: 80.5
+            oldestInstallmentDate: '2023-02-10'
+            revokedBillReceivableDate: '2023-02-10'
+            units:
+              - id: 501
+                name: A101
+            installments:
+              - id: 1
+                annualCorrection: true
+                sentToScripturalCharge: false
+                paymentTerms:
+                  id: PM
+                  descrition: Parcelas Mensais
+                baseDate: '2023-01-01'
+                originalValue: 500.25
+                dueDate: '2023-02-10'
+                indexerId: 99
+                calculationDate: '2023-01-15'
+                currentBalance: 250
+                currentBalanceWithAddition: 255
+                generatedBillet: true
+                installmentSituation: '2'
+                receipts:
+                  - days: 0
+                    date: '2023-02-10'
+                    value: 500.25
+                    extra: 0
+                    discount: 0
+                    netReceipt: 500.25
+                installmentNumber: '001'
+      properties:
+        data:
+          allOf:
+            - $ref: '#/components/schemas/ListOfTitlesSearchResultDescription'
+            - type: array
+              items:
+                $ref: '#/components/schemas/CustomerExtractHistoryResults'
+          example:
+            - billReceivableId: 12345
+              company:
+                id: 1
+                name: Empresa Exemplo
+              costCenter:
+                id: 10
+                name: Centro de Custo Exemplo
+              customer:
+                id: 100
+                name: João da Silva
+                document: 123.456.789-00
+              emissionDate: '2023-01-10'
+              dueDate: '2023-02-10'
+              correctionDate: '2023-01-15'
+              document: CT.1234
+              privateArea: 80.5
+              oldestInstallmentDate: '2023-02-10'
+              revokedBillReceivableDate: '2023-02-10'
+              units:
+                - id: 501
+                  name: A101
+              installments:
+                - id: 1
+                  annualCorrection: true
+                  sentToScripturalCharge: false
+                  paymentTerms:
+                    id: PM
+                    descrition: Parcelas Mensais
+                  baseDate: '2023-01-01'
+                  originalValue: 500.25
+                  dueDate: '2023-02-10'
+                  indexerId: 99
+                  calculationDate: '2023-01-15'
+                  currentBalance: 250
+                  currentBalanceWithAddition: 255
+                  generatedBillet: true
+                  installmentSituation: '2'
+                  receipts:
+                    - days: 0
+                      date: '2023-02-10'
+                      value: 500.25
+                      extra: 0
+                      discount: 0
+                      netReceipt: 500.25
+                  installmentNumber: '001'
+    ListOfTitlesSearchResultDescription:
+      description: Lista de títulos retornados como resultado da pesquisa.
+    CustomerExtractHistoryResults:
+      type: object
+      description: Dados de um título do Extrato do Cliente Histórico
+      properties:
+        billReceivableId:
+          description: Identificador do título a receber
+          example: 10
+          format: int32
+          type: integer
+        company:
+          $ref: '#/components/schemas/Company'
+        costCenter:
+          $ref: '#/components/schemas/CostCenter'
+        customer:
+          $ref: '#/components/schemas/Customer'
+        emissionDate:
+          description: Data de emissão do título. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2024-01-01T00:00:00.000Z
+          format: date
+          type: string
+        lastRenegotiationDate:
+          description: Data da última repactuação. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2023-01-10T00:00:00.000Z
+          format: date
+          type: string
+        correctionDate:
+          description: Data de correção. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2023-03-01T00:00:00.000Z
+          format: date
+          type: string
+        document:
+          description: Código do documento + "." + Número do documento.
+          example: CT.15
+          type: string
+        privateArea:
+          type: number
+          description: Área privativa.
+          format: double
+        oldestInstallmentDate:
+          type: string
+          description: >-
+            Data de vencimento da última parcela em aberto do título. Formato
+            esperado: yyyy-MM-dd.
+          format: date
+        revokedBillReceivableDate:
+          type: string
+          description: >-
+            Data do distrato do título, retornando null se o título não tiver
+            sido distratado. Formato esperado: yyyy-MM-dd.
+          format: date
+        units:
+          allOf:
+            - $ref: '#/components/schemas/UnitsListDescription'
+            - type: array
+              items:
+                $ref: '#/components/schemas/Unit'
+        installments:
+          allOf:
+            - $ref: '#/components/schemas/InstallmentsListDescription'
+            - type: array
+              items:
+                $ref: '#/components/schemas/CustomerExtractHistoryInstallment'
+    Company:
+      description: Empresa.
+      example:
+        id: 1
+        name: Empresa Exemplo
+      properties:
+        id:
+          example: 1
+          format: int64
+          type: integer
+        name:
+          example: Empresa Exemplo
+          type: string
+      type: object
+    CostCenter:
+      description: Centro de custo.
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+      type: object
+    Customer:
+      description: Cliente.
+      properties:
+        document:
+          description: CPF ou CNPJ formatado (exemplo de CPF '000.000.000-00').
+          type: string
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+      type: object
+    UnitsListDescription:
+      description: Lista de unidades
+    Unit:
+      description: Unidade.
+      properties:
+        id:
+          format: int64
+          type: integer
+        name:
+          type: string
+      type: object
+    InstallmentsListDescription:
+      description: Lista de parcelas
+    CustomerExtractHistoryInstallment:
+      type: object
+      description: Dados de uma parcela do Extrato do Cliente Histórico.
+      properties:
+        id:
+          description: Identificador da parcela do título
+          example: 1
+          format: int32
+          type: integer
+        annualCorrection:
+          type: boolean
+          description: Parcela com correção anual.
+        sentToScripturalCharge:
+          type: boolean
+          description: Parcela enviada para cobrança escritural.
+        paymentTerms:
+          $ref: '#/components/schemas/CustomerExtractHistoryPaymentTerms'
+        baseDate:
+          type: string
+          description: 'Data base do indexador. Formato esperado: yyyy-MM-dd.'
+          format: date
+        originalValue:
+          description: Valor original da parcela.
+          example: 1000
+          type: number
+        dueDate:
+          description: Data de vencimento. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        indexerId:
+          description: Código do indexador.
+          example: 5
+          type: integer
+        calculationDate:
+          type: string
+          description: 'Data cálculo. Formato esperado: yyyy-MM-dd.'
+          format: date
+        currentBalance:
+          description: Saldo atual da parcela.
+          format: double
+          type: number
+        currentBalanceWithAddition:
+          description: Saldo atual da parcela mais acréscimos.
+          format: double
+          type: number
+        generatedBillet:
+          description: informa se foi gerado boleto para a cobrança.
+          type: boolean
+        installmentSituation:
+          $ref: '#/components/schemas/InstallmentSituation'
+        receipts:
+          type: array
+          description: Lista de baixas referente a parcela.
+          items:
+            $ref: '#/components/schemas/CustomerExtractHistoryReceipt'
+        installmentNumber:
+          description: >-
+            Numero "sequencial" das parcelas 1, 2, 3, ou por "Condição de
+            Pagamento" 1/2, 2/2... (Resultado será apresentado conforme
+            Parâmetro 651).
+          example: 1/2
+          type: string
+    CustomerExtractHistoryPaymentTerms:
+      type: object
+      description: Condição de pagamento do título no Extrato do Cliente (Histórico).
+      properties:
+        id:
+          type: string
+        descrition:
+          type: string
+    InstallmentSituation:
+      description: |
+        informa a situação de pagamento da parcela:
+          - 0: Em Aberto
+          - 1: Parcialmente recebida
+          - 2: Recebida
+      enum:
+        - '0'
+        - '1'
+        - '2'
+      example: '2'
+      type: string
+    CustomerExtractHistoryReceipt:
+      type: object
+      description: Baixa registrada para uma parcela no Extrato do Cliente (Histórico).
+      properties:
+        days:
+          type: integer
+          description: Número de dias de atraso.
+          format: int64
+        date:
+          type: string
+          description: 'Data da baixa. Formato esperado: yyyy-MM-dd.'
+          format: date
+        value:
+          type: number
+          description: Valor da baixa.
+          format: double
+        extra:
+          type: number
+          description: Acréscimos.
+          format: double
+        discount:
+          type: number
+          description: Descontos.
+          format: double
+        netReceipt:
+          type: number
+          description: Recebimento líquido.
+          format: double
+        type:
+          type: string
+          description: Tipo da baixa ('Recebimento', 'Distrato', 'Reparcelamento', etc)
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    StartDueDate:
+      description: Período de vencimento inicial. Formato ISO 8601 (yyyy-MM-dd).
+      in: query
+      name: startDueDate
+      required: true
+      schema:
+        format: date
+        type: string
+    EndDueDate:
+      description: Período de vencimento final. Formato ISO 8601 (yyyy-MM-dd).
+      in: query
+      name: endDueDate
+      required: true
+      schema:
+        format: date
+        type: string
+    CorrectionDate:
+      description: >-
+        Data para correção do indexador. Se o parâmetro não for fornecido, será
+        considerada a data atual. Formato ISO 8601 (yyyy-MM-dd).
+      in: query
+      name: correctionDate
+      schema:
+        format: date
+        type: string
+    PositionDate:
+      description: >-
+        Data de posição do histórico. Se o parâmetro não for fornecido, será
+        considerada a data atual. Formato ISO 8601 (yyyy-MM-dd). <b>Exemplo</b>:
+        2019-12-20
+      in: query
+      name: positionDate
+      schema:
+        default: Data Atual
+        format: date
+        type: string
+    BillReceivableId:
+      description: Número do título a receber
+      in: query
+      name: billReceivableId
+      schema:
+        example: 12345
+        type: integer
+    CompanyId:
+      description: Código da empresa (opcional)
+      in: query
+      name: companyId
+      schema:
+        example: 101
+        type: integer
+    OptionalCustomerId:
+      description: Código do cliente (opcional)
+      in: query
+      name: customerId
+      schema:
+        example: 1001
+        type: integer
+    CostCenterId:
+      description: Código do centro de custo (opcional)
+      in: query
+      name: costCenterId
+      required: false
+      schema:
+        type: integer
+    UnitNumber:
+      description: Número da unidade.
+      in: query
+      name: unitNumber
+      schema:
+        type: string
+    DocumentsId:
+      description: >-
+        Lista de códigos de documentos (separados por vírgula). <b>Exemplo</b>:
+        CT, AT, CM
+      in: query
+      name: documentsId
+      schema:
+        example:
+          - CT
+          - AT
+          - CM
+        items:
+          example: CT
+          type: string
+        type: array
+    BearerId:
+      description: Código do portador.
+      in: query
+      name: bearerId
+      schema:
+        example: 1
+        type: integer
+    ConditionIdIn:
+      description: Filtro para incluir condições de pagamento.
+      example:
+        - AT
+        - PM
+      explode: false
+      in: query
+      name: conditionIdIn
+      schema:
+        example:
+          - AT
+          - PM
+        items:
+          type: string
+        type: array
+      style: form
+    IncludeRemadeInstallmentsBoolQuery:
+      description: Incluir parcelas que foram reparceladas (valor default = true).
+      in: query
+      name: includeRemadeInstallments
+      schema:
+        default: true
+        type: boolean
+    IncludeCanceledInstallments:
+      description: Incluir parcelas que foram canceladas (valor default = true).
+      in: query
+      name: includeCanceledInstallments
+      schema:
+        default: true
+        type: boolean
+    IncludeRevokedInstallments:
+      description: Incluir parcelas que foram distratadas (valor default = true).
+      in: query
+      name: includeRevokedInstallments
+      schema:
+        default: true
+        type: boolean
+    IncludeRenegotiatedDischarge:
+      description: Incluir baixas por repactuação (valor default = true).
+      in: query
+      name: includeRenegotiatedDischarge
+      schema:
+        default: true
+        type: boolean
+    ConditionIdNotIn:
+      description: Filtro para excluir condições de pagamento.
+      example:
+        - AT
+        - PM
+      explode: false
+      in: query
+      name: conditionIdNotIn
+      schema:
+        example:
+          - AT
+          - PM
+        items:
+          example: PM
+          type: string
+        type: array
+      style: form
+    ChangeStartDate:
+      description: >
+        Data Inicial de alteração do Título/Parcela. Buscará apenas
+        títulos/parcelas que tiveram alteração durante um intervalo de tempo
+        pré-definido. A data final será sempre a data atual. Formato ISO 8601
+        (yyyy-MM-dd).
+      in: query
+      name: changeStartDate
+      schema:
+        format: date
+        type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/bulk-data/v1

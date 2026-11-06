@@ -1,0 +1,500 @@
+openapi: 3.1.1
+info:
+  title: Bens Imóveis
+  version: 1.24.0
+  description: API para listagem de bens imóveis
+paths:
+  /patrimony/fixed:
+    get:
+      x-original-file: fixed-assets-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Bens Imóveis
+      summary: Lista bens imóveis
+      description: Lista os bens ordenados por código do patrimônio - (Bens Imóveis) (REST)
+      operationId: getPatrimonyFixed
+      parameters:
+        - name: patrimonyId
+          in: query
+          description: Código do patrimônio. - (Bens Imóveis)
+          schema:
+            type: integer
+        - name: costCenter
+          in: query
+          description: Empreendimento/Centro de custo
+          schema:
+            type: string
+        - name: detail
+          in: query
+          description: Detalhamento por código do patrimônio
+          schema:
+            type: string
+        - name: situation
+          in: query
+          description: Situação do bem podendo ser A - Ativo ou B - Baixados -
+          schema:
+            $ref: '#/components/schemas/AssetSituationEnum'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Resultado da pesquisa retornado com sucesso - (Bens Imóveis)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountacyFixedAssetsPaginationResult'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    AccountacyFixedAssetsPaginationResult:
+      description: >-
+        Lista paginada dos bens retornados como resultado da pesquisa por código
+        do patrimônio.
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista dos bens retornados como resultado da pesquisa
+          items:
+            $ref: '#/components/schemas/AccountacyFixedAssetItem'
+          example:
+            - patrimonyId: 10
+              detail: Detalhe do bem
+              observation: Bem em bom estado
+              costCenter: 5
+              situation: A
+              preservation: Ótimo
+              propertyRegistration: 55665d511aa
+              landRegistration: Local XYZ
+              previousOswner: João Silva
+              privateArea: 450
+              commonArea: 200
+              address: Rua XYZ
+              addressNumber: '90'
+              addressComplement: Apto 5
+              neighborhood: Centro
+              city: Florianópolis
+              postalCode: '88132770'
+              registrationLocation: 1º Ofício de Registro de Imóveis
+              incorporationForm: Compra
+              incorporationDate: '2021-01-06'
+              incorporationValue: 5000
+              accountancyIncorporationAccount: 1.01.02.01
+              accountancyIdentity: Edificações e Benfeitorias em Imóveis Próprios
+              accountancyOrigin: Aquisição no Mercado Interno
+              accountancyUsageIndicator: Produção de Bens Destinados a Venda
+              depreciationInitialDate: '2021-02-01'
+              depreciationDebitAccount: 3.01.02.05
+              depreciationCreditAccount: 1.01.02.09
+              depreciationValue: 32
+              depreciationLastDate: '2022-02-01'
+              depreciationActualValue: 600.5
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    AccountacyFixedAssetItem:
+      description: Representação de um bem patrimonial individual
+      type: object
+      properties:
+        patrimonyId:
+          type: integer
+          description: Código do patrimônio - (Bens Imóveis)
+          example: 10
+        detail:
+          type: string
+          description: Detalhamento - (Bens Imóveis)
+          example: Detalhe do bem
+        observation:
+          type: string
+          description: Observação - (Bens Imóveis)
+          example: Bem em bom estado
+        costCenter:
+          type: integer
+          description: Centro de custo - (Bens Imóveis)
+          example: 5
+        situation:
+          $ref: '#/components/schemas/AssetSituationEnum'
+          description: Situação do bem - (Bens Imóveis)
+        preservation:
+          type: string
+          description: Estado de conservação - (Bens Imóveis)
+          example: Ótimo
+        propertyRegistration:
+          type: string
+          description: Matrícula do imóvel - (Bens Imóveis)
+          example: 55665d511aa
+        landRegistration:
+          type: string
+          description: Local de registro - (Bens Imóveis)
+          example: Local XYZ
+        registrationLocation:
+          type: string
+          description: Cartório de registro do imóvel - (Bens Imóveis)
+          example: 1º Ofício de Registro de Imóveis
+        previousOswner:
+          type: string
+          description: Proprietário anterior - (Bens Imóveis)
+          example: Nome do proprietário anterior
+        privateArea:
+          type: number
+          description: Área privativa - (Bens Imóveis)
+          example: 450
+        commonArea:
+          type: number
+          description: Área comum - (Bens Imóveis)
+          example: 200
+        address:
+          type: string
+          description: Endereço - (Bens Imóveis)
+          example: Rua XYZ
+        addressNumber:
+          type: string
+          description: Número - (Bens Imóveis)
+          example: '90'
+        addressComplement:
+          type: string
+          description: Complemento - (Bens Imóveis)
+          example: Apto 5
+        neighborhood:
+          type: string
+          description: Bairro - (Bens Imóveis)
+          example: Centro
+        city:
+          type: string
+          description: Cidade - (Bens Imóveis)
+          example: Florianópolis
+        postalCode:
+          type: string
+          description: CEP - (Bens Imóveis)
+          example: '88132770'
+        incorporationForm:
+          type: string
+          description: Forma de incorporação - (Bens Imóveis)
+          example: Compra
+        incorporationDate:
+          type: string
+          format: date
+          description: Data da incorporação - (Bens Imóveis)
+          example: '2021-01-06'
+        incorporationValue:
+          type: number
+          description: Valor da incorporação - (Bens Imóveis)
+          example: 5000
+        accountancyIncorporationAccount:
+          type: string
+          description: Conta de incorporação - (Bens Imóveis)
+          example: 1.01.02.01
+        accountancyIdentity:
+          type: string
+          description: Identificação - (Bens Imóveis)
+          example: Máquinas
+        accountancyOrigin:
+          type: string
+          description: Origem - (Bens Imóveis)
+          example: Aquisição no Mercado Interno
+        accountancyUsageIndicator:
+          type: string
+          description: Indicador da utilização - (Bens Imóveis)
+          example: Produção de Bens Destinados a Venda
+        depreciationInitialDate:
+          type: string
+          format: date
+          description: Data de início da depreciação - (Bens Imóveis)
+          example: '2021-02-01'
+        depreciationDebitAccount:
+          type: string
+          description: Despesa de depreciação (Débito) - (Bens Imóveis)
+          example: 3.01.02.05
+        depreciationCreditAccount:
+          type: string
+          description: Depreciação acumulada (Crédito) - (Bens Imóveis)
+          example: 1.01.02.09
+        depreciationValue:
+          type: number
+          description: Depreciação (%) - (Bens Imóveis)
+          example: 32
+        depreciationLastDate:
+          type: string
+          format: date
+          description: Data da última depreciação - (Bens Imóveis)
+          example: '2022-02-01'
+        depreciationActualValue:
+          type: number
+          description: Valor atual da depreciação - (Bens Imóveis)
+          example: 600.5
+    AssetSituationEnum:
+      description: Situação do bem patrimonial
+      enum:
+        - A
+        - B
+      example: A
+      type: string
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

@@ -1,0 +1,58 @@
+openapi: 3.1.1
+info:
+  title: Gerenciamento de Cobrança
+  version: 1.24.0
+paths: {}
+components:
+  schemas:
+    BookCollectionConfirmedWebhookPayload:
+      type: object
+      description: Payload do webhook de confirmação de cobrança escritural
+      required:
+        - billId
+        - installmentId
+        - banknumber
+      properties:
+        billId:
+          type: integer
+          description: Identificador do título
+          example: 0
+        installmentId:
+          description: Identificador da parcela do título
+          example: 1
+          format: int32
+          type: integer
+        banknumber:
+          type: string
+          description: Nosso número vinculado à cobrança
+          example: '0'
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags:
+  - name: Gerenciamento de Cobrança
+security:
+  - basicAuth: []
+webhooks:
+  BOOK_COLLECTION_CONFIRMED:
+    post:
+      tags:
+        - Webhooks - Gerenciamento de Cobrança
+      operationId: bookCollectionConfirmedWebhook
+      summary: Cobrança escritural confirmada
+      description: >-
+        Sempre que é realizada a confirmação da cobrança e o nosso número é
+        vinculado a cobrança gerada
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookCollectionConfirmedWebhookPayload'
+      responses:
+        2XX:
+          description: O evento BOOK_COLLECTION_CONFIRMED foi processado com sucesso
+      x-audience:
+        - public

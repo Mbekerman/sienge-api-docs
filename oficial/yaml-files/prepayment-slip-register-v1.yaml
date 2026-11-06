@@ -1,0 +1,408 @@
+openapi: 3.1.1
+info:
+  title: Antecipação de Parcelas
+  version: 1.24.0
+  description: >-
+    Operações para simulação e registro de antecipação de parcelas com
+    recebimentos instantâneos
+paths:
+  /prepayment-slip-register/simulate:
+    post:
+      tags:
+        - Antecipação de Parcelas
+      summary: Simula informações para antecipação de parcelas.
+      operationId: postPrepaymentSlipRegisterSimulate
+      requestBody:
+        description: Informações para simular dados da cobrança a ser gerada
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecebivelAntecipadoInputDto'
+        required: true
+      responses:
+        '200':
+          description: Simulação realizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingDTO'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: prepayment-slip-register-v1.yaml
+      description: >-
+        Simula dados detalhados para antecipação de parcelas incluindo valores e
+        vencimentos. (REST)
+      x-audience:
+        - public
+  /prepayment-slip-register:
+    post:
+      tags:
+        - Antecipação de Parcelas
+      summary: Registra cobrança referente a antecipação de parcelas.
+      operationId: postPrepaymentSlipRegister
+      requestBody:
+        description: Informações para registrar cobrança de parcelas antecipadas.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecebivelAntecipadoInputDto'
+        required: true
+      responses:
+        '201':
+          description: Cobrança enviada com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: prepayment-slip-register-v1.yaml
+      description: >-
+        Registra cobrança para antecipação de parcelas com configurações de
+        agrupamento e valor presente. (REST)
+      x-audience:
+        - public
+components:
+  schemas:
+    RecebivelAntecipadoInputDto:
+      description: >-
+        Dados necessários para simulação e registro de antecipação de parcelas
+        com configurações de agrupamento
+      required:
+        - correctAnnualInstallment
+        - groupBy
+        - installments
+        - newDueDate
+      type: object
+      properties:
+        companyId:
+          type: integer
+          description: Código da empresa da conta corrente
+          format: int32
+          example: 1
+        installments:
+          type: array
+          description: Lista das parcelas a serem antecipadas
+          example:
+            - billId: 10
+              installmentId: 123
+            - billId: 11
+              installmentId: 124
+          items:
+            type: object
+            properties:
+              billId:
+                type: integer
+                description: Código do título a ser antecipado
+                format: int32
+                example: 10
+              installmentId:
+                description: Identificador da parcela do título
+                example: 1
+                format: int32
+                type: integer
+        accountNumber:
+          description: Número da conta corrente
+          example: 1234-5
+          type: string
+        newDueDate:
+          type: string
+          format: date
+          description: Data do vencimento da cobrança antecipada
+          example: '2021-01-01'
+        groupBy:
+          $ref: '#/components/schemas/GroupByEnum'
+        matchDueDate:
+          description: >-
+            Agrupar parcelas com vencimento no mesmo dia ('SAME_DAY'), no mesmo
+            mês ('SAME_MONTH') ou todos vencimentos das parcelas ('ALL')
+          $ref: '#/components/schemas/MatchDueDateEnum'
+        percentPresentValue:
+          type: number
+          description: percentual para calcular o valor presente nas parcelas
+          format: double
+          example: 11.11
+        calculatePresentValue:
+          type: boolean
+          description: Opção para calcular o valor presente nas parcelas
+          example: true
+        correctAnnualInstallment:
+          type: boolean
+          description: Opção para corrigir o valor anual das parcelas
+          example: false
+    BillingDTO:
+      description: >-
+        Resposta contendo informações detalhadas da antecipação incluindo
+        valores e parcelas
+      type: object
+      properties:
+        receivableBillId:
+          description: Identificador do título a receber
+          example: 10
+          format: int32
+          type: integer
+        amount:
+          type: number
+          description: Valor total calculado da antecipação
+          format: double
+          example: 4000.22
+        newDueDate:
+          type: string
+          format: date
+          description: Data de vencimento da cobrança a ser gerada
+          example: '2021-01-01'
+        installments:
+          type: array
+          description: Lista das parcelas a serem processadas
+          example:
+            - installmentId: 123
+              dueDate: '2021-01-01'
+              installmentValue: 4000.22
+            - installmentId: 124
+              dueDate: '2021-02-01'
+              installmentValue: 3500.5
+          items:
+            type: object
+            properties:
+              installmentId:
+                description: Identificador da parcela do título
+                example: 1
+                format: int32
+                type: integer
+              dueDate:
+                type: string
+                format: date
+                description: Data de vencimento original da parcela
+                example: '2021-01-01'
+              installmentValue:
+                type: number
+                description: Valor original da parcela
+                format: double
+                example: 4000.22
+    GroupByEnum:
+      description: Tipo de agrupamento
+      enum:
+        - CUSTOMER
+        - INSTALLMENT
+        - NONE
+      example: CUSTOMER
+      type: string
+    MatchDueDateEnum:
+      description: Tipo de correspondência da data de vencimento
+      enum:
+        - ALL
+        - SAME_DAY
+        - SAME_MONTH
+      example: ALL
+      type: string
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

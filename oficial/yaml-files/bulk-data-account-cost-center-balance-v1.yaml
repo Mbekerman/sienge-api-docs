@@ -1,0 +1,382 @@
+openapi: 3.1.1
+info:
+  title: Bulk-data Saldos Contábeis Consolidados Por Centro de Custo
+  version: 1.24.0
+  description: >-
+    API voltada para consulta de saldos contábeis consolidados por centro de
+    custo
+paths:
+  /accountancy/accountCostCenterBalance:
+    get:
+      x-original-file: bulk-data-account-cost-center-balance-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Bulk-data Saldos Contábeis Consolidados Por Centro de Custo
+      summary: Consulta saldos contábeis por centro de custo
+      description: Retorna saldos contábeis consolidados por centro de custo (BULK)
+      operationId: getAccountancyAccountCostCenterBalance
+      parameters:
+        - $ref: '#/components/parameters/StartDateQueryRequired'
+        - $ref: '#/components/parameters/EndDateQueryRequired'
+        - name: costCentersId
+          in: query
+          description: Códigos dos centros de custo
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: integer
+              example: 100
+          example:
+            - 100
+            - 200
+            - 300
+        - name: accountId
+          in: query
+          description: >-
+            Código contábil ou código reduzido da conta usado em centro de
+            custo.
+          schema:
+            type: string
+            example: 1.2.01.01.01
+        - name: includeBalancesWithoutCostCenter
+          in: query
+          description: Parâmetro para inclusão de saldos sem centro de custo (true | false)
+          schema:
+            type: boolean
+            default: false
+            example: true
+      responses:
+        '200':
+          description: >-
+            Saldos consolidados encontrados - (Saldos Contábeis Consolidados Por
+            Centro de Custo)
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/GetResponseBulkDataAccountancyAccountCostCenterBalance
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    GetResponseBulkDataAccountancyAccountCostCenterBalance:
+      type: object
+      description: Lista de saldos contábeis consolidados por centro de custo
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountancyAccountCostCenterBalance'
+          example:
+            - costCenterId: 10
+              companyId: 1
+              entryId: 1001
+              batchId: 500
+              id: 101
+              accountId: 1.2.01.01.01
+              previousBalance: 1000
+              previousBalanceType: DEBIT
+              debitBalance: 200
+              creditBalance: 50
+              balanceCarriedForward: 1150
+              balanceCarriedForwardType: DEBIT
+              monthYear: 06-2023
+    AccountancyAccountCostCenterBalance:
+      type: object
+      description: Dados do saldo contábil consolidado por centro de custo
+      properties:
+        costCenterId:
+          type: integer
+          format: int32
+          description: Código do centro de custo (Consolidados por Centro de Custo)
+          example: 10
+        companyId:
+          type: integer
+          format: int32
+          description: Código da empresa (Saldos Consolidados por Centro de Custo)
+          example: 1
+        entryId:
+          type: integer
+          format: int32
+          description: >-
+            Código do lançamento - (Saldos Contábeis Consolidados Por Centro de
+            Custo)
+          example: 1001
+        batchId:
+          type: integer
+          format: int32
+          description: Código do lote - (Saldos Contábeis Consolidados Por Centro de Custo)
+          example: 500
+        id:
+          type: integer
+          format: int32
+          description: Código reduzido da conta usado com centro de custo.
+          example: 101
+        accountId:
+          type: string
+          description: Código contábil da conta usado com centro de custo
+          example: 1.2.01.01.01
+        previousBalance:
+          type: number
+          format: double
+          description: Saldo anterior (Consolidado por Centro de Custo)
+          example: 1200
+        previousBalanceType:
+          $ref: '#/components/schemas/BalanceTypeEnum'
+          description: >-
+            Tipo do saldo anterior (CREDIT ou DEBIT) - (Saldos Contábeis
+            Consolidados Por Centro de Custo)
+        debitBalance:
+          type: number
+          format: double
+          description: Valor do saldo de débito (Consolidado por Centro de Custo)
+          example: 300
+        creditBalance:
+          type: number
+          format: double
+          description: Valor do saldo de crédito (Consolidado por Centro de Custo)
+          example: 100
+        balanceCarriedForward:
+          type: number
+          format: double
+          description: Valor do saldo final (Consolidados por Centro de Custo)
+          example: 1400
+        balanceCarriedForwardType:
+          $ref: '#/components/schemas/BalanceTypeEnum'
+          description: >-
+            Tipo do saldo final (CREDIT ou DEBIT) - (Saldos Contábeis
+            Consolidados Por Centro de Custo)
+        monthYear:
+          type: string
+          description: >-
+            Período do saldo consolidado (mês/ano) - Saldos Contábeis
+            Consolidados Por Centro de Custo
+          example: 06-2023
+    BalanceTypeEnum:
+      description: Tipo de saldo contábil
+      enum:
+        - CREDIT
+        - DEBIT
+      example: CREDIT
+      type: string
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    StartDateQueryRequired:
+      description: Data inicial para filtro de período
+      in: query
+      name: startDate
+      required: true
+      schema:
+        example: '2023-01-01'
+        format: date
+        type: string
+    EndDateQueryRequired:
+      description: Data final para filtro de período
+      in: query
+      name: endDate
+      required: true
+      schema:
+        example: '2023-01-31'
+        format: date
+        type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/bulk-data/v1

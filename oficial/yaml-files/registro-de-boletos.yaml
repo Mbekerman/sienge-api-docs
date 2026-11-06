@@ -1,0 +1,65 @@
+openapi: 3.1.1
+info:
+  title: Registro de Boletos
+  version: 1.24.0
+paths: {}
+components:
+  schemas:
+    PaymentSlipRegisteredWebhookPayload:
+      type: object
+      description: Payload do webhook de registro de boleto processado
+      required:
+        - receivableBillId
+        - installmentId
+        - accountNumber
+        - status
+      properties:
+        receivableBillId:
+          description: Identificador do título a receber
+          example: 10
+          format: int32
+          type: integer
+        installmentId:
+          description: Identificador da parcela do título
+          example: 1
+          format: int32
+          type: integer
+        accountNumber:
+          description: Número da conta corrente
+          example: 1234-5
+          type: string
+        status:
+          type: string
+          description: Status do registro do boleto
+          enum:
+            - CONFIRMED
+            - REJECTED
+          example: CONFIRMED
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags:
+  - name: Registro de Boletos
+security:
+  - basicAuth: []
+webhooks:
+  PAYMENT_SLIP_REGISTERED:
+    post:
+      tags:
+        - Webhooks - Registro de Boletos
+      operationId: paymentSlipRegisteredWebhook
+      summary: Registro de boleto processado
+      description: Sempre que é realizada a confirmação ou rejeição da cobrança pelo banco
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentSlipRegisteredWebhookPayload'
+      responses:
+        2XX:
+          description: O evento PAYMENT_SLIP_REGISTERED foi processado com sucesso
+      x-audience:
+        - public

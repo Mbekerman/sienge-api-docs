@@ -1,0 +1,2406 @@
+openapi: 3.1.1
+info:
+  title: Pedidos de Compra
+  version: 1.24.0
+  description: Operações relacionadas a um Pedido de Compra.
+paths:
+  /purchase-orders:
+    get:
+      description: Retorna uma lista de pedidos de compra. (REST)
+      operationId: getPurchaseOrders
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Pedidos de Compra
+      summary: Consulta pedidos de compra
+      parameters:
+        - in: query
+          name: startDate
+          required: false
+          description: 'Data de início da busca (data do pedido) no formato: yyyy-MM-dd.'
+          schema:
+            type: string
+            format: date
+            example: '2018-03-01'
+        - in: query
+          name: endDate
+          required: false
+          description: 'Data de fim da busca (data do pedido) no formato: yyyy-MM-dd.'
+          schema:
+            type: string
+            format: date
+            example: '2018-03-11'
+        - in: query
+          name: status
+          required: false
+          description: >-
+            As situações do pedido de compra são:  "PENDING" - Pendente,
+            "PARTIALLY_DELIVERED" - Parcialmente entregue, "FULLY_DELIVERED" -
+            Totalmente atendido, "CANCELED" - Cancelado
+          schema:
+            $ref: '#/components/schemas/PurchaseOrderStatusEnum'
+        - in: query
+          name: authorized
+          required: false
+          description: >-
+            Para retornar apenas pedidos de compra autorizados informe o valor
+            "true" e para pedidos de compra desautorizados informe "false". Caso
+            não seja informado retornará ambos
+          schema:
+            type: boolean
+            example: true
+        - in: query
+          name: supplierId
+          required: false
+          description: Id do fornecedor do pedido de compra.
+          schema:
+            type: integer
+            example: 1
+        - $ref: '#/components/parameters/BuildingIdQuery'
+          description: Código da obra do pedido de compra.
+        - in: query
+          name: buyerId
+          required: false
+          description: Id do comprador (Usuário do Sienge).
+          schema:
+            type: string
+            example: '1'
+        - in: query
+          name: statusApproval
+          required: false
+          description: Código da situação de aprovação do pedido de compra.
+          schema:
+            $ref: '#/components/schemas/StatusApprovalEnum'
+        - in: query
+          name: consistency
+          required: false
+          schema:
+            $ref: '#/components/schemas/ConsistencyEnum'
+          description: |
+            Status da situação de consistência do Pedido de compra.
+
+
+
+
+             * IN_INCLUSION - Em inclusão,
+             * CONSISTENT - Consistente,
+             * INCONSISTENT - Inconsistente
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Lista de pedidos de compra
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponseOfPurchaseOrder'
+              example:
+                links:
+                  - href: string
+                    rel: string
+                resultSetMetadata:
+                  count: 0
+                  offset: 0
+                  limit: 100
+                results:
+                  - id: 1
+                    formattedPurchaseOrderId: '1'
+                    status: PENDING
+                    authorized: true
+                    disapproved: false
+                    deliveryLate: true
+                    consistent: CONSISTENT
+                    supplierId: 10
+                    buildingId: 15
+                    buyerId: comprador
+                    date: '2018-03-11'
+                    salesRepresentativeId: 1
+                    internalNotes: Lorem ipsum dolor sit amet.
+                    costCenterId: 100
+                    departamentId: 1
+                    companyBillId: 5
+                    transporterId: 3
+                    forecastDocumentId: PPC
+                    forecastBillId: 1990
+                    indexerId: 0
+                    discount: 30.15
+                    increase: 5.1
+                    totalAmount: 15200.85
+                    directBillingDocumentId: CT
+                    directBillingContractNumber: 221
+                    directBillingJustificationId: 2
+                    createdBy: USER
+                    createdAt: '2018-03-11T14:20:00.000-03:00'
+                    modifiedBy: ANOTHERUSER
+                    modifiedAt: '2018-04-02T18:20:00.000-03:00'
+                    authorizedAt: '2018-04-02T18:20:00.000-03:00'
+                    sentDate: '2018-04-02T18:20:00.000-03:00'
+                    freightType: NI
+                    freightAmount: 0
+                    freightItemsAmount: 0
+                    freightIpiFlag: 'N'
+                    totalFreight: 0
+                    notes: Lorem ipsum dolor sit amet.
+                    paymentCondition: À vista
+                    tenantUrl: https://api.sienge.com.br/dev.local/sienge/public/api
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}:
+    get:
+      description: Consulta um pedido de compra (REST)
+      operationId: getPurchaseOrdersId
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Pedidos de Compra
+      summary: Consulta pedido de compra
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+      responses:
+        '200':
+          description: Pedido Compra
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrder'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}/items:
+    get:
+      description: Consulta de itens do pedido de compra. (REST)
+      operationId: getPurchaseOrdersIdItems
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Pedidos de Compra
+      summary: Consulta de itens do pedido de compra
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Itens Pedido Compra
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponseOfPurchaseOrderItem'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}/items/{itemNumber}:
+    get:
+      description: Consulta item do pedido de compra. (REST)
+      operationId: getPurchaseOrdersIdItemsId
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Pedidos de Compra
+      summary: Consulta item do pedido de compra
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+        - $ref: '#/components/parameters/PurchaseOrderItemNumberParam'
+      responses:
+        '200':
+          description: Item Pedido Compra
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrderItem'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}/items/{itemNumber}/purchase-requests:
+    get:
+      tags:
+        - Pedidos de Compra
+      summary: Itens de Solicitação atendidas.
+      description: >-
+        Retorna a lista de Solicitações de Compra vinculadas a um Item
+        específico de um Pedido de Compra, agrupadas por Solicitação, Item de
+        Solicitação e Categoria, com a soma da quantidade atendida de cada
+        agrupamento. (REST)
+      operationId: getPurchaseOrdersIdItemsIdPurchaseRequests
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+        - $ref: '#/components/parameters/PurchaseOrderItemNumberParam'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Operação bem sucedida.
+          content:
+            application/json:
+              example:
+                resultSetMetadata:
+                  count: 1
+                  offset: 0
+                  limit: 100
+                results:
+                  - purchaseRequestId: 10
+                    purchaseRequestItemId: 1
+                    categoryId: 5
+                    attendedQuantity: 2.5
+              schema:
+                type: object
+                required:
+                  - resultSetMetadata
+                  - results
+                properties:
+                  resultSetMetadata:
+                    $ref: '#/components/schemas/ResultSetMetadata'
+                  results:
+                    type: array
+                    description: >-
+                      Lista de Solicitações de Compra de origem do Item do
+                      Pedido de Compra.
+                    example:
+                      - purchaseRequestId: 10
+                        purchaseRequestItemId: 1
+                        categoryId: 5
+                        attendedQuantity: 2.5
+                    items:
+                      $ref: '#/components/schemas/PurchaseRequestOrigemDto'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-audience:
+        - public
+  /purchase-orders/{purchaseOrderId}/items/{itemNumber}/delivery-schedules:
+    get:
+      description: Consulta previsões de entregas do item do pedido de compra (REST)
+      operationId: getPurchaseOrdersIdItemsIdDeliverySchedules
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Pedidos de Compra
+      summary: Retorna previsões de entregas do item do pedido de compra
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+        - $ref: '#/components/parameters/PurchaseOrderItemNumberParam'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Entregas Item Pedido Compra
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedResponseOfPurchaseOrderItemDeliverySchedule
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}/items/{itemNumber}/buildings-appropriations:
+    get:
+      description: Consulta de apropriações de obra do item do pedido. (REST)
+      operationId: getPurchaseOrdersIdItemsIdBuildingAppropriations
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Pedidos de Compra
+      summary: Consulta de apropriações de obra do item do pedido
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+        - $ref: '#/components/parameters/PurchaseOrderItemNumberParam'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Apropriações Item Pedido Compra
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedResponseOfPurchaseOrderItemBuildingAppropriation
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}/totalization:
+    get:
+      description: Consultar a totalização do pedido de compra. (REST)
+      tags:
+        - Pedidos de Compra
+      summary: Consultar a totalização do pedido de compra
+      operationId: getPurchaseOrdersIdTotalization
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Totalização Pedido Compra
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrderTotalization'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}/direct-billing:
+    get:
+      description: >-
+        Consultar o faturamento direto simples do pedido de compra. Não consulta
+        faturamento direto com desconto em medição. (REST)
+      tags:
+        - Pedidos de Compra
+      summary: Consultar o faturamento direto simples do pedido de compra.
+      operationId: getPurchaseOrdersIdDirectBilling
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Faturamento direto Pedido Compra
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrderDirectBilling'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}/authorize:
+    put:
+      description: Autoriza pedido de compra que está aguardando autorização. (REST)
+      operationId: putPurchaseOrdersIdAuthorize
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Pedidos de Compra
+      summary: Autoriza pedido de compra que está aguardando autorização
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+      responses:
+        '200':
+          description: Autoriza Pedido Compra
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+    patch:
+      description: >-
+        Autoriza pedido de compra que está aguardando autorização com a opção de
+        informar a observação (REST)
+      tags:
+        - Pedidos de Compra
+      summary: Autoriza pedido de compra
+      operationId: patchPurchaseOrdersIdAuthorize
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+      requestBody:
+        required: true
+        description: Observação do Pedido de Compra
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/observacaoBody'
+      responses:
+        '200':
+          description: Autoriza Pedido Compra com Observação
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}/disapprove:
+    put:
+      description: Reprova pedido de compra que está aguardando autorização. (REST)
+      operationId: getPurchaseOrdersIdDisapprove
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Pedidos de Compra
+      summary: Reprova pedido de compra que está aguardando autorização
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+      responses:
+        '200':
+          description: Reprova Pedido Compra
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+    patch:
+      description: >-
+        Reprova pedido de compra que está aguardando autorização com a opção de
+        informar a observação (REST)
+      tags:
+        - Pedidos de Compra
+      summary: Reprova pedido de compra
+      operationId: patchPurchaseOrdersIdDisapprove
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+      requestBody:
+        required: true
+        description: Observação que será adicionada ao Pedido de Compra
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/observacaoBody'
+      responses:
+        '200':
+          description: Reprova Pedido Compra adicionando observação
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}/attachments:
+    post:
+      description: Inserção de anexos no pedido de compra (REST)
+      tags:
+        - Pedidos de Compra
+      summary: Inserção dos anexos no pedido de compra
+      operationId: postPurchaseOrdersIdAttachments
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+      requestBody:
+        description: Inserção anexos no pedido de compra
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                attachment:
+                  type: string
+                  format: binary
+                  description: >
+                    Arquivo a ser inserido | Tipo: multipart/form-data |
+
+                    Tamanho máximo: 70MB | Tamanho máximo do nome do arquivo:
+                    100 caracteres
+                  example: arquivo.pdf
+                description:
+                  type: string
+                  description: Descrição do anexo
+                  example: Anexo xpto
+              example:
+                description: Descrição do anexo
+                attachment: arquivo.pdf
+              required:
+                - attachment
+                - description
+      responses:
+        '201':
+          description: Anexo Pedido Compra
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+    get:
+      operationId: getPurchaseOrdersIdAttachments
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Pedidos de Compra
+      description: Busca as informações dos anexos do pedido de compra (REST)
+      summary: Retorna lista de anexos do pedido de compra
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+      responses:
+        '200':
+          description: Lista de anexos do pedido de compra
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/PaginatedResponseOfPurchaseOrderAttachment
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}/attachments/{attachmentNumber}:
+    get:
+      operationId: getPurchaseOrdersIdAttachmentsId
+      x-original-file: purchase-orders-v1.yaml
+      description: Download de anexo do Pedido de Compra (REST)
+      x-audience:
+        - public
+      summary: Download Anexo
+      tags:
+        - Pedidos de Compra
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+        - name: attachmentNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+            example: 4
+          description: Número do anexo
+      responses:
+        '200':
+          description: Anexo do pedido de compra encontrado
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}/supplier-evaluation-criteria:
+    get:
+      operationId: postPurchaseOrdersIdSupplierEvaluationsCriteria
+      x-section: Avaliação
+      x-original-file: purchase-orders-v1.yaml
+      description: Consulta os critérios de avaliação para um pedido específico (REST)
+      x-audience:
+        - public
+      summary: Lista de critérios de avaliação
+      tags:
+        - Avaliação
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+      responses:
+        '200':
+          description: Consulta de critérios de avaliação bem sucedida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplierEvaluationCriteria'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}/evaluation:
+    post:
+      description: Cadastra uma avaliação do fornecedor no pedido de compra. (REST)
+      operationId: postPurchaseOrdersIdEvaluation
+      x-section: Avaliação
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Avaliação
+      summary: Cadastra uma avaliação do fornecedor no pedido de compra
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+      requestBody:
+        required: true
+        description: Dados da Avaliação do fornecedor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Evaluation'
+      responses:
+        '204':
+          description: Avaliação cadastrada com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+    put:
+      operationId: putPurchaseOrdersIdEvaluation
+      x-section: Avaliação
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Avaliação
+      summary: Cadastra uma avaliação do fornecedor
+      description: >-
+        Cadastra uma avaliação do fornecedor no pedido de compra caso não
+        exista, ou atualiza a última avaliação cadastrada (REST)
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+      requestBody:
+        description: Dados Avaliação do fornecedor
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Evaluation'
+      responses:
+        '204':
+          description: Avaliação cadastrada/atualizada com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+  /purchase-orders/{purchaseOrderId}/analysis/pdf:
+    get:
+      tags:
+        - Pedidos de Compra
+      summary: Gera o relatório de Análise do Pedido de Compra
+      description: >-
+        Gera o relatório de Análise do Pedido de Compra informado e efetua
+        download deste em formato PDF. (REST)
+      operationId: getPurchaseOrdersIdAnalysisPdf
+      x-original-file: purchase-orders-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/PurchaseOrderId'
+        - name: printPurchaseOrderAuthorizationObservationsFlag
+          in: query
+          description: >-
+            Se verdadeiro imprime as observações de autorização do Pedido de
+            Compra
+          schema:
+            default: false
+            type: boolean
+            example: false
+        - name: printListOfPurchaseOrdersWithSameAppropriateItems
+          required: false
+          in: query
+          description: >-
+            Se verdadeiro imprime uma relação de pedidos que possuem os mesmos
+            itens apropriados do Pedido de Compra informado
+          schema:
+            default: false
+            type: boolean
+            example: false
+        - name: printOnlyPurchaseInvoicesWithOutstandingInstallments
+          required: false
+          in: query
+          description: >-
+            Se verdadeiro imprime somente Notas Fiscais de Compra com Parcelas
+            em aberto
+          schema:
+            default: false
+            type: boolean
+            example: false
+        - name: printDetailedAmountsFromPurchaseInvoices
+          required: false
+          in: query
+          description: >-
+            Se verdadeiro imprime quantidades detalhadas das Notas Fiscais de
+            Compra
+          schema:
+            default: false
+            type: boolean
+            example: false
+        - name: printAppropriationQuantity
+          required: false
+          in: query
+          description: Se verdadeiro imprime quantidades de apropriações
+          schema:
+            default: false
+            type: boolean
+            example: false
+      responses:
+        '200':
+          description: Arquivo gerado
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+                example: arquivo.pdf
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    PaginatedResponseOfPurchaseOrder:
+      description: Lista de pedidos de compra retornadas
+      type: object
+      required:
+        - links
+        - resultSetMetadata
+        - results
+      properties:
+        links:
+          $ref: '#/components/schemas/Links'
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de Pedidos de Compra retornadas como resultado da requisição
+          items:
+            $ref: '#/components/schemas/PurchaseOrder'
+          example:
+            - id: 1
+              formattedPurchaseOrderId: '1'
+              status: PENDING
+              authorized: true
+              disapproved: false
+              deliveryLate: true
+              consistent: CONSISTENT
+              supplierId: 10
+              buildingId: 15
+              buyerId: comprador
+              date: '2018-03-11'
+              salesRepresentativeId: 1
+              internalNotes: Lorem ipsum dolor sit amet.
+              costCenterId: 100
+              departamentId: 1
+              companyBillId: 5
+              transporterId: 3
+              forecastDocumentId: PPC
+              forecastBillId: 1990
+              indexerId: 0
+              discount: 30.15
+              increase: 5.1
+              totalAmount: 15200.85
+              directBillingDocumentId: CT
+              directBillingContractNumber: 221
+              directBillingJustificationId: 2
+              createdBy: USER
+              createdAt: '2018-03-11T14:20:00.000-03:00'
+              modifiedBy: ANOTHERUSER
+              modifiedAt: '2018-04-02T18:20:00.000-03:00'
+              authorizedAt: '2018-04-02T18:20:00.000-03:00'
+              sentDate: '2018-04-02T18:20:00.000-03:00'
+              freightType: NI
+              freightAmount: 0
+              freightItemsAmount: 0
+              freightIpiFlag: 'N'
+              totalFreight: 0
+              notes: Lorem ipsum dolor sit amet.
+              paymentCondition: À vista
+              tenantUrl: https://api.sienge.com.br/dev.local/sienge/public/api
+    PurchaseOrder:
+      description: Pedido de compra
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+          description: Identificador do pedido de compra
+        formattedPurchaseOrderId:
+          type: string
+          example: '1'
+          description: Id do pedido de compra formatado de acordo com o parâmetro 415
+        status:
+          $ref: '#/components/schemas/PurchaseOrderStatusEnum'
+        authorized:
+          type: boolean
+          example: true
+          description: >-
+            Retornará verdadeiro se pedido de compra estiver autorizado, caso
+            contrário retornará falso.
+        disapproved:
+          type: boolean
+          example: false
+          description: >-
+            Retornará verdadeiro se pedido de compra estiver reprovado, caso
+            contrário retornará falso.
+        deliveryLate:
+          type: boolean
+          example: true
+          description: >-
+            Retornará verdadeiro se um dos itens do pedido de compra estiver com
+            alguma entrega em atraso, caso contrário retornará falso.
+        consistent:
+          $ref: '#/components/schemas/ConsistencyEnum'
+        supplierId:
+          description: Código do fornecedor
+          example: 236
+          format: int32
+          type: integer
+        buildingId:
+          type: integer
+          format: int64
+          example: 15
+          description: Identificador da obra vinculada ao pedido de compra
+        buyerId:
+          type: string
+          example: comprador
+          description: Identificador do comprador (Usuário do Sienge)
+        date:
+          type: string
+          example: '2018-03-11'
+          description: 'Data do pedido de compra no formato: yyyy-MM-dd.'
+        salesRepresentativeId:
+          type: integer
+          example: 1
+          description: Id do representante de venda
+        internalNotes:
+          type: string
+          example: Lorem ipsum dolor sit amet.
+          description: Observação interna do pedido.
+        costCenterId:
+          type: integer
+          format: int64
+          example: 100
+          description: Id do centro de custo do pedido de compra
+        departamentId:
+          type: integer
+          format: int64
+          example: 1
+          description: Id do departamento
+        companyBillId:
+          type: integer
+          format: int64
+          example: 5
+          description: Id da empresa de cobrança
+        transporterId:
+          type: integer
+          format: int64
+          example: 3
+          description: Id do transportador
+        forecastDocumentId:
+          type: string
+          example: PPC
+          description: Id do documento de previsão
+        forecastBillId:
+          type: integer
+          format: int64
+          example: 1990
+          description: Número do título de previsão
+        indexerId:
+          type: integer
+          format: int64
+          example: 0
+          description: Código do indexador do título de previsão
+        discount:
+          type: number
+          format: double
+          example: 30.15
+          description: Valor do desconto
+        increase:
+          type: number
+          format: double
+          example: 5.1
+          description: Outras despesas
+        totalAmount:
+          type: number
+          format: double
+          example: 15200.85
+          description: Total do pedido de compra
+        directBillingDocumentId:
+          type: string
+          example: CT
+          description: Código do documento de pré-faturamento direto
+        directBillingContractNumber:
+          type: integer
+          example: 221
+          description: Número do contrato de pré-faturamento direto
+        directBillingJustificationId:
+          type: integer
+          format: int64
+          example: 2
+          description: Id da justificativa de pré-faturamento direto
+        createdBy:
+          type: string
+          example: USER
+          description: Id do usuário que criou o pedido de compra
+        createdAt:
+          type: string
+          example: '2018-03-11T14:20:00.000-03:00'
+          description: >-
+            Data de criação do pedido de compra no formato:
+            yyyy-MM-dd'T'HH:mm:ss.SSSXXX.
+        modifiedBy:
+          type: string
+          example: ANOTHERUSER
+          description: Id do usuário que modificou o pedido de compra
+        modifiedAt:
+          type: string
+          example: '2018-04-02T18:20:00.000-03:00'
+          description: >-
+            Data de modificação do pedido de compra no formato:
+            yyyy-MM-dd'T'HH:mm:ss.SSSXXX.
+        authorizedAt:
+          type: string
+          example: '2018-04-02T18:20:00.000-03:00'
+          description: >-
+            Data da última aprovação do pedido de compra no formato:
+            yyyy-MM-dd'T'HH:mm:ss.SSSXXX.
+        sentDate:
+          type: string
+          example: '2018-04-02T18:20:00.000-03:00'
+          description: >-
+            Data do último e-mail enviado do pedido de compra no formato:
+            yyyy-MM-dd'T'HH:mm:ss.SSSXXX.
+        freightType:
+          $ref: '#/components/schemas/OrderFreightTypeEnum'
+        freightAmount:
+          type: number
+          format: double
+          example: 0
+          description: Valor do frete.
+        freightItemsAmount:
+          type: number
+          format: double
+          example: 0
+          description: Valor do frete nos itens.
+        freightIpiFlag:
+          $ref: '#/components/schemas/FreightIpiFlagEnum'
+        totalFreight:
+          type: number
+          format: double
+          example: 0
+          description: Valor do frete adicionado o ipi;
+        notes:
+          type: string
+          example: Lorem ipsum dolor sit amet.
+          description: Observação do pedido.
+        paymentCondition:
+          type: string
+          example: À vista
+          description: Descrição condição de pagamento
+        tenantUrl:
+          type: string
+          example: https://api.sienge.com.br/dev.local/sienge/public/api
+          description: URL do tenant
+    PaginatedResponseOfPurchaseOrderItem:
+      description: Lista de items de um pedido de compra retornadas
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: >-
+            Lista de items de um pedido de compra retornadas como resultado da
+            requisição
+          items:
+            $ref: '#/components/schemas/PurchaseOrderItem'
+      example:
+        resultSetMetadata:
+          count: 1
+          offset: 0
+          limit: 100
+        results:
+          - itemNumber: 1
+            buildingCostDatebaseId: 1
+            resourceId: 1
+            resourceDescription: Cimento
+            resourceCode: M0012
+            resourceReference: Cimento de Exemplo
+            detailId: 1
+            detailDescription: Detalhe X
+            trademarkId: 1
+            trademarkDescription: Marca X
+            unitOfMeasure: kg
+            quantity: 100
+            estimatedPrice: 0
+            unitPrice: 10.99
+            netPrice: 10.99
+            freightUnitPrice: 0
+            discount: 0
+            discountPercentage: 0
+            increasePercentage: 0
+            imcsTaxPercentage: 0
+            ipiTaxPercentage: 0
+            issTaxPercentage: 0
+            notes: string
+            purchaseQuotations:
+              - purchaseQuotationId: 1
+                purchaseQuotationItemId: 1
+    PurchaseOrderItem:
+      description: Item do pedido de compra
+      type: object
+      properties:
+        itemNumber:
+          type: integer
+          format: int64
+          example: 1
+          description: Número do item do pedido de compra.
+        buildingCostDatebaseId:
+          type: integer
+          format: int64
+          example: 1
+          description: Código da tabela de custo unitário na obra
+        resourceId:
+          type: integer
+          format: int64
+          example: 1
+          description: Id do insumo
+        resourceDescription:
+          type: string
+          example: Cimento
+          description: Descrição do insumo
+        resourceCode:
+          type: string
+          example: M0012
+          description: Código auxiliar do insumo do item
+        resourceReference:
+          type: string
+          example: Cimento de Exemplo
+          description: Referência do insumo
+        detailId:
+          type: integer
+          format: int64
+          example: 1
+          description: Id do detalhe do insumo
+        detailDescription:
+          type: string
+          example: Detalhe X
+          description: Descrição do detalhe do insumo
+        trademarkId:
+          type: integer
+          format: int64
+          example: 1
+          description: Id da marca do insumo
+        trademarkDescription:
+          type: string
+          example: Marca X
+          description: Descrição da marca do insumo
+        unitOfMeasure:
+          type: string
+          example: kg
+          description: Unidade de medida do insumo
+        quantity:
+          type: number
+          format: double
+          example: 100
+          description: Quantidade do insumo do pedido de compra
+        estimatedPrice:
+          type: number
+          format: double
+          example: 0
+          description: Preço estimado.
+        unitPrice:
+          type: number
+          format: double
+          example: 10.99
+          description: Preço unitário
+        netPrice:
+          type: number
+          format: double
+          example: 10.99
+          description: Preço unitário liquido
+        freightUnitPrice:
+          type: number
+          format: double
+          example: 0
+          description: Preço unitário do frete
+        discount:
+          type: number
+          format: double
+          example: 0
+          description: Valor do desconto do item
+        discountPercentage:
+          type: number
+          format: double
+          example: 0
+          description: Percentual do desconto
+        increasePercentage:
+          type: number
+          format: double
+          example: 0
+          description: Percentual do acréscimo
+        imcsTaxPercentage:
+          type: number
+          format: double
+          example: 0
+          description: Percentual referente ao ICMS
+        ipiTaxPercentage:
+          type: number
+          format: double
+          example: 0
+          description: Percentual referente ao IPI
+        issTaxPercentage:
+          type: number
+          format: double
+          example: 0
+          description: Percentual referente ao ISS
+        notes:
+          type: string
+          description: Observações
+          example: Observações
+        purchaseQuotations:
+          type: array
+          description: Lista de cotações atendidas pelo item do pedido
+          items:
+            $ref: '#/components/schemas/PurchaseQuotation'
+      example:
+        itemNumber: 1
+        buildingCostDatebaseId: 1
+        resourceId: 1
+        resourceDescription: Cimento
+        resourceCode: M0012
+        resourceReference: Cimento de Exemplo
+        detailId: 1
+        detailDescription: Detalhe X
+        trademarkId: 1
+        trademarkDescription: Marca X
+        unitOfMeasure: kg
+        quantity: 100
+        estimatedPrice: 0
+        unitPrice: 10.99
+        netPrice: 10.99
+        freightUnitPrice: 0
+        discount: 0
+        discountPercentage: 0
+        increasePercentage: 0
+        imcsTaxPercentage: 0
+        ipiTaxPercentage: 0
+        issTaxPercentage: 0
+        notes: string
+        purchaseQuotations:
+          - purchaseQuotationId: 1
+            purchaseQuotationItemId: 1
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    PurchaseRequestOrigemDto:
+      description: Dados Solicitação de Compras
+      properties:
+        attendedQuantity:
+          description: >-
+            Soma da quantidade atendida para a combinação de Solicitação, Item
+            de Solicitação e Categoria.
+          example: 2.5
+          format: double
+          type: number
+        categoryId:
+          description: >-
+            Código da Categoria da Solicitação de Compra. Pode ser nulo quando a
+            Solicitação não possui Categoria associada.
+          example: 5
+          format: int32
+          nullable: true
+          type: integer
+        purchaseRequestId:
+          description: Número da Solicitação de Compra de origem.
+          example: 10
+          format: int32
+          type: integer
+        purchaseRequestItemId:
+          description: Número do Item da Solicitação de Compra de origem.
+          example: 1
+          format: int32
+          type: integer
+      type: object
+    PaginatedResponseOfPurchaseOrderItemDeliverySchedule:
+      description: Lista de entregas de um item de pedido de compra retornadas
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: >-
+            Lista de entregas de um item de pedido de compra retornadas como
+            resultado da requisição
+          items:
+            $ref: '#/components/schemas/PurchaseOrderItemDeliverySchedule'
+          example:
+            - deliveryScheduleNumber: 1
+              sheduledDate: '2018-03-11'
+              sheduledQuantity: 100
+              deliveredQuantity: 50
+              openQuantity: 50
+    PaginatedResponseOfPurchaseOrderItemBuildingAppropriation:
+      description: Lista de apropriações de obra de um item do pedido de compra retornadas
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de apropriações de obra de um item do pedido de compra.
+          items:
+            $ref: '#/components/schemas/PurchaseOrderItemBuildingAppropriation'
+          example:
+            - buildingUnitId: 1
+              costEstimationItemReference: 08.004.001
+              percentage: 5.88
+            - buildingUnitId: 2
+              costEstimationItemReference: 08.004.002
+              percentage: 5.88
+    PurchaseOrderTotalization:
+      description: Totalização do pedido de compra
+      type: object
+      properties:
+        itemsTotalAmount:
+          type: integer
+          format: double
+          example: 25010
+          description: Valor total dos itens
+        discountAmount:
+          type: integer
+          format: double
+          example: 620
+          description: Valor do desconto do Pedido Compra
+        freightItemsAmount:
+          type: integer
+          format: double
+          example: 5200
+          description: Valor dos itens do frete
+        transporterId:
+          type: integer
+          format: int64
+          example: 296
+          description: Identificador do transportador
+        paymentConditionDescription:
+          type: string
+          example: 10/20/30
+          description: Descrição da condição de pagamento
+        installmentsPaymentCondition:
+          type: array
+          description: Lista das parcelas das condições de pagamento
+          items:
+            $ref: '#/components/schemas/InstallmentPaymentCondition'
+      example:
+        itemsTotalAmount: 25010
+        discountAmount: 620
+        freightItemsAmount: 5200
+        transporterId: 296
+        paymentConditionDescription: 10/20/30
+        installmentsPaymentCondition:
+          - installmentId: 1
+            numberOfdays: 10
+            percentage: 25
+    PurchaseOrderDirectBilling:
+      description: Faturamento direto de um pedido de compra
+      type: object
+      properties:
+        supplierId:
+          description: Código do fornecedor
+          example: 236
+          format: int32
+          type: integer
+        buildingId:
+          type: integer
+          format: int64
+          example: 15
+          description: Identificador da obra vinculada ao pedido de compra
+        amountLinked:
+          type: integer
+          format: double
+          example: 5200
+          description: Valor a vincular.
+        documentId:
+          type: string
+          example: CT
+          description: Código do documento de faturamento direto
+        contractNumber:
+          type: string
+          example: '523'
+          description: Número do contrato de faturamento direto
+        billingDate:
+          type: string
+          example: {}
+          description: Data do faturamento
+        responsibleId:
+          type: string
+          example: NOME
+          description: Id do responsável
+        observation:
+          type: string
+          description: Observação do faturamento direto
+          example: Observação
+    observacaoBody:
+      $ref: '#/components/schemas/ObservationDTO'
+    PaginatedResponseOfPurchaseOrderAttachment:
+      description: Lista de anexos de Pedidos de Compra retornadas
+      type: object
+      required:
+        - resultSetMetadata
+        - results
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: >-
+            Lista de anexos de Pedidos de Compra retornadas como resultado da
+            requisição
+          items:
+            $ref: '#/components/schemas/PurchaseOrderAttachment'
+        links:
+          $ref: '#/components/schemas/Links'
+      example:
+        resultSetMetadata:
+          count: 1
+          offset: 0
+          limit: 100
+        results:
+          - purchaseOrderId: 1
+            attachmentNumber: 4
+            description: Anexo X
+            name: anexo_x.pdf
+    SupplierEvaluationCriteria:
+      description: Lista de critérios de avaliação do fornecedor
+      type: object
+      properties:
+        remainderList:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplierEvaluationCriteriaRemainderList'
+        defaultList:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplierEvaluationCriteriaDefaultList'
+        rangeMin:
+          type: integer
+          format: int64
+          example: 0
+          description: Número mínimo do intervalo das avaliações
+        rangeMax:
+          type: integer
+          format: int64
+          example: 10
+          description: Número máximo do intervalo das avaliações
+      example:
+        remainderList:
+          - id: 1
+            description: Qualidade do produto
+            weight: 5
+        defaultList:
+          - id: 2
+            description: Prazo de entrega
+            weight: 5
+        rangeMin: 0
+        rangeMax: 10
+    Evaluation:
+      type: object
+      description: Avaliação do fornecedor
+      properties:
+        notes:
+          type: string
+          description: Observação para avaliação
+          example: Observação para avaliação
+        evaluatedCriteria:
+          type: array
+          description: Lista de critérios a serem avaliados com suas respectivas notas.
+          items:
+            $ref: '#/components/schemas/EvaluatedCriterion'
+      example:
+        notes: Observação para avaliação
+        evaluatedCriteria:
+          - criterionId: 1
+            value: 6.5
+    Links:
+      description: Links para acessar outros recursos
+      example:
+        - href: https://../v1/purchase-..
+          rel: Recurso
+      items:
+        $ref: '#/components/schemas/Link'
+      type: array
+    PurchaseOrderStatusEnum:
+      type: string
+      description: |-
+        Situação do Pedido de Compra.
+
+
+
+
+          - `PENDING` - Pendente
+          - `PARTIALLY_DELIVERED` - Parcialmente entregue
+          - `FULLY_DELIVERED` - Totalmente atendido
+          - `CANCELED` - Cancelado
+      enum:
+        - PENDING
+        - PARTIALLY_DELIVERED
+        - FULLY_DELIVERED
+        - CANCELED
+      example: PENDING
+    ConsistencyEnum:
+      type: string
+      description: |-
+        Status da situação de consistência do Pedido de compra.
+
+
+
+
+          - `IN_INCLUSION` - Em inclusão
+          - `CONSISTENT` - Consistente
+          - `INCONSISTENT` - Inconsistente
+      enum:
+        - IN_INCLUSION
+        - CONSISTENT
+        - INCONSISTENT
+      example: IN_INCLUSION
+    OrderFreightTypeEnum:
+      type: string
+      description: |-
+        Modalidade do frete do pedido de compra.
+
+
+
+
+          - `NI` - Não incidente
+          - `CIF` - Incluso
+          - `FOB` - A pagar
+      enum:
+        - NI
+        - CIF
+        - FOB
+      example: NI
+    FreightIpiFlagEnum:
+      description: |-
+        Considerar o valor do IPI no frete.
+          - `S` - Sim
+          - `N` - Não
+      enum:
+        - S
+        - 'N'
+      example: S
+      type: string
+    PurchaseQuotation:
+      description: Cotação atendida pelo item do pedido
+      type: object
+      properties:
+        purchaseQuotationId:
+          type: integer
+          format: int64
+          example: 1
+          description: Número da cotação
+        purchaseQuotationItemId:
+          type: integer
+          format: int64
+          example: 1
+          description: Número item da cotação
+    PurchaseOrderItemDeliverySchedule:
+      description: Previsão de entrega de um item de pedido de compra
+      type: object
+      properties:
+        deliveryScheduleNumber:
+          type: integer
+          format: int64
+          example: 1
+          description: Número da previsão de entrega
+        sheduledDate:
+          type: string
+          example: '2018-03-11'
+          description: 'Data da previsão de entrega no formato: yyyy-MM-dd.'
+        sheduledQuantity:
+          type: number
+          format: double
+          example: 100
+          description: Quantidade prevista para entrega
+        deliveredQuantity:
+          type: number
+          format: double
+          example: 50
+          description: Quantidade já entregue
+        openQuantity:
+          type: number
+          format: double
+          example: 50
+          description: >-
+            Saldo da entrega
+
+            Caso a diferença entre sheduledQuantity e deliveredQuantity for
+            maior que zero e o openQuantity estiver igual a zero, significa que
+            o saldo foi cancelado
+      example:
+        deliveryScheduleNumber: 1
+        sheduledDate: '2018-03-11'
+        sheduledQuantity: 100
+        deliveredQuantity: 50
+        openQuantity: 50
+    PurchaseOrderItemBuildingAppropriation:
+      description: Apropriação de obra de um item do pedido de compra
+      type: object
+      properties:
+        buildingUnitId:
+          type: integer
+          format: int64
+          example: 1
+          description: Código da unidade construtiva da obra
+        costEstimationItemReference:
+          type: string
+          example: 08.004.001
+          description: Referência do item do orçamento
+        percentage:
+          type: number
+          format: double
+          example: 5.88
+          description: Percentual apropriado
+    InstallmentPaymentCondition:
+      type: object
+      description: Parcela das condição de pagamento
+      properties:
+        installmentId:
+          type: integer
+          example: 1
+          description: Id da parcela
+        numberOfdays:
+          type: integer
+          example: 10
+          description: Quantidade de dias
+        percentage:
+          type: number
+          format: double
+          example: 25
+          description: Percentual da parcela
+    ObservationDTO:
+      description: >-
+        Objeto contendo a observação relacionada a aprovação ou reprovação do
+        contrato
+      properties:
+        observation:
+          description: >-
+            Observação que será concatenada as observações de autorização e
+            desautorização.
+          example: Texto enviado via Api
+          maxLength: 300
+          type: string
+      type: object
+      x-implementation:
+        name: >-
+          br.com.softplan.unic.contract.measurement.v1.controller.contract.authorization.ObservationDTO
+        source: >-
+          sienge/SiengeAPI-Contratos-medicoes/src/main/java/br/com/softplan/unic/contract/measurement/v1/controller/contract/authorization/ObservationDTO.java
+    PurchaseOrderAttachment:
+      description: Anexo de um pedido de compra
+      type: object
+      properties:
+        purchaseOrderId:
+          type: integer
+          format: int64
+          example: 5760
+          description: Id pedido de compra
+        attachmentNumber:
+          type: integer
+          format: int64
+          example: 4
+          description: Número do Anexo do pedido de compra
+        name:
+          type: string
+          example: document_escaneado.pdf
+          description: Nome do arquivo de anexo do Pedido de Compra
+        description:
+          type: string
+          example: Document Escaneado 01/08/2019
+          description: Descrição do Anexo do Pedido de Compra
+    SupplierEvaluationCriteriaRemainderList:
+      type: object
+      description: Lista complementar de critérios de avaliação do fornecedor
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: Id do critério de avaliação
+        description:
+          type: string
+          example: Qualidade do produto
+          description: Descrição critério de avaliação
+        weight:
+          type: integer
+          example: 1
+          description: Peso do cálculo da média
+    SupplierEvaluationCriteriaDefaultList:
+      type: object
+      description: Lista padrão dos critério de avaliação do fornecedor
+      properties:
+        id:
+          type: integer
+          example: 1
+          description: Identificador do critério de avaliação
+        description:
+          type: string
+          example: Prazo de entrega
+          description: Descrição do critério de avaliação
+        weight:
+          type: integer
+          example: 1
+          description: Peso do cálculo da média
+    EvaluatedCriterion:
+      type: object
+      description: Critério a ser avaliado
+      properties:
+        criterionId:
+          type: integer
+          format: int64
+          example: 1
+          description: Código do critério a ser avaliado
+        value:
+          type: number
+          format: double
+          example: 6.5
+          description: Nota atribuída ao critério.
+    Link:
+      description: Representa um link para outro recurso.
+      properties:
+        href:
+          description: URL do recurso associado
+          example: https://../v1/purchase-..
+          type: string
+        rel:
+          description: Nome da recurso associado
+          example: Recurso
+          type: string
+      type: object
+    StatusApprovalEnum:
+      type: string
+      description: |-
+        Situação de aprovação do Pedido de Compra.
+
+
+
+
+          - `APPROVED` - Aprovado
+          - `DISAPPROVED` - Reprovado
+      enum:
+        - APPROVED
+        - DISAPPROVED
+      example: DISAPPROVED
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    BuildingIdQuery:
+      description: Código da obra (opcional)
+      in: query
+      name: buildingId
+      required: false
+      schema:
+        example: 123
+        format: int32
+        type: integer
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    PurchaseOrderId:
+      description: >-
+        Id do Pedido de Compra
+
+
+        Obs: Este campo deve seguir o padrão de acordo com o parâmetro 415 do
+        Sienge. Esse parâmetro possui as seguintes configurações:
+
+
+        Sequêncial contínuo: Apenas inserir o número do Pedido de Compra. Ex:
+        "/purchase-orders/123"
+
+        Sequêncial contínuo anual: O campo possui no total 8 caracteres. Os 2
+        primeiros corresponde ao ano do pedido. Os demais são o número do pedido
+        preenchidos com 0 à esquerda. Ex: No sienge o pedido é representado
+        assim: "123/19". Porém na API seria assim: "/purchase-orders/19000123"
+      example: 1
+      in: path
+      name: purchaseOrderId
+      required: true
+      schema:
+        format: int64
+        type: integer
+    PurchaseOrderItemNumberParam:
+      description: Número do item do Pedido de Compra
+      example: 1
+      in: path
+      name: itemNumber
+      required: true
+      schema:
+        format: int32
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1
+webhooks:
+  PURCHASE_ORDER_AUTHORIZATION_CHANGED:
+    post:
+      tags:
+        - Webhooks - Pedidos de Compra
+      operationId: purchaseOrderAuthorizationChanged
+      summary: Autorização do pedido alterada
+      description: Sempre que a autorização do pedido de compra mudar.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                purchaseOrderId:
+                  type: integer
+                  description: Código (ID) do pedido de compra
+                  example: 1027
+                authorized:
+                  type: boolean
+                  description: Indica se o pedido está autorizado
+                  example: true
+                consistent:
+                  type: boolean
+                  description: Indica se o pedido está consistente
+                  example: true
+                changedAt:
+                  description: >-
+                    Data e hora da modificação no formato
+                    yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+                  example: '2024-08-19T14:20:00.123-03:00'
+                  format: date-time
+                  type: string
+              required:
+                - purchaseOrderId
+                - authorized
+                - consistent
+                - changedAt
+            example:
+              purchaseOrderId: 1024
+              authorized: true
+              consistent: true
+              changedAt: '2024-08-19T14:20:00.123-03:00'
+      responses:
+        '200':
+          description: >-
+            Confirmação de recebimento do evento de alteração de autorização do
+            pedido de compra.
+      x-audience:
+        - public
+  PURCHASE_ORDER_GENERATED_FROM_NEGOCIATION:
+    post:
+      tags:
+        - Webhooks - Pedidos de Compra
+      operationId: purchaseOrderGeneratedFromNegotiation
+      summary: Pedido gerado via negociação
+      description: Sempre que um pedido de compra for gerado a partir de uma negociação.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                purchaseOrderId:
+                  type: integer
+                  description: Código (ID) do pedido de compra
+                  example: 1027
+                purchaseQuotationId:
+                  type: integer
+                  description: Identificador da cotação de compra
+                  example: 501
+                supplierId:
+                  type: integer
+                  description: Identificador do fornecedor
+                  example: 3001
+                negotiationNumber:
+                  type: integer
+                  description: Número da negociação
+                  example: 77
+                authorized:
+                  type: boolean
+                  description: Indica se o pedido está autorizado
+                  example: true
+              required:
+                - purchaseOrderId
+                - purchaseQuotationId
+                - supplierId
+                - negotiationNumber
+                - authorized
+            example:
+              purchaseOrderId: 1025
+              purchaseQuotationId: 501
+              supplierId: 3001
+              negotiationNumber: 77
+              authorized: true
+      responses:
+        '200':
+          description: >-
+            Confirmação de recebimento do evento de geração de pedido de compra
+            a partir de negociação.
+      x-audience:
+        - public
+  PURCHASE_ORDER_ITEM_MODIFIED:
+    post:
+      tags:
+        - Webhooks - Pedidos de Compra
+      operationId: purchaseOrderItemModified
+      summary: Itens do pedido modificados
+      description: Sempre que tiver alguma alteração nos itens do pedido de compra.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                purchaseOrderId:
+                  type: integer
+                  description: Código (ID) do pedido de compra
+                  example: 1027
+              required:
+                - purchaseOrderId
+            example:
+              purchaseOrderId: 1026
+      responses:
+        '200':
+          description: >-
+            Confirmação de recebimento do evento de modificação de itens do
+            pedido de compra.
+      x-audience:
+        - public
+  PURCHASE_ORDER_FINANCIAL_FORECAST_UPDATED:
+    post:
+      tags:
+        - Webhooks - Pedidos de Compra
+      operationId: purchaseOrderFinancialForecastUpdated
+      summary: Previsão financeira atualizada
+      description: >-
+        Sempre que houver alterações nos campos departamento e centro de custo
+        das previsões financeiras dos pedidos de compra.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                purchaseOrderId:
+                  type: integer
+                  description: Código (ID) do pedido de compra
+                  example: 1027
+              required:
+                - purchaseOrderId
+            example:
+              purchaseOrderId: 1027
+      responses:
+        '200':
+          description: >-
+            Confirmação de recebimento do evento de atualização da previsão
+            financeira do pedido de compra.
+      x-audience:
+        - public

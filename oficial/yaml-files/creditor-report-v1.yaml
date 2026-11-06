@@ -1,0 +1,485 @@
+openapi: 3.1.1
+info:
+  title: Relatório de Extrato de Credores
+  version: 1.24.0
+  description: >-
+    API para geração e obtenção da URL do relatório de extrato de credores em
+    PDF.
+paths:
+  /creditor-report/pdf:
+    get:
+      x-original-file: creditor-report-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Relatório de Extrato de Credores
+      summary: Gera relatório de extrato de credores em PDF
+      description: >-
+        Gera um relatório de extrato de credores conforme os filtros informados
+        e retorna a URL para visualização do PDF. (REST)
+      operationId: findCreditorReportUrlPdf
+      parameters:
+        - name: companyId
+          in: query
+          description: Código da empresa.
+          schema:
+            type: integer
+        - name: billId
+          in: query
+          description: Código do título.
+          schema:
+            type: integer
+        - name: dueStartDate
+          in: query
+          description: Data inicial de vencimento no formato yyyy-MM-dd.
+          schema:
+            type: string
+            format: 'date (Formato ISO 8601 yyyy-MM-dd | Exemplo: 2025-01-01)'
+        - name: dueEndDate
+          in: query
+          description: Data final de vencimento no formato yyyy-MM-dd.
+          schema:
+            type: string
+            format: 'date (Formato ISO 8601 yyyy-MM-dd | Exemplo: 2025-01-01)'
+        - name: issueStartDate
+          in: query
+          description: Data inicial de emissão no formato yyyy-MM-dd.
+          schema:
+            type: string
+            format: 'date (Formato ISO 8601 yyyy-MM-dd | Exemplo: 2025-01-01)'
+        - name: issueEndDate
+          in: query
+          description: Data final de emissão no formato yyyy-MM-dd.
+          schema:
+            type: string
+            format: 'date (Formato ISO 8601 yyyy-MM-dd | Exemplo: 2025-01-01)'
+        - name: documentId
+          in: query
+          description: Lista de identificadores de documentos.
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+          example:
+            - NF
+            - AV
+        - name: creditorId
+          in: query
+          description: Lista de códigos de credores.
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: integer
+          example:
+            - 1
+            - 2
+            - 3
+        - name: creditorClassId
+          in: query
+          description: Lista de códigos de classe de credor.
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: integer
+          example:
+            - 10
+            - 20
+        - name: costCenterId
+          in: query
+          description: Código do centro de custo.
+          schema:
+            type: integer
+          example: 100
+        - name: departmentId
+          in: query
+          description: Lista de códigos de departamento.
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: integer
+          example:
+            - 1
+            - 2
+            - 3
+        - name: monetaryCorrectionDate
+          in: query
+          description: Data de correção monetária no formato yyyy-MM-dd.
+          schema:
+            type: string
+            format: date
+          example: '2025-01-01'
+        - name: sortBy
+          in: query
+          description: |
+            Ordenação do relatório.  
+            V: Vencimento,  
+            E: Emissão,  
+            T: Título,  
+            D: Documento,  
+            P: Departamento.
+          schema:
+            type: string
+            default: V
+            enum:
+              - V
+              - E
+              - T
+              - D
+              - P
+        - name: indexerId
+          in: query
+          description: >-
+            Código do indexador para correção dos valores das baixas por
+            pagamento
+          schema:
+            type: integer
+        - name: valuesPresentation
+          in: query
+          description: |
+            Forma de apresentação dos valores.  
+            C: Conforme valor total dos títulos,  
+            N: Conforme apropriação financeira para o centro de custo.
+          schema:
+            type: string
+            default: C
+            enum:
+              - C
+              - 'N'
+        - name: forecastDocument
+          in: query
+          description: Apresentar documento de previsão (S/N).
+          schema:
+            type: string
+            default: S
+            enum:
+              - S
+              - 'N'
+        - name: obsBill
+          in: query
+          description: Apresentar observação do título (S/N).
+          schema:
+            type: string
+            default: 'N'
+            enum:
+              - S
+              - 'N'
+        - name: includeObsPayment
+          in: query
+          description: Apresentar observação da baixa (S/N).
+          schema:
+            type: string
+            default: 'N'
+            enum:
+              - S
+              - 'N'
+        - name: includePaymentInfo
+          in: query
+          description: Apresentar informações de pagamento escritural (S/N).
+          schema:
+            type: string
+            default: 'N'
+            enum:
+              - S
+              - 'N'
+        - name: printPaymentMethod
+          in: query
+          description: Apresentar forma de pagamento (S/N).
+          schema:
+            type: string
+            default: 'N'
+            enum:
+              - S
+              - 'N'
+        - name: printOriginalDueDate
+          in: query
+          description: Apresentar vencimento original da parcela (S/N).
+          schema:
+            type: string
+            default: 'N'
+            enum:
+              - S
+              - 'N'
+        - name: showTaxes
+          in: query
+          description: Apresentar impostos retidos (S/N).
+          schema:
+            type: string
+            default: 'N'
+            enum:
+              - S
+              - 'N'
+        - name: showDepartment
+          in: query
+          description: Apresentar departamento (S/N).
+          schema:
+            type: string
+            default: 'N'
+            enum:
+              - S
+              - 'N'
+        - name: includePaymentAdvance
+          in: query
+          description: >-
+            Apresentar apenas baixas de pagamento e adiantamento para as
+            parcelas baixadas (S/N).
+          schema:
+            type: string
+            default: 'N'
+            enum:
+              - S
+              - 'N'
+        - name: creditorTypeEmployee
+          in: query
+          description: Incluir credores do tipo funcionário (S/N).
+          schema:
+            type: string
+            default: S
+            enum:
+              - S
+              - 'N'
+        - name: creditorTypeBroker
+          in: query
+          description: Incluir credores do tipo corretor (S/N).
+          schema:
+            type: string
+            default: S
+            enum:
+              - S
+              - 'N'
+        - name: creditorTypeSupplier
+          in: query
+          description: Incluir credores do tipo fornecedor (S/N).
+          schema:
+            type: string
+            default: S
+            enum:
+              - S
+              - 'N'
+      responses:
+        '200':
+          description: Extrato do credor carregado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditorReportResults'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    CreditorReportResults:
+      description: Resultado da geração do relatório de extrato de credores
+      type: object
+      example:
+        urlReport: https://example.com/reports/creditor-report-123.pdf
+      properties:
+        urlReport:
+          type: string
+          description: Url para download do PDF referente ao Extrato do Credor
+          example: https://example.com/reports/creditor-report-123.pdf
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

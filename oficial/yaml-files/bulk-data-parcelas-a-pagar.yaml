@@ -1,0 +1,1110 @@
+openapi: 3.1.1
+info:
+  title: Bulk-data Parcelas a Pagar
+  version: 1.24.0
+  description: Bulk data de parcelas a pagar
+paths:
+  /outcome:
+    get:
+      tags:
+        - Bulk-data Parcelas a Pagar
+      summary: Retorna parcelas sem baixa e seus pagamentos, caso possua.
+      operationId: bulkdataOutcome
+      parameters:
+        - $ref: '#/components/parameters/StartDateQueryRequired'
+        - $ref: '#/components/parameters/EndDateQueryRequired'
+        - name: selectionType
+          in: query
+          description: >-
+            Seleção da data do período. Para filtrar por data da emissão do
+            título (I), data de vencimento da parcela (D), data de pagamento da
+            parcela (P) ou data de competência (B)
+          required: true
+          schema:
+            type: string
+            enum:
+              - I
+              - D
+              - P
+              - B
+            example: I
+        - name: correctionIndexerId
+          in: query
+          description: Código do indexador de correção cadastrado no Sienge
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - name: correctionDate
+          in: query
+          description: Data para correção do indexador
+          required: true
+          schema:
+            type: string
+            format: date
+            example: '2018-01-01'
+        - $ref: '#/components/parameters/CompanyIdQuery'
+        - $ref: '#/components/parameters/CostCentersId'
+        - name: withAuthorizations
+          in: query
+          description: Indica se é para trazer as autorizações de pagamento das parcelas
+          required: false
+          schema:
+            type: boolean
+            default: false
+            example: false
+        - name: withBankMovements
+          in: query
+          description: Indica se é para trazer as movimentações bancárias
+          required: false
+          schema:
+            type: boolean
+            default: true
+            example: true
+        - $ref: '#/components/parameters/BuildingIdQuery'
+        - $ref: '#/components/parameters/BuildingUnitId'
+        - $ref: '#/components/parameters/CostEstimationSheetId'
+      responses:
+        '200':
+          description: Parcelas encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseBulkDataOutcome'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Retorna Parcelas encontradas (BULK)
+      x-audience:
+        - public
+  /outcome/by-bills:
+    get:
+      tags:
+        - Bulk-data Parcelas a Pagar
+      summary: Retorna parcelas por códigos dos títulos
+      operationId: bulkdataOutcomePayable
+      parameters:
+        - name: billsIds
+          in: query
+          description: Códigos dos títulos a serem consultados no Sienge.
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+            example:
+              - 101
+        - name: correctionIndexerId
+          in: query
+          description: Código do indexador de correção cadastrado no Sienge.
+          required: false
+          schema:
+            type: integer
+            example: 1
+        - name: correctionDate
+          in: query
+          description: Data para correção do indexador.
+          required: false
+          schema:
+            type: string
+            format: date
+            example: '2018-01-01'
+        - name: withAuthorizations
+          in: query
+          description: Indica se é para trazer as autorizações de pagamento das parcelas.
+          required: false
+          schema:
+            type: boolean
+            default: false
+            example: false
+        - name: withBankMovements
+          in: query
+          description: Indica se é para trazer as movimentações bancárias.
+          required: false
+          schema:
+            type: boolean
+            default: true
+            example: true
+      responses:
+        '200':
+          description: Parcelas encontradas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseBulkDataOutcome'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Retorna parcelas encontradas por códigos dos títulos (BULK)
+      x-audience:
+        - public
+components:
+  schemas:
+    GetResponseBulkDataOutcome:
+      type: object
+      description: Lista parcelas
+      properties:
+        data:
+          type: array
+          description: Lista de parcelas com pagamentos e movimentações
+          items:
+            $ref: '#/components/schemas/Installment'
+          example:
+            - companyId: 0
+              companyName: string
+              businessAreaId: 0
+              businessAreaName: string
+              projectId: 0
+              projectName: string
+              groupCompanyId: 0
+              groupCompanyName: string
+              holdingId: 0
+              holdingName: string
+              subsidiaryId: 0
+              subsidiaryName: string
+              businessTypeId: 0
+              businessTypeName: string
+              creditorId: 0
+              creditorName: string
+              billId: 0
+              installmentId: 0
+              documentIdentificationId: string
+              documentIdentificationName: string
+              documentNumber: string
+              forecastDocument: string
+              consistencyStatus: S
+              originId: string
+              originalAmount: 0
+              discountAmount: 0
+              taxAmount: 0
+              indexerId: 0
+              indexerName: string
+              dueDate: '2018-12-22'
+              issueDate: '2018-12-22'
+              installmentBaseDate: '2018-12-22'
+              balanceAmount: 0
+              correctedBalanceAmount: 0
+              authorizationStatus: S
+              billDate: '2018-12-22'
+              registeredUserId: string
+              registeredBy: string
+              registeredDate: '2018-12-22T10:50:48.045-03:00'
+      example:
+        data:
+          - companyId: 0
+            companyName: string
+            businessAreaId: 0
+            businessAreaName: string
+            projectId: 0
+            projectName: string
+            groupCompanyId: 0
+            groupCompanyName: string
+            holdingId: 0
+            holdingName: string
+            subsidiaryId: 0
+            subsidiaryName: string
+            businessTypeId: 0
+            businessTypeName: string
+            creditorId: 0
+            creditorName: string
+            billId: 0
+            installmentId: 0
+            documentIdentificationId: string
+            documentIdentificationName: string
+            documentNumber: string
+            forecastDocument: string
+            consistencyStatus: S
+            originId: string
+            originalAmount: 0
+            discountAmount: 0
+            taxAmount: 0
+            indexerId: 0
+            indexerName: string
+            dueDate: '2018-12-22'
+            issueDate: '2018-12-22'
+            installmentBaseDate: '2018-12-22'
+            balanceAmount: 0
+            correctedBalanceAmount: 0
+            authorizationStatus: S
+            billDate: '2018-12-22'
+            registeredUserId: string
+            registeredBy: string
+            registeredDate: '2018-12-22T10:50:48.045-03:00'
+            paymentsCategories:
+              - costCenterId: 0
+                costCenterName: string
+                projectId: 0
+                projectName: string
+                financialCategoryId: string
+                financialCategoryName: string
+                financialCategoryReducer: string
+                financialCategoryType: string
+                financialCategoryRate: 0
+            departamentsCosts:
+              - id: 0
+                name: string
+                rate: 0
+            buildingsCosts:
+              - buildingId: 0
+                buildingName: string
+                buildingUnitId: 0
+                buildingUnitName: string
+                costEstimationSheetId: string
+                costEstimationSheetName: string
+                rate: 0
+            payments:
+              - operationTypeId: 0
+                operationTypeName: string
+                grossAmount: 0
+                monetaryCorrectionAmount: 0
+                interestAmount: 0
+                fineAmount: 0
+                discountAmount: 0
+                taxAmount: 0
+                netAmount: 0
+                calculationDate: '2018-01-01'
+                paymentDate: '2018-01-01'
+                sequencialNumber: 0
+                correctedNetAmount: 0
+                paymentAuthentication: string
+                bankMovements:
+                  - accountCompanyId: 0
+                    accountNumber: string
+                    accountType: string
+                    bankMovementDate: '2018-01-01'
+                    sequencialNumber: 0
+                    id: 0
+                    amount: 0
+                    historicId: 0
+                    historicName: string
+                    operationId: 0
+                    operationName: string
+                    operationType: string
+                    reconcile: string
+                    originId: string
+                    paymentCategories:
+                      - costCenterId: 0
+                        financialCategoryId: string
+                        financialCategoryName: string
+                        financialCategoryReducer: string
+                        financialCategoryType: string
+                        financialCategoryRate: 0
+                        bankMovementId: 0
+            authorizations:
+              - authorizationUserId: string
+                authorizationUserName: string
+                authorizationDate: string
+                isLastToAuthorize: string
+    Installment:
+      type: object
+      description: Parcela do Contas a Pagar
+      properties:
+        companyId:
+          description: Código da empresa
+          example: 123
+          format: int32
+          type: integer
+        companyName:
+          description: Nome da empresa
+          example: Nome da empresa
+          type: string
+        businessAreaId:
+          description: Código da área de negócio
+          example: 123
+          format: int32
+          type: integer
+        businessAreaName:
+          description: Nome da área de negócio
+          example: Área de Negócio Exemplo
+          type: string
+        projectId:
+          description: Código do projeto
+          example: 123
+          format: int32
+          type: integer
+        projectName:
+          description: Nome do projeto
+          example: Projeto Exemplo
+          type: string
+        groupCompanyId:
+          description: Código do grupo da empresa
+          example: 10
+          format: int32
+          type: integer
+        groupCompanyName:
+          description: Nome do grupo da empresa
+          example: Grupo Exemplo
+          type: string
+        holdingId:
+          description: Código da holding
+          example: 123
+          format: int32
+          type: integer
+        holdingName:
+          description: Nome da holding
+          example: Holding Exemplo
+          type: string
+        subsidiaryId:
+          description: Código da subsidiária
+          example: 30
+          format: int32
+          type: integer
+        subsidiaryName:
+          description: Nome da subsidiária
+          example: Subsidiária Exemplo
+          type: string
+        businessTypeId:
+          description: Código do tipo de negócio
+          example: 40
+          format: int32
+          type: integer
+        businessTypeName:
+          description: Nome do tipo de negócio
+          example: Tipo Exemplo
+          type: string
+        creditorId:
+          description: Código do credor
+          example: 123
+          format: int32
+          type: integer
+        creditorName:
+          description: Nome do credor
+          example: Credor Exemplo
+          type: string
+        billId:
+          description: Identificador do título no Sienge
+          example: 5000
+          format: int32
+          type: integer
+        installmentId:
+          description: Identificador da parcela do título
+          example: 1
+          format: int32
+          type: integer
+        documentIdentificationId:
+          description: Código do documento
+          example: NF | AV
+          type: string
+        documentIdentificationName:
+          description: Nome do documento
+          example: Nota Fiscal
+          type: string
+        documentNumber:
+          description: Número do documento
+          example: NF-001
+          type: string
+        forecastDocument:
+          type: string
+          description: Documento de previsão financeira
+          example: PREV123
+        consistencyStatus:
+          type: string
+          description: >-
+            Indica a consistência do título (I = Em inclusão, N = Incompleto, S
+            = Completo)
+          enum:
+            - I
+            - 'N'
+            - S
+          example: S
+        originId:
+          type: string
+          description: Código da origem
+          example: ORG123
+        originalAmount:
+          description: Valor original da parcela
+          example: 1000.5
+          format: double
+          type: number
+        discountAmount:
+          description: Valor de desconto do título
+          example: 50
+          format: double
+          type: number
+        taxAmount:
+          description: Valor total do imposto retido
+          example: 10
+          format: double
+          type: number
+        indexerId:
+          type: integer
+          format: int32
+          description: Código do indexador
+          example: 5
+        indexerName:
+          type: string
+          description: Nome do indexador
+          example: Indexador Exemplo
+        dueDate:
+          description: Data de vencimento. Formato ISO 8601 (yyyy-MM-dd).
+          example: 2018-12-22T00:00:00.000Z
+          format: date
+          type: string
+        issueDate:
+          type: string
+          format: date
+          description: Data de emissão
+          example: '2018-12-22'
+        installmentBaseDate:
+          type: string
+          format: date
+          description: Data base da parcela
+          example: '2018-12-22'
+        balanceAmount:
+          type: number
+          format: double
+          description: Valor do saldo
+          example: 900.5
+        correctedBalanceAmount:
+          type: number
+          format: double
+          description: Valor do saldo corrigido
+          example: 910
+        authorizationStatus:
+          type: string
+          description: >-
+            Indica o status de autorização da parcela (S = Autorizada, N = Não
+            autorizada (sem autorização))
+          enum:
+            - S
+            - 'N'
+          example: S
+        billDate:
+          type: string
+          format: date
+          description: Data de competência
+          example: '2018-12-22'
+        registeredUserId:
+          type: string
+          description: Usuário que criou o título
+          example: user123
+        registeredBy:
+          type: string
+          description: Nome usuário que criou o título
+          example: Usuário Exemplo
+        registeredDate:
+          type: string
+          format: date
+          description: >-
+            Data de criação do título (Formato ISO 8601 yyyy-MM-dd | Exemplo:
+            2018-01-01)
+          example: '2018-12-22T10:50:48.045-03:00'
+        paymentsCategories:
+          allOf:
+            - $ref: '#/components/schemas/PaymentsCategoriesDescription'
+            - type: array
+              items:
+                $ref: '#/components/schemas/InstallmentPaymentCategory'
+        departamentsCosts:
+          type: array
+          description: Custo por departamento
+          items:
+            $ref: '#/components/schemas/DepartamentCost'
+        buildingsCosts:
+          type: array
+          description: Custo por obra
+          items:
+            $ref: '#/components/schemas/BuildingCost'
+        payments:
+          type: array
+          description: Pagamentos
+          items:
+            $ref: '#/components/schemas/Payment'
+        authorizations:
+          type: array
+          description: Autorização de pagamento
+          items:
+            $ref: '#/components/schemas/Authorization'
+    PaymentsCategoriesDescription:
+      description: Categorias dos pagamentos
+    InstallmentPaymentCategory:
+      type: object
+      description: Categorias dos pagamentos.
+      properties:
+        costCenterId:
+          description: Código do centro de custo
+          example: 123
+          format: int32
+          type: integer
+        costCenterName:
+          description: Nome do centro de custo
+          example: Centro de Custo Exemplo
+          type: string
+        projectId:
+          description: Código do projeto
+          example: 123
+          format: int32
+          type: integer
+        projectName:
+          description: Nome do projeto
+          example: Projeto Exemplo
+          type: string
+        financialCategoryId:
+          description: Código do plano financeiro
+          example: '2010101'
+          type: string
+        financialCategoryName:
+          description: Descrição do plano financeiro
+          example: Descrição do plano financeiro
+          type: string
+        financialCategoryReducer:
+          description: Indica se é plano financeiro redutor
+          example: S
+          type: string
+        financialCategoryType:
+          description: Indica plano financeiro de receita ou despesa (R/D)
+          example: R
+          type: string
+        financialCategoryRate:
+          description: Porcentagem
+          example: 10
+          format: double
+          type: number
+    DepartamentCost:
+      type: object
+      description: Custo por departamento.
+      properties:
+        id:
+          description: Código do departamento
+          example: 123
+          format: int32
+          type: integer
+        name:
+          description: Nome do departamento
+          example: Departamento Exemplo
+          type: string
+        rate:
+          type: number
+          format: double
+          description: Porcentagem.
+          example: 10
+    BuildingCost:
+      type: object
+      description: Custo por obra.
+      properties:
+        buildingId:
+          description: Código da obra
+          example: 100
+          format: int32
+          minimum: 0
+          type: integer
+        buildingName:
+          description: Nome da obra
+          example: Obra Exemplo
+          type: string
+        buildingUnitId:
+          description: Código da unidade construtiva
+          example: 123
+          format: int32
+          type: integer
+        buildingUnitName:
+          description: Nome da Unidade Construtiva.
+          example: Unidade Exemplo
+          type: string
+        costEstimationSheetId:
+          description: Código do item de orçamento
+          example: CE01
+          type: string
+        costEstimationSheetName:
+          description: Nome do item de orçamento
+          example: Item Orçamento Exemplo
+          type: string
+        rate:
+          description: Percentual de apropriação
+          example: 100
+          format: double
+          type: number
+    Payment:
+      type: object
+      description: Pagamento
+      properties:
+        operationTypeId:
+          description: Código do tipo da baixa
+          example: 123
+          format: int32
+          type: integer
+        operationTypeName:
+          description: Nome do tipo da baixa
+          example: Baixa 1
+          type: string
+        grossAmount:
+          description: Valor bruto
+          example: 10
+          format: double
+          type: number
+        monetaryCorrectionAmount:
+          description: Valor da correção monetária
+          example: 10
+          format: double
+          type: number
+        interestAmount:
+          description: Valor dos juros.
+          example: 100.05
+          type: number
+        fineAmount:
+          description: Valor da multa.
+          example: 0
+          type: number
+        discountAmount:
+          description: Valor de desconto do título
+          example: 50
+          format: double
+          type: number
+        taxAmount:
+          description: Valor do imposto
+          example: 10
+          format: double
+          type: number
+        netAmount:
+          description: Valor líquido
+          example: 10
+          format: double
+          type: number
+        calculationDate:
+          type: string
+          format: date
+          description: 'Data de cálculo (Formato ISO 8601 yyyy-MM-dd | Exemplo: 2018-01-01)'
+          example: '2018-01-01'
+        paymentDate:
+          type: string
+          format: date
+          description: >-
+            Data de pagamento (Formato ISO 8601 yyyy-MM-dd | Exemplo:
+            2018-01-01)
+          example: '2018-01-01'
+        sequencialNumber:
+          type: integer
+          format: int32
+          description: Número sequencial
+          example: 123
+        correctedNetAmount:
+          type: number
+          format: double
+          description: Valor líquido corrigido por indexador
+          example: 10
+        paymentAuthentication:
+          type: string
+          description: Autenticação bancária
+          example: Autenticação bancária 1
+        bankMovements:
+          allOf:
+            - $ref: '#/components/schemas/BankMovementsListDescription'
+            - type: array
+              items:
+                $ref: '#/components/schemas/BankMovements'
+    Authorization:
+      type: object
+      description: Autorização
+      properties:
+        authorizationUserId:
+          type: string
+          description: Código do usuário que autorizou
+          example: '123'
+        authorizationUserName:
+          type: string
+          description: Nome do usuário que autorizou
+          example: Nome do usuário 1
+        authorizationDate:
+          type: string
+          description: Data da autorização
+          example: '2018-01-01'
+        isLastToAuthorize:
+          type: string
+          description: Indica se é o último a autorizar
+          example: Sim
+    BankMovementsListDescription:
+      description: Movimentos
+    BankMovements:
+      type: object
+      description: Movimentos Bancarios
+      properties:
+        accountCompanyId:
+          description: Código da conta da empresa
+          example: 123
+          format: int32
+          type: integer
+        accountNumber:
+          description: Número da conta
+          example: '13354'
+          type: string
+        accountType:
+          description: Tipo de conta 'C' para corrente 'P' para poupança
+          example: C
+          type: string
+        bankMovementDate:
+          type: string
+          format: date
+          description: >-
+            Data do movimento (Formato ISO 8601 yyyy-MM-dd | Exemplo:
+            2018-01-01)
+          example: '2018-01-01'
+        sequencialNumber:
+          type: integer
+          format: int32
+          description: Número sequencial.
+          example: 123
+        id:
+          type: integer
+          format: int32
+          description: Número do lançamento
+          example: 123
+        amount:
+          description: Valor do movimento
+          example: 1000
+          format: double
+          type: number
+        historicId:
+          description: Código do histórico padrão
+          example: 123
+          format: int32
+          type: integer
+        historicName:
+          description: Descrição do histórico padrão
+          example: Histórico padrão 1
+          type: string
+        operationId:
+          description: Código da operação
+          example: 123
+          format: int32
+          type: integer
+        operationName:
+          description: Descrição da operação
+          example: Operação 1
+          type: string
+        operationType:
+          description: Tipo de operação
+          example: Recebimento
+          type: string
+        reconcile:
+          description: Movimento conciliado
+          example: sim
+          type: string
+        originId:
+          type: string
+          description: Origem do movimento
+          example: Origem 1
+        paymentCategories:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentCategories'
+          example:
+            - costCenterId: 123
+              financialCategoryId: '123'
+              financialCategoryName: Plano financeiro 1
+              financialCategoryReducer: Sim
+              financialCategoryType: Receita
+              financialCategoryRate: 10
+              bankMovementId: 123
+    PaymentCategories:
+      type: object
+      description: Apropriação financeira
+      properties:
+        costCenterId:
+          description: Código do centro de custo
+          example: 123
+          format: int32
+          type: integer
+        financialCategoryId:
+          description: Código do plano financeiro
+          example: '2010101'
+          type: string
+        financialCategoryName:
+          description: Descrição do plano financeiro
+          example: Descrição do plano financeiro
+          type: string
+        financialCategoryReducer:
+          description: Indica se é plano financeiro redutor
+          example: S
+          type: string
+        financialCategoryType:
+          description: Indica plano financeiro de receita ou despesa (R/D)
+          example: R
+          type: string
+        financialCategoryRate:
+          description: Percentual de apropriação
+          example: 100
+          format: double
+          type: number
+        bankMovementId:
+          type: integer
+          format: int32
+          description: Número do lançamento.
+          example: 123
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    StartDateQueryRequired:
+      description: Data inicial para filtro de período
+      in: query
+      name: startDate
+      required: true
+      schema:
+        example: '2023-01-01'
+        format: date
+        type: string
+    EndDateQueryRequired:
+      description: Data final para filtro de período
+      in: query
+      name: endDate
+      required: true
+      schema:
+        example: '2023-01-31'
+        format: date
+        type: string
+    CompanyIdQuery:
+      description: Código da empresa (opcional)
+      in: query
+      name: companyId
+      required: false
+      schema:
+        example: 1
+        type: integer
+    CostCentersId:
+      description: Códigos de centro de custo cadastrados no Sienge
+      in: query
+      name: costCentersId
+      required: false
+      schema:
+        example:
+          - 123
+          - 456
+        items:
+          example: 456
+          type: integer
+        type: array
+    BuildingIdQuery:
+      description: Código da obra (opcional)
+      in: query
+      name: buildingId
+      required: false
+      schema:
+        example: 123
+        format: int32
+        type: integer
+    BuildingUnitId:
+      description: Código da Unidade Construtiva
+      in: query
+      name: buildingUnitId
+      required: false
+      schema:
+        example: 1
+        type: integer
+    CostEstimationSheetId:
+      description: Código do item de orçamento
+      in: query
+      name: costEstimationSheetId
+      required: false
+      schema:
+        example: 001.001.001.001
+        type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/bulk-data/v1

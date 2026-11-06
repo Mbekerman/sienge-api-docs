@@ -1,0 +1,3201 @@
+openapi: 3.1.1
+info:
+  title: Clientes
+  version: 1.24.0
+  description: API de busca de clientes.
+paths:
+  /customers:
+    get:
+      x-original-file: customers-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Clientes
+      summary: Busca clientes ordenando pelo código.
+      operationId: getCustomers
+      parameters:
+        - name: cpf
+          in: query
+          description: CPF do cliente sem máscara, somente números.
+          schema:
+            type: string
+            example: '12345678901'
+        - name: cnpj
+          in: query
+          description: CNPJ do cliente sem máscara, somente números.
+          schema:
+            type: string
+            example: '12345678000195'
+        - name: internationalId
+          in: query
+          description: Informação da identificação internacional.
+          schema:
+            type: string
+            example: 123456789AB
+        - name: onlyActive
+          in: query
+          description: >-
+            True para filtrar por clientes ativos, false não aplicará o filtro e
+            retornará todos os clientes independente de status ativo ou não.
+          schema:
+            type: boolean
+            example: true
+        - name: enterpriseId
+          in: query
+          description: Id do empreendimento, somente números.
+          schema:
+            type: number
+            example: 123
+        - name: createdAfter
+          in: query
+          description: >-
+            Data inicial para filtrar clientes pela data de criação. Formato:
+            yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2024-01-01'
+        - name: createdBefore
+          in: query
+          description: >-
+            Data final para filtrar clientes pela data de criação. Formato:
+            yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2024-12-31'
+        - name: modifiedAfter
+          in: query
+          description: >-
+            Data inicial para filtrar clientes pela data de última alteração.
+            Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2024-01-01'
+        - name: modifiedBefore
+          in: query
+          description: >-
+            Data final para filtrar clientes pela data de última alteração.
+            Formato: yyyy-MM-dd.
+          schema:
+            type: string
+            example: '2024-12-31'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Clientes encontrados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerAttachmentResponseDocument'
+              example:
+                resultSetMetadata:
+                  count: 2
+                  offset: 0
+                  limit: 100
+                results:
+                  - id: 1
+                    personType: F
+                    foreigner: 'N'
+                    internationalId: 123456789AB
+                    createdAt: '2025-01-01'
+                    modifiedAt: '2025-01-01'
+                    modifiedAtDateTime: '2025-01-01 10:30:45.123'
+                    issuingBody: SSP
+                    name: João Silva
+                    socialName: Maria Silva
+                    email: joao.silva@example.com
+                    birthDate: '2025-01-01'
+                    birthPlace: São Paulo
+                    civilStatus: Solteiro
+                    cpf: '12345678901'
+                    fatherName: Antonio Silva
+                    motherName: Maria Silva
+                    sex: Masculino
+                    issueDateIdentityCard: '2025-01-01'
+                    matrimonialRegime: União estável
+                    marriageDate: '2025-01-01'
+                    nationality: Brasileiro
+                    numberIdentityCard: '123456789'
+                    profession: Engenheiro
+                    mailingAddress: R
+                    licenseNumber: '123456789'
+                  - id: 2
+                    personType: J
+                    foreigner: 'N'
+                    internationalId: 987654321XY
+                    createdAt: '2025-02-01'
+                    modifiedAt: '2025-02-01'
+                    modifiedAtDateTime: '2025-02-01 08:15:22.456'
+                    issuingBody: SSP
+                    name: Empresa Exemplo LTDA
+                    email: contato@empresaexemplo.com
+                    nationality: Brasileiro
+                    mailingAddress: C
+                    licenseNumber: '987654321'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Busca uma lista de clientes ordenando do cadastro mais recente para o
+        mais antigo. (REST)
+    post:
+      tags:
+        - Clientes
+      summary: Inclui um novo cliente.
+      operationId: insertCustomers
+      requestBody:
+        description: Objeto para criação do cliente
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerInsertDocument'
+            example:
+              personType: F
+              foreigner: 'N'
+              typeId: 1
+              internationalId: 123456789AB
+              subtypeIds:
+                - 1
+                - 2
+              addresses:
+                - type: R
+                  streetName: Rua das Palmeiras
+                  number: '123'
+                  complement: Apto 45
+                  neighborhood: Centro
+                  cityId: 1001
+                  city: Florianópolis
+                  state: SC
+                  zipCode: '88000123'
+              phones:
+                - type: CE
+                  number: '48999998888'
+                  extension: '234'
+                  description: Celular principal
+                  whatsapp: true
+              naturalPersonData:
+                name: João Silva
+                socialName: Maria Silva
+                email: joao.silva@example.com
+                birthDate: '1990-12-31'
+                birthPlace: Florianópolis
+                civilStatus: Solteiro
+                cpf: '12345678901'
+                mailingAddress: R
+                fatherName: Antonio Silva
+                motherName: Maria Silva
+                sex: M
+                issueDateIdentityCard: '2008-01-01'
+                matrimonialRegime: Comunhão parcial de bens
+                marriageDate: '2008-01-01'
+                nationality: Brasileiro
+                numberIdentityCard: '123456789'
+                profession: Engenheiro
+                issuingBody: SSP
+        required: true
+      responses:
+        '201':
+          description: Cliente criado
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: customers-v1.yaml
+      description: Persiste um cliente. (REST)
+      x-audience:
+        - public
+  /customers/{customerId}:
+    get:
+      x-original-file: customers-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Clientes
+      summary: Busca um cliente pelo código.
+      operationId: getCustomer
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      responses:
+        '200':
+          description: Cliente encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerGetDocument'
+              example:
+                id: 1
+                personType: F
+                foreigner: 'N'
+                internationalId: 123456789AB
+                createdAt: '2025-01-01'
+                modifiedAt: '2025-01-01'
+                modifiedAtDateTime: '2025-01-01 10:30:45.123'
+                issuingBody: SSP
+                name: João Silva
+                socialName: Maria Silva
+                email: joao.silva@example.com
+                birthDate: '2025-01-01'
+                birthPlace: São Paulo
+                civilStatus: Solteiro
+                cpf: '12345678901'
+                fatherName: Antonio Silva
+                motherName: Maria Silva
+                sex: Masculino
+                issueDateIdentityCard: '2025-01-01'
+                matrimonialRegime: União estável
+                marriageDate: '2025-01-01'
+                nationality: Brasileiro
+                numberIdentityCard: '123456789'
+                profession: Engenheiro
+                mailingAddress: R
+                licenseNumber: '123456789'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca um cliente. (REST)
+    patch:
+      tags:
+        - Clientes
+      summary: Atualiza informações do cliente.
+      operationId: updateCustomer
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      requestBody:
+        description: >-
+          Objeto para atualização do cliente. Se você não quiser atualizar um
+          campo, não insira no objeto. Se quiser remover o conteúdo de um campo,
+          envie uma string vazia como valor do campo. Campos não  enviados ou
+          nulos serão ignorados.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerUpdateDocument'
+            example:
+              internationalId: 123456789AB
+              typeId: 1
+              naturalPersonData:
+                name: João Silva
+                socialName: Maria Silva
+                email: joao.silva@example.com
+                sex: M
+                birthDate: '2025-01-01'
+                birthPlace: São Paulo
+                civilStatus: Solteiro
+                cpf: '12345678901'
+                fatherName: Antonio Silva
+                motherName: Maria Silva
+                issueDateIdentityCard: '2025-01-01'
+                matrimonialRegime: União estável
+                marriageDate: '2025-01-01'
+                nationality: Brasileiro
+                numberIdentityCard: '123456789'
+                profession: Engenheiro
+                mailingAddress: R
+                licenseNumber: '123456789'
+        required: true
+      responses:
+        '204':
+          description: Cliente atualizado
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: customers-v1.yaml
+      description: Atualiza informações de um cliente. (REST)
+      x-audience:
+        - public
+  /customers/{customerId}/phones:
+    put:
+      tags:
+        - Telefones do cliente
+      summary: Atualiza os telefones do cliente.
+      operationId: updatePhones
+      x-section: Telefones do cliente
+      x-original-file: customers-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      requestBody:
+        description: >-
+          Objeto para atualizar telefones do cliente. É necessário enviar todos
+          os telefones do cliente, pois esta ação apagará os telefones antigos e
+          irá registrar apenas os telefones enviados nessa requisição.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerPhonesUpdateDocument'
+            example:
+              phones:
+                - number: '48999998888'
+                  main: true
+                  type: CE
+                  note: Celular principal
+                  idd: '+55'
+                  whatsapp: true
+        required: true
+      responses:
+        '204':
+          description: Telefones do cliente atualizados
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Atualiza os telefones de um cliente. (REST)
+  /customers/{customerId}/spouse:
+    put:
+      tags:
+        - Cônjuge do cliente
+      summary: Substitui dados do cônjuge, cria um novo caso não exista.
+      operationId: updateSpouse
+      x-section: Cônjuge do cliente
+      x-original-file: customers-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      requestBody:
+        description: Objeto para atualizar cônjuge do cliente.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerSpouseDocument'
+            example:
+              cpf: '41833114030'
+              name: Ana Paula Souza
+              email: ana.paula@example.com
+              sex: F
+        required: true
+      responses:
+        '204':
+          description: Cônjuge do cliente atualizado
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Atualiza o cônjuge de um cliente, apagando o antigo cônjuge. Se não
+        existir, cria. (REST)
+  /customers/{customerId}/familyIncomes:
+    put:
+      tags:
+        - Rendas Familiares do cliente
+      summary: Atualiza as rendas familiares do cliente.
+      operationId: updateFamilyIncomes
+      x-section: Rendas Familiares do cliente
+      x-original-file: customers-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      requestBody:
+        description: >-
+          Objeto para atualizar rendas familiares do cliente. É necessário
+          enviar todas as rendas familiares do cliente, pois esta ação apagará
+          as rendas familiares antigas e irá registrar apenas as rendas
+          familiares enviadas nessa requisição.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerFamilyIncomeUpdateDocument'
+            example:
+              - kinsName: Maria Souza
+                kinship: Mãe
+                incomeValue: 3500.5
+                observation: Renda proveniente de aposentadoria
+        required: true
+      responses:
+        '204':
+          description: Rendas familiares do cliente atualizadas
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Atualiza as rendas familiares de um cliente. (REST)
+  /customers/{customerId}/addresses/{addressType}:
+    put:
+      tags:
+        - Endereços do cliente
+      summary: Atualiza os endereços do cliente. Se não existir, cria.
+      operationId: updateAddresses
+      x-section: Endereços do cliente
+      x-original-file: customers-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+        - $ref: '#/components/parameters/AddressType'
+      requestBody:
+        description: Objeto para atualizar endereços do cliente.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerAddressUpdateDocument'
+            example:
+              type: R
+              streetName: Rua das Palmeiras
+              number: '123'
+              complement: Apto 45
+              neighborhood: Centro
+              cityId: 1001
+              city: Florianópolis
+              state: SC
+              zipCode: '88000123'
+        required: true
+      responses:
+        '204':
+          description: Endereços do cliente foram atualizados.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Atualiza os endereços de um cliente. Se não existir, cria. (REST)
+  /customers/{customerId}/attachments:
+    get:
+      x-original-file: customers-v1.yaml
+      x-section: Anexos do cliente
+      x-audience:
+        - public
+      tags:
+        - Anexos do cliente
+      summary: Busca as informações de anexos do cliente
+      operationId: getCustomerAttachments
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: >-
+            Foi encontrado anexos para o cliente, caso retorne vazio foi
+            encontrado apenas o cliente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CostumerAttachmentsResponseArray'
+              example:
+                resultSetMetadata:
+                  count: 1
+                  limit: 10
+                  offset: 0
+                results:
+                  - attachmentid: 1
+                    name: documento.pdf
+                    description: Documento do cliente
+                    size: 320123
+                    contentType: application/pdf
+                    links:
+                      - rel: contentDownloadLink
+                        href: https://api.exemplo.com/attachments/1/download
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca as informações dos anexos do cliente (REST)
+    post:
+      x-original-file: customers-v1.yaml
+      x-section: Anexos do cliente
+      x-audience:
+        - public
+      tags:
+        - Anexos do cliente
+      summary: Inclui um novo anexo ao cliente.
+      operationId: insertCustomerAttachment
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+        - name: description
+          in: query
+          description: 'Descrição do anexo. Exemplo: "Certidão de nascimento".'
+          required: true
+          schema:
+            type: string
+            example: Certidão de nascimento
+      requestBody:
+        description: Arquivo para inserção do anexo do cliente.
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: >-
+                    Arquivo para inserção | Tamanho máximo: 70 MB | Tamanho
+                    máximo do nome do arquivo: 100 caracteres | Somente 1 Anexo
+                    por requisição. Caso seja enviado mais de 1 Anexo, o Sienge
+                    vai aceitar somente o primeiro selecionado.
+                  format: binary
+                  example: documento.pdf
+            examples:
+              exemplo1:
+                summary: Exemplo de PDF
+                value:
+                  file: documento.pdf
+        required: true
+      responses:
+        '201':
+          description: Anexo inserido com sucesso
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Inclui um anexo ao cliente. (REST)
+  /customers/{customerId}/attachments/{attachmentId}:
+    get:
+      x-original-file: customers-v1.yaml
+      x-section: Anexos do cliente
+      x-audience:
+        - public
+      tags:
+        - Anexos do cliente
+      summary: Download do anexo do cliente
+      operationId: downloadCostumerAttachment
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+        - $ref: '#/components/parameters/AttachmentId'
+      responses:
+        '200':
+          description: Anexo encontrado
+          content:
+            application/json:
+              schema:
+                type: string
+                format: binary
+            file:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Download de anexo do cliente (REST)
+  /customers/{customerId}/procurator:
+    post:
+      tags:
+        - Procuradores do cliente
+      summary: Inclui um novo procurador ao cliente.
+      operationId: insertCustomerProcurators
+      x-section: Procuradores do cliente
+      x-original-file: customers-v1.yaml
+      x-audience:
+        - public
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+      requestBody:
+        description: Objeto para criação do procurador
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcuratorInsertDocument'
+            example:
+              name: Carlos Alberto Souza
+              cpf: '12345678901'
+              procuratorType: CLIENTE
+              numberIdentityCard: MG1234567
+              email: carlos.souza@email.com
+              birthDate: '1970-05-20'
+              nationality: Brasileiro
+              birthPlace: Belo Horizonte
+              professionId: 123
+              civilStatusId: 2
+              marriageRegime: Comunhão parcial de bens
+              marriageDate: '2000-10-10'
+              residentialAddress:
+                streetName: Rua das Palmeiras
+                neighborhood: Centro
+                cityId: 1001
+                zipCode: '88000123'
+                number: '123'
+                complement: Apto 45
+                state: SC
+                city: Florianópolis
+              businessAddress:
+                streetName: Rua das Palmeiras
+                neighborhood: Centro
+                cityId: 1001
+                zipCode: '88000123'
+                number: '123'
+                complement: Apto 45
+                state: SC
+                city: Florianópolis
+              proxy:
+                registry: Cartório Central
+                district: Belo Horizonte
+                stateId: 31
+                book: Livro A
+                sheet: Folha 10
+        required: true
+      responses:
+        '201':
+          description: Procurador criado
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Inclui um procurador ao cliente. (REST)
+components:
+  schemas:
+    CustomerAttachmentResponseDocument:
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      description: Informações de anexo do cliente.
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de clientes retornados como resultado da pesquisa.
+          items:
+            $ref: '#/components/schemas/CustomerGetDocument'
+          example:
+            - id: 1
+              personType: F
+              foreigner: 'N'
+              internationalId: 123456789AB
+              createdAt: '2025-01-01'
+              modifiedAt: '2025-01-01'
+              issuingBody: SSP
+              name: João Silva
+              email: joao.silva@example.com
+              birthDate: '1990-05-20'
+              birthPlace: São Paulo
+              civilStatus: Solteiro
+              cpf: '12345678901'
+              fatherName: Antonio Silva
+              motherName: Maria Silva
+              sex: Masculino
+              issueDateIdentityCard: '2010-06-15'
+              addresses:
+                - type: R
+                  streetName: Rua das Palmeiras
+                  number: '123'
+                  complement: Apto 45
+                  neighborhood: Centro
+                  cityId: 1001
+                  city: Florianópolis
+                  state: SC
+                  zipCode: '88000123'
+              phones:
+                - number: '48999998888'
+                  main: true
+                  type: CE
+                  note: Celular principal
+                  idd: '+55'
+                  whatsapp: true
+    CustomerInsertDocument:
+      required:
+        - personType
+      type: object
+      description: Informações para inclusão do cliente.
+      properties:
+        personType:
+          type: string
+          description: >-
+            Tipo de pessoa. Informar F para pessoa física ou J para pessoa
+            juridica. Campo obrigatório.
+          example: F
+        foreigner:
+          type: string
+          description: |
+            Pessoa é estrangeira ou não:
+              * `S` - Sim
+              * `N` - Não
+          enum:
+            - S
+            - 'N'
+          example: S
+        typeId:
+          type: integer
+          description: Tipo de cliente. Informar código do cadastro de tipo de cliente.
+          example: 1
+        internationalId:
+          type: string
+          description: Identificação internacional.
+          example: 123456789AB
+        subtypeIds:
+          type: array
+          description: >-
+            Subtipos de cliente. Informar lista com o código do cadastro de
+            subtipos de cliente.
+          items:
+            type: integer
+          example:
+            - 1
+        addresses:
+          type: array
+          description: Endereços do cliente para inclusão.
+          items:
+            $ref: '#/components/schemas/CustomerAddressInsertDocument'
+          example:
+            - type: R
+              streetName: Rua de Exemplo
+              number: '123'
+              complement: Apto 45
+              neighborhood: Centro
+              cityId: 1001
+              city: Florianópolis
+              state: SC
+              zipCode: '88000123'
+        phones:
+          type: array
+          description: Telefones do cliente para inclusão.
+          items:
+            $ref: '#/components/schemas/CustomerPhoneInsertAndUpdateDocument'
+          example:
+            - number: '48999998888'
+              main: true
+              type: CE
+              note: Celular principal
+              idd: '+55'
+              whatsapp: true
+        naturalPersonData:
+          required:
+            - cpf
+            - name
+            - sex
+          type: object
+          properties:
+            name:
+              type: string
+              description: Nome da pessoa física.
+              example: João Silva
+            email:
+              type: string
+              description: E-mail da pessoa física.
+              example: joao.silva@example.com
+            birthDate:
+              type: string
+              description: >-
+                Data de nascimento da pessoa física. Formato YYYY-MM-DD. Exemplo
+                -> 1990-12-31.
+              example: '1990-12-31'
+            birthPlace:
+              type: string
+              description: Naturalidade da pessoa física.
+              example: São Paulo
+            civilStatus:
+              type: string
+              description: >-
+                Estado civil da pessoa física. Deve ser informada a descrição
+                conforme cadastro de estados civis no Sienge.
+              example: Solteiro
+            cpf:
+              type: string
+              description: >-
+                CPF da pessoa física. Formato NNNNNNNNNNN (somente números).
+                Exemplo -> 41833114035.
+              example: '41833114035'
+            mailingAddress:
+              type: string
+              description: |
+                Endereço de correspondência:
+                  * `R` - Residencial
+                  * `C` - Comercial
+                  * `I` - Internacional
+              enum:
+                - R
+                - C
+                - I
+              example: R
+            licenseNumber:
+              type: string
+              description: Número da CNH do cliente.
+              example: '123456789'
+            licenseIssuingBody:
+              type: string
+              description: Órgão emissor da CNH do cliente.
+              example: DETRAN
+            licenseIssueDate:
+              type: string
+              description: >-
+                Data de emissão da CNH do cliente (Formato ISO 8601 yyyy-MM-dd |
+                Exemplo: 2023-01-01).
+              format: date
+              example: '2023-01-01'
+            fatherName:
+              type: string
+              description: Nome do pai.
+              example: Antonio Silva
+            sex:
+              type: string
+              description: >-
+                Sexo. Informar F para feminino ou M para masculino. Campo
+                obrigatório.
+              example: M
+            issueDateIdentityCard:
+              type: string
+              description: >-
+                Data de emissão da carteira de identidade (RG). Formato
+                YYYY-MM-DD. Exemplo -> 2010-02-05.
+              example: '2010-02-05'
+            issuingBody:
+              type: string
+              description: Orgão Emissor do RG.
+              example: SSP
+            matrimonialRegime:
+              type: string
+              description: Regime de casamento.
+              example: Comunhão parcial de bens
+            marriageDate:
+              type: string
+              description: Data de casamento. Formato YYYY-MM-DD. Exemplo -> 2015-05-31.
+              example: '2015-05-31'
+            nationality:
+              type: string
+              description: Nacionalidade do cliente.
+              example: Brasileiro
+            numberIdentityCard:
+              type: string
+              description: Número de RG do cliente (carteira de identidade).
+              example: '123456789'
+            motherName:
+              type: string
+              description: Nome da mãe.
+              example: Maria Silva
+            profession:
+              type: string
+              description: >-
+                Profissão do cliente. Deve ser informada a descrição conforme
+                cadastro de profissôes no Sienge.
+              example: Engenheiro
+            spouse:
+              required:
+                - name
+                - sex
+              type: object
+              properties:
+                foreigner:
+                  type: string
+                  description: Flag que indica se o cônjuge é estrangeiro.
+                  example: 'N'
+                internationalId:
+                  type: string
+                  description: Identificação internacional do cônjuge para inclusão.
+                  example: 123456789AB
+                cpf:
+                  type: string
+                  description: >-
+                    CPF do cônjuge. Formato NNNNNNNNNNN (somente números).
+                    Exemplo -> 41833114035.
+                  example: '41833114035'
+                name:
+                  maxLength: 80
+                  type: string
+                  description: Nome do cônjuge para inclusão. Campo obrigatório.
+                  example: Maria Silva
+                email:
+                  maxLength: 40
+                  type: string
+                  description: E-mail do cônjuge para inclusão.
+                  example: maria.silva@example.com
+                sex:
+                  type: string
+                  description: >-
+                    Sexo do cônjuge. Informar F para feminino, M para masculino
+                    e A para anônimo. Campo obrigatório.
+                  example: F
+                civilStatus:
+                  type: string
+                  description: >-
+                    Estado civil do cônjuge para inclusão. Deve ser informada a
+                    descrição conforme cadastro de estados civis no Sienge.
+                  example: Casado
+                birthDate:
+                  type: string
+                  description: >-
+                    Data de nascimento do cônjuge para inclusão. Formato
+                    YYYY-MM-DD. Exemplo -> 1990-12-31.
+                  example: '1990-12-31'
+                numberIdentityCard:
+                  type: string
+                  description: Número do RG do cônjuge para inclusão.
+                  example: '987654321'
+                issueDateIdentityCard:
+                  type: string
+                  description: >-
+                    Data de emissão identidade do cônjuge para inclusão. Formato
+                    YYYY-MM-DD. Exemplo -> 1990-12-31.
+                  example: '1990-12-31'
+                profession:
+                  type: string
+                  description: >-
+                    Profissão do cônjuge para inclusão. Deve ser informada a
+                    descrição conforme cadastro de profissôes no Sienge.
+                  example: Professora
+                nationality:
+                  maxLength: 40
+                  type: string
+                  description: Nacionalidade do cônjuge para inclusão.
+                  example: Brasileira
+                birthPlace:
+                  maxLength: 40
+                  type: string
+                  description: Naturalidade do cônjuge para inclusão.
+                  example: Rio de Janeiro
+                fatherName:
+                  maxLength: 40
+                  type: string
+                  description: Nome do pai do cônjuge para inclusão.
+                  example: José Santos
+                motherName:
+                  maxLength: 40
+                  type: string
+                  description: Nome da mãe do cônjuge para inclusão.
+                  example: Ana Santos
+                cellphoneNumber:
+                  maxLength: 12
+                  type: string
+                  description: >-
+                    Número do telefone celular do cônjuge para inclusão. Formato
+                    DDDNNNNNNNNN. Exemplo -> 048912345678
+                  example: '048912345678'
+                businessPhone:
+                  maxLength: 12
+                  type: string
+                  description: >-
+                    Número do telefone comercial do cônjuge para inclusão.
+                    Formato DDDNNNNNNNNN. Exemplo -> 048912345678
+                  example: '048912345678'
+                company:
+                  maxLength: 80
+                  type: string
+                  description: Empresa do cônjuge para inclusão.
+                  example: Escola Municipal
+                addresses:
+                  type: object
+                  properties:
+                    city:
+                      type: string
+                      description: >-
+                        Nome do munícipio do endereço. Deve ser informada o nome
+                        conforme cadastro de munícipio no Sienge.
+                      example: Florianópolis
+                    complement:
+                      maxLength: 40
+                      type: string
+                      description: Complemento do endereço do cônjuge para inclusão.
+                      example: Apto 201
+                    neighborhood:
+                      maxLength: 40
+                      type: string
+                      description: Bairro do endereço do cônjuge para inclusão.
+                      example: Centro
+                    number:
+                      maxLength: 10
+                      type: string
+                      description: Número do endereço do cônjuge para inclusão.
+                      example: '456'
+                    streetName:
+                      maxLength: 40
+                      type: string
+                      description: Logradouro do endereço do cônjuge para inclusão.
+                      example: Rua das Flores
+                    zipCode:
+                      maxLength: 8
+                      type: string
+                      description: >-
+                        Código de endereçamento postal (CEP) do endereço do
+                        cônjuge para inclusão. Informar somente números. Exemplo
+                        -> 88000111
+                      example: '88000111'
+                  description: Endereço do Cônjuge para inclusão.
+              description: Cônjuge para inclusão.
+            example: {}
+          description: >-
+            Dados para cliente pessoa física. Informar somente quando o
+            personType for F.
+          example:
+            name: Cliente de Exemplo
+            email: cliente.exemplo@example.com
+            birthDate: '1990-12-31'
+            birthPlace: Brasil
+            civilStatus: Solteiro
+            cpf: '41833114035'
+            sex: M
+            mailingAddress: R
+            licenseNumber: '123456789'
+            licenseIssuingBody: Secretaria de Segurança Pública
+            licenseIssueDate: '2023-01-01'
+            addresses:
+              - type: R
+                streetName: Rua de Exemplo
+                number: '123'
+                complement: Apto 45
+                neighborhood: Centro
+                city: Munícipio de Exemplo
+                zipCode: '88000123'
+            phones:
+              - number: '48999998888'
+                main: true
+                type: CE
+                note: Celular principal
+                idd: '+55'
+        legalPersonData:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Nome da pessoa jurídica.
+              example: Empresa Exemplo Ltda
+            email:
+              type: string
+              description: E-mail de contato da pessoa jurídica.
+              example: contato@empresaexemplo.com
+            cityRegistrationNumber:
+              type: string
+              description: Número de inscrição municipal da pessoa jurídica.
+              example: '123456789'
+            cnaeNumber:
+              type: string
+              description: Número do CNAE da pessoa jurídica.
+              example: '6201501'
+            cnpj:
+              type: string
+              description: >-
+                CNPJ. Formato NNNNNNNNNNNNNN (somente números). Exemplo ->
+                87389750000181.
+              example: '87389750000181'
+            contactName:
+              type: string
+              description: Nome do contato da pessoa jurídica.
+              example: João da Silva
+            creaNumber:
+              type: string
+              description: Número do CREA da pessoa jurídica.
+              example: '123456789'
+            establishmentDate:
+              type: string
+              description: >-
+                Data de constituição da empresa. Formato YYYY-MM-DD. Exemplo ->
+                2012-12-31.
+              example: '2012-12-31'
+            fantasyName:
+              type: string
+              description: Nome fantasia da pessoa jurídica.
+              example: Empresa Exemplo
+            note:
+              type: string
+              description: Observação da pessoa jurídica para inclusão.
+              example: Empresa especializada em desenvolvimento de software
+            site:
+              type: string
+              description: Endereço de website da pessoa jurídica.
+              example: https://www.empresaexemplo.com
+            shareCapital:
+              type: number
+              description: Capital social da pessoa jurídica.
+              example: 100000
+            stateRegistrationNumber:
+              type: string
+              description: Número de inscrição estadual da pessoa jurídica.
+              example: '987654321'
+            technicalManager:
+              type: string
+              description: Nome do responsável técnico da pessoa jurídica.
+              example: Carlos Engenheiro
+            governmentEntityId:
+              type: number
+              description: |
+                Código do tipo de ente governamental para pessoa jurídica.
+                  * 0 - Não aplicável
+                  * 1 - União
+                  * 2 - Estado
+                  * 3 - Distrito federal
+                  * 4 - Município
+              example: 1
+            agents:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Id do representante da pessoa jurídica.
+                    example: 123
+          description: >-
+            Dados para cliente pessoa jurídica. Informar somente quando o
+            personType for J.
+          example:
+            name: Empresa Exemplo Ltda
+            email: contato@empresaexemplo.com
+            cityRegistrationNumber: '123456789'
+            cnaeNumber: '6201501'
+            cnpj: '87389750000181'
+            contactName: João da Silva
+            fantasyName: Empresa Exemplo
+            stateRegistrationNumber: '987654321'
+            openingDate: '2010-04-15'
+            legalNature: Sociedade Limitada
+            mainActivity: Desenvolvimento de software
+            phone: '4833332211'
+            address:
+              streetName: Av. Central
+              number: '100'
+              complement: Sala 202
+              neighborhood: Centro
+              cityId: 1001
+              city: Florianópolis
+              state: SC
+              zipCode: '88000000'
+        familyIncome:
+          type: array
+          description: Lista de renda familiar do cliente.
+          items:
+            $ref: '#/components/schemas/CustomerFamilyIncomeInsert'
+          example:
+            - kinsName: Maria Souza
+              kinship: Mãe
+              incomeValue: 3500.5
+              observation: Renda proveniente de aposentadoria
+    CustomerGetDocument:
+      type: object
+      description: Informações do cliente.
+      example:
+        id: 1
+        personType: F
+        foreigner: 'N'
+        internationalId: 123456789AB
+        createdAt: '2025-01-01'
+        modifiedAt: '2025-01-01'
+        modifiedAtDateTime: '2025-01-01 10:30:45.123'
+        issuingBody: SSP
+        name: João Silva
+        socialName: Maria Silva
+        email: joao.silva@example.com
+        birthDate: '2025-01-01'
+        birthPlace: São Paulo
+        civilStatus: Solteiro
+        cpf: '12345678901'
+        fatherName: Antonio Silva
+        motherName: Maria Silva
+        sex: Masculino
+        issueDateIdentityCard: '2025-01-01'
+        matrimonialRegime: União estável
+        marriageDate: '2025-01-01'
+        nationality: Brasileiro
+        numberIdentityCard: '123456789'
+        profession: Engenheiro
+        mailingAddress: R
+        licenseNumber: '123456789'
+      properties:
+        id:
+          type: integer
+          description: Código.
+          format: int32
+          example: 1
+        personType:
+          type: string
+          description: 'Tipo de pessoa: F - Física, J - Jurídica'
+          enum:
+            - F
+            - J
+          example: F
+        foreigner:
+          type: string
+          example: 'N'
+          description: |
+            Indica se a pessoa é estrangeira ou não:
+              * `S` - Sim
+              * `N` - Não
+          enum:
+            - S
+            - 'N'
+        internationalId:
+          type: string
+          description: Id internacional do cliente estrangeiro.
+          example: 123456789AB
+        createdAt:
+          type: string
+          format: date
+          description: Data de cadastramento.
+          example: '2025-01-01'
+        modifiedAt:
+          type: string
+          format: date
+          description: Data da última alteração.
+          example: '2025-01-01'
+        modifiedAtDateTime:
+          type: string
+          format: date-time
+          description: Data e hora da última alteração no formato yyyy-MM-dd HH:mm:ss.SSS.
+          example: '2025-01-01 10:30:45.123'
+        issuingBody:
+          type: string
+          description: Orgão emissor.
+          example: SSP
+        name:
+          description: Nome do cliente
+          example: Nome do cliente
+          type: string
+        socialName:
+          type: string
+          description: Nome social para pessoa física.
+          example: Maria Silva
+        email:
+          type: string
+          description: E-mail do cliente.
+          example: joao.silva@example.com
+        birthDate:
+          type: string
+          description: Data de nascimento para pessoa física.
+          example: '2025-01-01'
+        birthPlace:
+          type: string
+          description: Naturalidade para pessoa física.
+          example: São Paulo
+        civilStatus:
+          type: string
+          description: Estado civil da pessoa física.
+          example: Solteiro
+        cpf:
+          type: string
+          description: CPF da pessoa física.
+          example: '12345678901'
+        fatherName:
+          type: string
+          description: Nome do pai do cliente.
+          example: Antonio Silva
+        motherName:
+          type: string
+          description: Nome da mãe do cliente.
+          example: Maria Silva
+        sex:
+          type: string
+          example: Masculino
+          description: |
+            Sexo para pessoa física:
+                * Feminino
+                * Masculino
+                * Anônimo
+          enum:
+            - Feminino
+            - Masculino
+            - Anônimo
+        issueDateIdentityCard:
+          type: string
+          description: Data de emissão da carteira de identidade (RG) para pessoa física.
+          example: '2025-01-01'
+        matrimonialRegime:
+          type: string
+          description: Regime matrimonial para pessoa física.
+          example: União estável
+        marriageDate:
+          type: string
+          description: Data de casamento para pessoa física.
+          example: '2025-01-01'
+        nationality:
+          type: string
+          description: Nacionalidade da pessoa física.
+          example: Brasileiro
+        numberIdentityCard:
+          type: string
+          description: Número da carteira de identidade (RG) da pessoa física.
+          example: '123456789'
+        profession:
+          type: string
+          description: Profissão da pessoa física.
+          example: Engenheiro
+        mailingAddress:
+          type: string
+          description: |
+            Endereço de correspondências:
+              * `R` - Residencial
+              * `C` - Comercial
+              * `I` - Internacional
+          enum:
+            - R
+            - C
+            - I
+          example: R
+        licenseNumber:
+          type: string
+          description: Número da licença.
+          example: '123456789'
+        licenseIssuingBody:
+          type: string
+          description: Órgão emissor da licença.
+          example: SSP
+        licenseIssueDate:
+          type: string
+          description: >-
+            Data de emissão da licença (Formato ISO 8601 yyyy-MM-dd | Exemplo:
+            2023-01-01)
+          format: date
+          example: '2025-01-01'
+        cityRegistrationNumber:
+          type: string
+          description: Número de inscrição municipal para pessoa jurídica.
+          example: '123456789'
+        cnaeNumber:
+          type: string
+          description: Número do CNAE para pessoa jurídica.
+          example: '123456789'
+        cnpj:
+          type: string
+          description: CNPJ da pessoa jurídica.
+          example: '12345678900001'
+        contactName:
+          type: string
+          description: Nome da pessoa de contato da pessoa jurídica.
+          example: João Silva
+        creaNumber:
+          type: string
+          description: Número do CREA para pessoa jurídica.
+          example: '123456789'
+        establishmentDate:
+          type: string
+          description: Data de constituição da empresa para pessoa jurídica.
+          example: '2025-01-01'
+        fantasyName:
+          type: string
+          description: Nome fantasia pessoa jurídica.
+          example: Empresa de Exemplo
+        note:
+          type: string
+          description: Observação para pessoa jurídica.
+          example: Observação de Exemplo
+        site:
+          type: string
+          description: Endereço de website para pessoa jurídica.
+          example: https://www.example.com
+        shareCapital:
+          type: number
+          description: Capital social para pessoa jurídica.
+          example: 100000
+        stateRegistrationNumber:
+          type: string
+          description: Número de inscrição estadual para pessoa jurídica.
+          example: '123456789'
+        technicalManager:
+          type: string
+          description: Nome do responsável técnico para pessoa jurídica.
+          example: João Silva
+        clientType:
+          type: string
+          description: Tipo de cliente.
+          example: Pessoa Jurídica
+        subTypes:
+          type: array
+          description: Subtipos do cliente.
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Id do subtipo.
+              description:
+                type: string
+                description: Descrição do subtipo.
+          example:
+            - id: 1
+              description: Subtipo de Exemplo
+        activityId:
+          type: integer
+          description: Id da atividade.
+          example: 1
+        activityDescription:
+          type: string
+          description: Descrição da atividade.
+          example: Atividade de Exemplo
+        governmentEntityId:
+          type: number
+          description: |
+            Código do tipo de ente governamental para pessoa jurídica.
+              * 0 - Não aplicável
+              * 1 - União
+              * 2 - Estado
+              * 3 - Distrito federal
+              * 4 - Município
+          example: 1
+        governmentEntityDescription:
+          type: string
+          description: Descrição do tipo de ente governamental para pessoa jurídica.
+          example: União
+        phones:
+          type: array
+          description: Telefones do cliente.
+          items:
+            $ref: '#/components/schemas/PhoneGetDocument'
+          example:
+            - number: '48999998888'
+              main: true
+              type: CELULAR
+              note: Celular principal do cliente
+              idd: '+55'
+              whatsapp: true
+        addresses:
+          type: array
+          description: Endereços do cliente.
+          items:
+            $ref: '#/components/schemas/CustomerAddressGetDocument'
+          example:
+            - type: R
+              streetName: Rua de Exemplo
+              number: '123'
+              complement: Apto 45
+              neighborhood: Centro
+              cityId: 1001
+              city: Florianópolis
+              state: SC
+              zipCode: '88000123'
+        agents:
+          type: array
+          description: Representantes do cliente pessoa jurídica.
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Id do cliente representante.
+          example:
+            - id: 1
+              description: Representante de Exemplo
+        procurators:
+          type: object
+          properties:
+            cpf:
+              type: string
+              description: CPF do procurador.
+              example: '12345678901'
+            email:
+              type: string
+              description: E-mail do procurador.
+              example: procurador@example.com
+            name:
+              type: string
+              description: Nome do procurador.
+              example: Procurador de Exemplo
+            profession:
+              type: string
+              description: Profissão do procurador.
+              example: Advogado
+            civilStatus:
+              type: string
+              description: Descrição estado civil do procurador.
+              example: Solteiro
+            nationality:
+              type: string
+              description: Nacionalidade do procurador.
+              example: Brasileiro
+            numberIdentityCard:
+              type: string
+              description: Número da carteira de identidade (RG) do procurador.
+              example: '123456789'
+            proxy:
+              type: object
+              properties:
+                book:
+                  type: string
+                  description: Livro.
+                  example: Livro de Exemplo
+                date:
+                  type: string
+                  description: Data da procuração.
+                  example: '2025-01-01'
+                expirationDate:
+                  type: string
+                  description: Data de validade da procuração.
+                  example: '2025-01-01'
+                district:
+                  type: string
+                  description: Comarca.
+                  example: Comarca de Exemplo
+                registry:
+                  type: string
+                  description: Cartório.
+                  example: Cartório de Exemplo
+                sheet:
+                  type: string
+                  description: Folha.
+                  example: Folha de Exemplo
+              description: Procuração.
+            addresses:
+              type: array
+              description: Endereços do procurador.
+              items:
+                $ref: '#/components/schemas/AddressGetDocument'
+            phones:
+              type: array
+              description: Telefones do procurador.
+              items:
+                $ref: '#/components/schemas/PhoneGetDocument'
+          description: Procuradores do cliente.
+          example:
+            cpf: '12345678901'
+            email: procurador@example.com
+            name: Procurador de Exemplo
+            profession: Advogado
+            civilStatus: Solteiro
+            nationality: Brasileiro
+            numberIdentityCard: '123456789'
+            proxy:
+              registry: Cartório Central
+              district: Belo Horizonte
+              stateId: 31
+              book: Livro A
+              sheet: Folha 10
+        spouse:
+          $ref: '#/components/schemas/CustomerSpouseDocument'
+        familyIncome:
+          type: array
+          description: Renda familiar.
+          items:
+            $ref: '#/components/schemas/CustomerFamilyIncome'
+          example:
+            - kinsName: Maria Souza
+              kinship: Mãe
+              incomeValue: 3500.5
+              observation: Renda proveniente de aposentadoria
+    CustomerUpdateDocument:
+      type: object
+      description: Informações para atualização do cliente.
+      properties:
+        internationalId:
+          type: string
+          description: Id internacional para clientes estrangeiros.
+          example: 123456789AB
+        typeId:
+          type: integer
+          description: Tipo de cliente. Informar código do cadastro de tipo de cliente.
+          example: 1
+        naturalPersonData:
+          $ref: '#/components/schemas/NaturalPersonDataUpdateDocument'
+        legalPersonData:
+          $ref: '#/components/schemas/LegalPersonDataUpdateDocument'
+    CustomerPhonesUpdateDocument:
+      type: object
+      description: Telefones do cliente para atualização.
+      properties:
+        phones:
+          type: array
+          description: Informações para atualização de telefones do cliente.
+          items:
+            $ref: '#/components/schemas/CustomerPhoneInsertAndUpdateDocument'
+          example:
+            - number: '48999998888'
+              main: true
+              type: CE
+              note: Celular principal
+              idd: '+55'
+              whatsapp: true
+    CustomerSpouseDocument:
+      required:
+        - name
+        - sex
+      type: object
+      description: Cônjuge do cliente.
+      properties:
+        cpf:
+          type: string
+          description: >-
+            CPF do cônjuge. Formato NNNNNNNNNNN (somente números). Exemplo ->
+            41833114030.
+          example: '41833114030'
+        name:
+          maxLength: 80
+          type: string
+          description: Nome do cônjuge. Campo obrigatório.
+          example: Maria Fernanda Souza
+        email:
+          maxLength: 40
+          type: string
+          description: E-mail do cônjuge do cliente.
+          example: maria.fernanda@email.com
+        sex:
+          type: string
+          description: |
+            Sexo do cônjuge:
+                * `F` - Feminino
+                * `M` - Masculino
+                * `A` - Anônimo
+          enum:
+            - F
+            - M
+            - A
+          example: F
+        foreigner:
+          type: string
+          description: |
+            Indica se o cônjuge é estrangeiro ou não:
+              * `S` - Sim
+              * `N` - Não
+          enum:
+            - S
+            - 'N'
+          example: 'N'
+        internationalId:
+          type: string
+          description: Identificação internacional do cônjuge.
+          example: '123456'
+        civilStatus:
+          type: string
+          description: >-
+            Estado civil do cônjuge. Deve ser informada a descrição conforme
+            cadastro de estados civis no Sienge.
+          example: Casado
+        birthDate:
+          type: string
+          description: >-
+            Data de nascimento do cônjuge. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-31.
+          example: '1990-12-31'
+        numberIdentityCard:
+          type: string
+          description: Número da identidade (RG) do cônjuge.
+          example: '123456'
+        issueDateIdentityCard:
+          type: string
+          description: >-
+            Data de emissão identidade do cônjuge. Formato YYYY-MM-DD. Exemplo
+            -> 1990-12-31.
+          example: '1990-12-31'
+        profession:
+          type: string
+          description: >-
+            Profissão do cônjuge. Deve ser informada a descrição conforme
+            cadastro de profissôes no Sienge.
+          example: Engenheiro
+        nationality:
+          maxLength: 40
+          type: string
+          description: Nacionalidade do cônjuge.
+          example: Brasil
+        birthPlace:
+          maxLength: 40
+          type: string
+          description: Naturalidade do cônjuge.
+          example: Brasil
+        fatherName:
+          maxLength: 40
+          type: string
+          description: Filiação 1.
+          example: João Silva
+        motherName:
+          maxLength: 40
+          type: string
+          description: Filiação 2.
+          example: Maria Silva
+        cellphoneNumber:
+          maxLength: 12
+          type: string
+          description: >-
+            Número do telefone celular do cônjuge. Formato DDDNNNNNNNNN. Exemplo
+            -> 048912345678
+          example: '048912345678'
+        businessPhone:
+          maxLength: 12
+          type: string
+          description: >-
+            Número do telefone comercial do cônjuge. Formato DDDNNNNNNNNN.
+            Exemplo -> 048912345678
+          example: '048912345678'
+        company:
+          maxLength: 80
+          type: string
+          description: Empresa do cônjuge.
+          example: Empresa de Exemplo
+        addresses:
+          type: array
+          description: Endereço do Cônjuge
+          items:
+            type: object
+            properties:
+              city:
+                type: string
+                description: >-
+                  Nome do munícipio do endereço do cônjuge. Deve ser informada o
+                  nome conforme cadastro de munícipio no Sienge.
+                example: Munícipio de Exemplo
+              complement:
+                maxLength: 40
+                type: string
+                description: Complemento do endereço do cônjuge.
+                example: Complemento de Exemplo
+              neighborhood:
+                maxLength: 40
+                type: string
+                description: Bairro do endereço do cônjuge.
+                example: Bairro de Exemplo
+              number:
+                maxLength: 10
+                type: string
+                description: Número do endereço do cônjuge.
+                example: '123'
+              streetName:
+                maxLength: 40
+                type: string
+                description: Logradouro do endereço do cônjuge.
+                example: Rua de Exemplo
+              zipCode:
+                maxLength: 8
+                type: string
+                description: >-
+                  Código de endereçamento postal (CEP) do endereço do cônjuge.
+                  Informar somente números. Exemplo -> 88000123
+                example: '88000123'
+          example:
+            - type: R
+              streetName: Rua das Palmeiras
+              number: '123'
+              complement: Apto 45
+              neighborhood: Centro
+              cityId: 1001
+              city: Florianópolis
+              state: SC
+              zipCode: '88000123'
+      example:
+        cpf: '41833114030'
+        name: Maria Fernanda Souza
+        email: maria.fernanda@email.com
+        sex: F
+        foreigner: 'N'
+        internationalId: '123456'
+        civilStatus: Casado
+        birthDate: '1982-07-20'
+        numberIdentityCard: '123456789'
+        issueDateIdentityCard: '2022-01-01'
+        profession: Engenheiro
+        nationality: Brasil
+        birthPlace: Belo Horizonte
+        fatherName: João Silva
+        motherName: Maria Silva
+        cellphoneNumber: '48999998888'
+        businessPhone: '48999998888'
+        company: Empresa Exemplo
+        addresses:
+          - city: Residencial
+            complement: Apto 202
+            neighborhood: Centro
+            number: '100'
+            streetName: Rua das Flores
+            zipCode: '30123456'
+    CustomerFamilyIncomeUpdateDocument:
+      type: array
+      description: Renda Familiar do cliente.
+      items:
+        $ref: '#/components/schemas/CustomerFamilyIncome'
+      example:
+        - kinsName: Maria Souza
+          kinship: Mãe
+          incomeValue: 3500.5
+          observation: Renda proveniente de aposentadoria
+    CustomerAddressUpdateDocument:
+      type: object
+      description: Informações para atualização do endereço do cliente.
+      properties:
+        streetName:
+          type: string
+          description: Logradouro do endereço para atualização.
+          example: Rua das Palmeiras
+        number:
+          type: string
+          description: Número do endereço para atualização.
+          example: 123A
+        complement:
+          type: string
+          description: Complemento do endereço para atualização.
+          example: Apto 45
+        neighborhood:
+          type: string
+          description: Bairro do endereço para atualização.
+          example: Centro
+        cityId:
+          type: integer
+          description: Código do munícipio do endereço para atualização.
+          example: 123
+        city:
+          type: string
+          description: >-
+            Nome do munícipio do endereço para atualização. Este campo será
+            desconsiderado quando o cityId for informado.
+          example: Florianópolis
+        state:
+          type: string
+          description: Sigla do estado do endereço.
+          example: SC
+        zipCode:
+          type: string
+          description: Código de endereçamento postal (CEP) do endereço para atualização.
+          example: '88000222'
+    CostumerAttachmentsResponseArray:
+      required:
+        - resultSetMetadata
+        - results
+      type: object
+      description: Lista de anexos existentes do cliente.
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de anexos do cliente
+          items:
+            $ref: '#/components/schemas/CostumerAttachmentDocument'
+          example:
+            - attachmentid: 1
+              name: arquivo.pdf
+              description: Documento do cliente
+              size: 320123
+              contentType: application/pdf
+              links:
+                - rel: contentDownloadLink
+                  href: http://../v1/customers/1202/attachments/1
+    ProcuratorInsertDocument:
+      required:
+        - cpf
+        - name
+        - procuratorType
+        - residentialAddress
+      type: object
+      properties:
+        name:
+          maxLength: 80
+          type: string
+          description: Nome do procurador para inclusão.
+          example: João Silva
+        cpf:
+          type: string
+          description: CPF do procurador para inclusão.
+          example: '12345678901'
+        procuratorType:
+          type: string
+          description: Tipos de procuradores. São aceitos "Cliente", "Conjuge" ou "Ambos".
+          enum:
+            - CLIENTE
+            - CONJUGE
+            - AMBOS
+          example: CLIENTE
+        numberIdentityCard:
+          maxLength: 21
+          type: string
+          description: Número da carteira de identidade (RG) do procurador para inclusão.
+          example: '123456789'
+        email:
+          maxLength: 100
+          type: string
+          description: Endereço eletrônico (e-mail) do procurador para inclusão.
+          example: joao.silva@example.com
+        birthDate:
+          type: string
+          description: Data de nascimento do procurador. Formato YYYY-MM-DD.
+          example: '2025-01-01'
+        nationality:
+          maxLength: 40
+          type: string
+          description: Nacionalidade do procurador para inclusão.
+          example: Brasil
+        birthPlace:
+          maxLength: 80
+          type: string
+          description: Naturalidade do procurador para inclusão.
+          example: Brasil
+        professionId:
+          type: integer
+          description: Código da profissão do procurador.
+          format: int32
+          example: 1
+        civilStatusId:
+          type: integer
+          description: Código do estado civil do procurador.
+          format: int32
+          example: 1
+        marriageRegime:
+          maxLength: 40
+          type: string
+          description: Regime de casamento do procurador.
+          example: União Estável
+        marriageDate:
+          type: string
+          description: Data de casamento do procurador. Formato YYYY-MM-DD.
+          example: '2025-01-01'
+        residentialAddress:
+          $ref: '#/components/schemas/ProcuratorResidentialAddressInsertDocument'
+        businessAddress:
+          $ref: '#/components/schemas/ProcuratorBusinessAddressInsertDocument'
+        proxy:
+          $ref: '#/components/schemas/ProcuratorProxyInsertDocument'
+        spouse:
+          $ref: '#/components/schemas/ProcuratorSpouseInsertDocument'
+        phones:
+          type: array
+          description: Telefones do procurador para inclusão.
+          items:
+            $ref: '#/components/schemas/PhoneInsertDocument'
+          example:
+            - number: '48999998888'
+              main: true
+              type: CELULAR
+              note: Celular principal
+              idd: '+55'
+      description: Informações relacionadas ao procurador do cliente.
+    CustomerWebhookPayload:
+      type: object
+      description: Payload enviado nos webhooks de eventos de cliente
+      required:
+        - customerId
+      properties:
+        customerId:
+          description: Código do cliente
+          example: 123
+          format: int32
+          type: integer
+      example:
+        customerId: 123
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    CustomerAddressInsertDocument:
+      type: object
+      description: Informações para inclusão do endereço do cliente.
+      properties:
+        type:
+          type: string
+          description: >-
+            Tipo do endereço. Informar R para endereço residencial ou C para
+            endereço comercial. É permitido no máximo um de cada.
+          example: R
+        streetName:
+          type: string
+          description: Nome do logradouro do endereço para inclusão.
+          example: Rua das Flores
+        number:
+          type: string
+          description: Número do endereço para inclusão.
+          example: '456'
+        complement:
+          type: string
+          description: Complemento do endereço para inclusão.
+          example: Bloco B
+        neighborhood:
+          type: string
+          description: Bairro do endereço para inclusão.
+          example: Trindade
+        cityId:
+          type: integer
+          description: Código do munícipio do endereço para inclusão.
+          example: 4205407
+        city:
+          type: string
+          description: >-
+            Nome do munícipio do endereço para inclusão. Este campo será
+            desconsiderado quando o cityId for informado.
+          example: Florianópolis
+        state:
+          type: string
+          description: UF do estado do endereço para inclusão. Exemplo -> SC.
+          example: SC
+        zipCode:
+          type: string
+          description: >-
+            Código de endereçamento postal (CEP) do endereço para inclusão.
+            Informar somente números. Exemplo -> 88000222
+          example: '88040000'
+    CustomerPhoneInsertAndUpdateDocument:
+      type: object
+      description: Informações para inserção e atualização de telefone.
+      properties:
+        number:
+          type: string
+          description: Número de telefone. Formato DDDNNNNNNNNN. Exemplo -> 048912345678
+          example: '48999998888'
+        main:
+          type: boolean
+          description: >-
+            True quando o telefone for principal. Deve ser informado um telefone
+            como principal.
+          example: true
+        type:
+          type: string
+          description: >-
+            Tipo de telefone. Informar CE para celular, CO para comercial ou RE
+            para residencial.
+          example: CE
+        note:
+          type: string
+          description: Observação do telefone para inclusão.
+          example: Celular principal
+        idd:
+          type: string
+          description: DDI do Telefone. Formato +NNN ou NNN. Exemplo -> +123, 123 etc.
+          example: '+55'
+        ddd:
+          type: string
+          description: >-
+            DDD do telefone internacional. Formato NNNNN. Exemplo -> 123, 12345
+            etc. OBS. Informar apenas quando telefone internacional. Para
+            telefones nacionais (ddi +55 ou ddi não informado), deve manter o
+            ddd junto no campo number, caso seja enviado separado, a informação
+            enviada será ignorada, e o formato DDDNNNNNNNNN será solicitado.
+          example: '123'
+          maxLength: 5
+        whatsapp:
+          type: boolean
+          description: >-
+            Indica se o telefone deve ser marcado como WhatsApp. Campo opcional,
+            assume false quando não informado.
+          example: true
+    CustomerFamilyIncomeInsert:
+      type: object
+      description: Informações para inclusão da renda familiar do cliente.
+      properties:
+        kinsName:
+          type: string
+          description: Nome do parente.
+          example: Maria Souza
+        kinship:
+          type: string
+          description: Grau de parentesco.
+          example: Mãe
+        incomeValue:
+          type: number
+          description: Valor da renda familiar.
+          example: 3500.5
+        observation:
+          type: string
+          description: Observação da renda familiar para inclusão.
+          example: Renda proveniente de aposentadoria
+    PhoneGetDocument:
+      type: object
+      description: Informações do telefone.
+      properties:
+        number:
+          type: string
+          description: Número de telefone com o DDD.
+          example: (48) 99999-9999
+        main:
+          type: boolean
+          description: Indica se o telefone é o principal.
+          example: true
+        type:
+          type: string
+          description: Tipo de telefone do cliente.
+          example: Celular
+        note:
+          type: string
+          description: Observação do telefone do cliente.
+          example: Telefone comercial
+        idd:
+          type: string
+          description: DDI do telefone do cliente.
+          example: '+55'
+        whatsapp:
+          type: boolean
+          description: >-
+            Indica se o telefone está marcado como WhatsApp no cadastro do
+            cliente. Para procuradores, este campo não se aplica.
+          example: true
+    CustomerAddressGetDocument:
+      type: object
+      description: Informações do endereço do cliente.
+      properties:
+        type:
+          type: string
+          description: Tipo do endereço do cliente.
+          example: R
+        streetName:
+          type: string
+          description: Logradouro do endereço do cliente.
+          example: Rua das Palmeiras
+        number:
+          type: string
+          description: Número do endereço do cliente.
+          example: '123'
+        complement:
+          type: string
+          description: Complemento do endereço do cliente.
+          example: Apto 45
+        neighborhood:
+          type: string
+          description: Bairro do endereço do cliente.
+          example: Centro
+        cityId:
+          type: integer
+          description: Identificador do munícipio do endereço do cliente.
+          example: 4205407
+        city:
+          type: string
+          description: Nome do munícipio do endereço do cliente.
+          example: Florianópolis
+        state:
+          type: string
+          description: Nome do estado do endereço do cliente.
+          example: Santa Catarina
+        zipCode:
+          type: string
+          description: Código de endereçamento postal (CEP) do endereço do cliente.
+          example: '88000222'
+        mail:
+          type: boolean
+          description: Identifica se é o endereço de correspondencia do cliente.
+          example: true
+    AddressGetDocument:
+      type: object
+      description: Informações do endereço.
+      properties:
+        type:
+          type: string
+          description: Tipo de endereço.
+          example: R
+        streetName:
+          type: string
+          description: Descrição do logradouro do endereço.
+          example: Rua das Palmeiras
+        number:
+          type: string
+          description: Número identificador do endereço.
+          example: '123'
+        complement:
+          type: string
+          description: Descrição do complemento do endereço.
+          example: Apto 45
+        neighborhood:
+          type: string
+          description: Nome do bairro do endereço.
+          example: Centro
+        city:
+          type: string
+          description: Nome do município.
+          example: Florianópolis
+        state:
+          type: string
+          description: Nome do estado.
+          example: Santa Catarina
+        zipCode:
+          type: string
+          description: Código de endereçamento postal (CEP).
+          example: '88000222'
+    CustomerFamilyIncome:
+      type: object
+      description: Informações da renda familiar.
+      properties:
+        kinsName:
+          type: string
+          description: Nome parente.
+          example: Maria Souza
+        kinship:
+          type: string
+          description: Nome parentesco.
+          example: Mãe
+        incomeValue:
+          type: number
+          description: Valor da renda.
+          example: 3500.5
+        observation:
+          type: string
+          description: Observação da renda familiar.
+          example: Renda proveniente de aposentadoria
+    NaturalPersonDataUpdateDocument:
+      type: object
+      description: Informações da pessoa física.
+      example:
+        name: João Silva
+        email: joao.silva@example.com
+        sex: M
+        birthDate: '2025-01-01'
+        birthPlace: São Paulo
+        civilStatus: Solteiro
+        cpf: '12345678901'
+        fatherName: Antonio Silva
+        motherName: Maria Silva
+        issueDateIdentityCard: '2025-01-01'
+        matrimonialRegime: União estável
+        marriageDate: '2025-01-01'
+        nationality: Brasileiro
+        numberIdentityCard: '123456789'
+        profession: Engenheiro
+        mailingAddress: R
+        licenseNumber: '123456789'
+      properties:
+        name:
+          type: string
+          description: Nome a ser atualizado.
+          example: João Silva
+        email:
+          type: string
+          description: E-mail a ser atualizado.
+          example: joao.silva@example.com
+        cpf:
+          type: string
+          description: CPF. Formato NNNNNNNNNNN (somente números). Exemplo -> 41833114035.
+          example: '41833114035'
+        sex:
+          type: string
+          description: |
+            Sexo para pessoa física:
+              * `M` - Masculino
+              * `F` - Feminino
+              * `A` - Anônimo
+          example: M
+          enum:
+            - M
+            - F
+            - A
+        birthDate:
+          type: string
+          description: Data de nascimento. Formato YYYY-MM-DD. Exemplo -> 1990-12-25.
+          example: '1990-12-25'
+        birthPlace:
+          type: string
+          description: Naturalidade.
+          example: São Paulo
+        nationality:
+          type: string
+          description: Nacionalidade.
+          example: Brasil
+        civilStatus:
+          type: string
+          description: >-
+            Estado civil. Deve ser informada a descrição conforme cadastro de
+            estados civis no Sienge.
+          example: Solteiro
+        matrimonialRegime:
+          type: string
+          description: Regime matrimonial.
+          example: União estável
+        marriageDate:
+          type: string
+          description: Data de casamento. Formato YYYY-MM-DD. Exemplo -> 2015-05-03.
+          example: '2015-05-03'
+        fatherName:
+          type: string
+          description: Nome do pai para atualização.
+          example: Antonio Silva
+        motherName:
+          type: string
+          description: Nome da mãe para atualização.
+          example: Maria Silva
+        numberIdentityCard:
+          type: string
+          description: Número da carteira de identidade (RG).
+          example: '123456789'
+        issueDateIdentityCard:
+          type: string
+          description: >-
+            Data de emissão do RG (carteira de identidade). Formato YYYY-MM-DD.
+            Exemplo -> 2010-02-05.
+          example: '2010-02-05'
+        issuingBody:
+          type: string
+          description: Orgão Emissor.
+          example: Secretaria de Segurança Pública
+        profession:
+          type: string
+          description: >-
+            Profissão. Deve ser informada a descrição conforme cadastro de
+            profissôes no Sienge.
+          example: Engenheiro
+        mailingAddress:
+          type: string
+          description: |
+            Endereço para correspondência:
+              * `R` - Residencial
+              * `C` - Comercial
+              * `I` - Internacional
+          enum:
+            - R
+            - C
+            - I
+          example: R
+        licenseNumber:
+          type: string
+          description: Número da CNH.
+          example: '123456789'
+        licenseIssuingBody:
+          type: string
+          description: Órgão emissor da CNH.
+          example: Secretaria de Segurança Pública
+        licenseIssueDate:
+          type: string
+          description: >-
+            Data de emissão da CNH (Formato ISO 8601 yyyy-MM-dd | Exemplo:
+            2023-01-01)
+          format: date
+    LegalPersonDataUpdateDocument:
+      type: object
+      description: Informações da pessoa jurídica.
+      example:
+        name: Empresa de Exemplo
+        fantasyName: Exemplo Ltda
+        email: empresa.exemplo@example.com
+        cnpj: '87389750000185'
+        cityRegistrationNumber: '123456789'
+        stateRegistrationNumber: '987654321'
+        establishmentDate: '2012-12-05'
+        note: Observação de Exemplo
+        site: https://www.exemplo.com.br
+        shareCapital: 1000000
+        technicalManager: Responsável Técnico de Exemplo
+      properties:
+        name:
+          type: string
+          description: Nome da empresa.
+          example: Empresa de Exemplo
+        fantasyName:
+          type: string
+          description: Nome fantasia.
+          example: Empresa de Exemplo
+        email:
+          type: string
+          description: E-mail da empresa.
+          example: empresa.exemplo@example.com
+        cnpj:
+          type: string
+          description: >-
+            CNPJ. Formato NNNNNNNNNNNNNN (somente números). Exemplo ->
+            87389750000185.
+          example: '87389750000185'
+        cityRegistrationNumber:
+          type: string
+          description: Número de inscrição municipal.
+          example: '123456789'
+        stateRegistrationNumber:
+          type: string
+          description: Número de inscrição estadual.
+          example: '123456789'
+        cnaeNumber:
+          type: string
+          description: Número do CNAE.
+          example: '123456789'
+        creaNumber:
+          type: string
+          description: Número do CREA.
+          example: '123456789'
+        contactName:
+          type: string
+          description: Nome do contato.
+          example: Contato de Exemplo
+        establishmentDate:
+          type: string
+          description: >-
+            Data de constituição da empresa. Formato YYYY-MM-DD. Exemplo ->
+            2012-12-05.
+          example: '2012-12-05'
+        note:
+          type: string
+          description: Observação da pessoa jurídica.
+          example: Observação de Exemplo
+        site:
+          type: string
+          description: Endereço de website.
+          example: https://www.exemplo.com.br
+        shareCapital:
+          type: number
+          description: Capital social.
+          example: 1000000
+        technicalManager:
+          type: string
+          description: Nome do responsável técnico.
+          example: Responsável Técnico de Exemplo
+    CostumerAttachmentDocument:
+      type: object
+      description: Informação do anexo do cliente.
+      properties:
+        attachmentid:
+          type: integer
+          description: 'ID do anexo | Exemplo: 1'
+          format: int32
+          example: 1
+        name:
+          maxLength: 100
+          type: string
+          description: 'Nome do arquivo | Exemplo: arquivo.pdf'
+          example: arquivo.pdf
+        description:
+          maxLength: 500
+          type: string
+          description: 'Descrição do anexo | Exemplo: Documento do cliente'
+          example: Documento do cliente
+        size:
+          type: integer
+          description: 'Tamanho do arquivo em bytes | Exemplo: 320123'
+          format: int32
+        contentType:
+          type: string
+          description: 'Tipo do arquivo (MimeType) | Exemplo: application/pdf'
+          example: application/pdf
+        links:
+          $ref: '#/components/schemas/Links'
+    ProcuratorResidentialAddressInsertDocument:
+      required:
+        - cityId
+        - neighborhood
+        - streetName
+      type: object
+      description: Informações do endereço residencial do procurador.
+      example:
+        streetName: Rua das Flores
+        neighborhood: Centro
+        cityId: 1234
+        zipCode: 12345-678
+        number: '100'
+        complement: Apto 202
+      properties:
+        streetName:
+          maxLength: 80
+          type: string
+          description: Logradouro do endereço residencial.
+          example: Rua das Flores
+        neighborhood:
+          maxLength: 40
+          type: string
+          description: Bairro do endereço residencial.
+          example: Centro
+        cityId:
+          type: integer
+          description: Código do município do endereço residencial.
+          format: int32
+          example: 1234
+        zipCode:
+          type: string
+          description: Código de endereçamento postal (CEP) residencial. Formato NNNNN-NNN.
+          example: 12345-678
+        number:
+          maxLength: 10
+          type: string
+          description: Número do endereço residencial.
+          example: '100'
+        complement:
+          maxLength: 40
+          type: string
+          description: Complemento do endereço residencial.
+          example: Apto 202
+    ProcuratorBusinessAddressInsertDocument:
+      type: object
+      description: Informações do endereço comercial do procurador.
+      example:
+        streetName: Rua das Flores
+        neighborhood: Centro
+        cityId: 1234
+        zipCode: 12345-678
+        number: '100'
+        complement: Apto 202
+      properties:
+        streetName:
+          maxLength: 80
+          type: string
+          description: Logradouro do endereço comercial.
+          example: Rua das Flores
+        neighborhood:
+          maxLength: 40
+          type: string
+          description: Bairro do endereço comercial.
+          example: Centro
+        cityId:
+          type: integer
+          description: Código do município do endereço comercial.
+          format: int32
+          example: 1234
+        zipCode:
+          type: string
+          description: Código de endereçamento postal (CEP) comercial. Formato NNNNN-NNN.
+          example: 12345-678
+        number:
+          maxLength: 10
+          type: string
+          description: Número do endereço comercial.
+          example: '100'
+        complement:
+          maxLength: 40
+          type: string
+          description: Complemento do endereço comercial.
+          example: Apto 202
+    ProcuratorProxyInsertDocument:
+      type: object
+      description: Informações da procuração.
+      example:
+        registry: Cartório Central
+        district: Belo Horizonte
+        stateId: 31
+        book: Livro A
+        sheet: Folha 10
+      properties:
+        registry:
+          maxLength: 40
+          type: string
+          description: Nome do cartório.
+          example: Cartório Central
+        district:
+          maxLength: 40
+          type: string
+          description: Comarca do cartório.
+          example: Belo Horizonte
+        stateId:
+          type: integer
+          description: Código da unidade federativa (UF) do cartório.
+          format: int32
+          example: 31
+        book:
+          maxLength: 20
+          type: string
+          description: Nome do livro.
+          example: Livro A
+        sheet:
+          maxLength: 10
+          type: string
+          description: Número da folha.
+          example: Folha 10
+        date:
+          type: string
+          description: Data da procuração. Formato YYYY-MM-DD.
+          example: '2025-01-01'
+        expirationDate:
+          type: string
+          description: Data de validade da procuração. Formato YYYY-MM-DD.
+          example: '2025-01-01'
+    ProcuratorSpouseInsertDocument:
+      required:
+        - cpf
+        - name
+      type: object
+      description: Informações do cônjuge do procurador para inclusão.
+      example:
+        name: João Silva
+        cpf: '12345678901'
+        numberIdentityCard: '123456789'
+        birthDate: '2025-01-01'
+        nationality: Brasil
+        birthPlace: Brasil
+        professionId: 1
+      properties:
+        name:
+          maxLength: 80
+          type: string
+          description: Nome do cônjuge do procurador.
+          example: João Silva
+        cpf:
+          type: string
+          description: CPF do cônjuge do procurador.
+          example: '12345678901'
+        birthDate:
+          type: string
+          description: Data de nascimento do cônjuge do procurador. Formato YYYY-MM-DD.
+          example: '2025-01-01'
+        birthPlace:
+          maxLength: 40
+          type: string
+          description: Naturalidade do cônjuge do procurador.
+          example: Brasil
+        nationality:
+          maxLength: 40
+          type: string
+          description: Nacionalidade do cônjuge do procurador.
+          example: Brasil
+        professionId:
+          type: integer
+          description: Código da profissão do cônjuge do procurador.
+          format: int32
+          example: 1
+        numberIdentityCard:
+          maxLength: 21
+          type: string
+          description: Número da carteira de identidade (RG) do cônjuge do procurador.
+          example: '123456789'
+    PhoneInsertDocument:
+      required:
+        - main
+        - number
+        - type
+      type: object
+      description: Informações de telefone para inclusão.
+      properties:
+        main:
+          type: boolean
+          description: >-
+            Indicador de telefone principal. "True" quando for principal,
+            "False" quando não. Deve ser informado apenas um telefone como o
+            principal.
+          example: true
+        type:
+          type: string
+          description: Tipo de telefone, pode ser "Celular", "Comercial" ou "Residencial".
+          enum:
+            - CELULAR
+            - COMERCIAL
+            - RESIDENCIAL
+          example: CELULAR
+        number:
+          type: string
+          description: Número de telefone com DDD. Formato DDDNNNNNNNNN ou DDNNNNNNNNN.
+          example: '48999998888'
+        extension:
+          maxLength: 4
+          type: string
+          description: Ramal do telefone.
+          example: '123'
+        note:
+          maxLength: 80
+          type: string
+          description: Observação do telefone sendo inserido.
+          example: Telefone comercial
+    Links:
+      description: Links para acessar outros recursos
+      example:
+        - href: https://../v1/purchase-..
+          rel: Recurso
+      items:
+        $ref: '#/components/schemas/Link'
+      type: array
+    Link:
+      description: Representa um link para outro recurso.
+      properties:
+        href:
+          description: URL do recurso associado
+          example: https://../v1/purchase-..
+          type: string
+        rel:
+          description: Nome da recurso associado
+          example: Recurso
+          type: string
+      type: object
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+    CustomerId:
+      name: customerId
+      in: path
+      description: Id do cliente.
+      required: true
+      schema:
+        type: integer
+        format: int32
+      example: 123
+    AddressType:
+      name: addressType
+      in: path
+      description: Tipo de endereço. 'C' para Comercial. 'R' para Residencial.
+      required: true
+      schema:
+        type: string
+      example: C
+    AttachmentId:
+      description: ID do anexo
+      in: path
+      name: attachmentId
+      required: true
+      schema:
+        format: int32
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1
+webhooks:
+  CUSTOMER_CREATED:
+    post:
+      tags:
+        - Webhooks - Clientes
+      summary: Webhook disparado quando um cliente é criado
+      description: Sempre que um cliente é criado
+      operationId: customerCreatedWebhook
+      requestBody:
+        description: Dados do evento de criação de cliente
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerWebhookPayload'
+            example:
+              customerId: 123
+        required: true
+      responses:
+        2XX:
+          description: O evento CUSTOMER_CREATED foi processado com sucesso
+      x-audience:
+        - public
+  CUSTOMER_UPDATED:
+    post:
+      tags:
+        - Webhooks - Clientes
+      summary: Webhook disparado quando um cliente é atualizado
+      description: Sempre que um cliente é atualizado
+      operationId: customerUpdatedWebhook
+      requestBody:
+        description: Dados do evento de atualização de cliente
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerWebhookPayload'
+            example:
+              customerId: 123
+        required: true
+      responses:
+        2XX:
+          description: O evento CUSTOMER_UPDATED foi processado com sucesso
+      x-audience:
+        - public
+  CUSTOMER_REMOVED:
+    post:
+      tags:
+        - Webhooks - Clientes
+      summary: Webhook disparado quando um cliente é removido
+      description: Sempre que um cliente é removido
+      operationId: customerRemovedWebhook
+      requestBody:
+        description: Dados do evento de remoção de cliente
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerWebhookPayload'
+            example:
+              customerId: 123
+        required: true
+      responses:
+        2XX:
+          description: O evento CUSTOMER_REMOVED foi processado com sucesso
+      x-audience:
+        - public
+  CUSTOMER_DISABLED:
+    post:
+      tags:
+        - Webhooks - Clientes
+      summary: Webhook disparado quando um cliente é desativado
+      description: Sempre que um cliente é desativado
+      operationId: customerDisabledWebhook
+      requestBody:
+        description: Dados do evento de desativação de cliente
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerWebhookPayload'
+            example:
+              customerId: 123
+        required: true
+      responses:
+        2XX:
+          description: O evento CUSTOMER_DISABLED foi processado com sucesso
+      x-audience:
+        - public
+  CUSTOMER_ENABLED:
+    post:
+      tags:
+        - Webhooks - Clientes
+      summary: Webhook disparado quando um cliente é ativado
+      description: Sempre que um cliente é ativado
+      operationId: customerEnabledWebhook
+      requestBody:
+        description: Dados do evento de ativação de cliente
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerWebhookPayload'
+            example:
+              customerId: 123
+        required: true
+      responses:
+        2XX:
+          description: O evento CUSTOMER_ENABLED foi processado com sucesso
+      x-audience:
+        - public

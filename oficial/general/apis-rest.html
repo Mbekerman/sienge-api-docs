@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>APIs REST · Documentação de APIs</title>
+    <link href="../fonts.css" rel="stylesheet" />
+    <link href="../general-page.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>APIs REST</h1>
+    <p>As APIs REST têm por finalidade o consumo de recursos de forma estruturada, seguindo os métodos HTTP convencionais (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>) e com retornos simples ou paginados.</p>
+<h4>Paginação</h4>
+<p>Endpoints de listagem aceitam os parâmetros de query <code>limit</code> e <code>offset</code> para controlar a página retornada:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Parâmetro</th>
+<th>Padrão</th>
+<th>Máximo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>limit</code></td>
+<td>100</td>
+<td>200</td>
+<td>Quantidade máxima de resultados retornados na página.</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td>0</td>
+<td>—</td>
+<td>Deslocamento a partir do começo da lista.</td>
+</tr>
+</tbody></table></div>
+<p>A resposta de um endpoint paginado traz os resultados junto com os metadados da paginação:</p>
+<pre><code class="language-json">{
+  &quot;resultSetMetadata&quot;: {
+    &quot;count&quot;: 200,
+    &quot;offset&quot;: 0,
+    &quot;limit&quot;: 100
+  },
+  &quot;results&quot;: [ {...}, {...} ]
+}
+</code></pre>
+<p><code>count</code> é o total de resultados disponíveis para a pesquisa efetuada (não apenas os retornados na página atual) — use-o para saber quando parar de paginar.</p>
+<h4>Tratamento de erros</h4>
+<p>Em caso de erro, a API retorna o status HTTP apropriado com um corpo de erro padronizado:</p>
+<pre><code class="language-json">{
+  &quot;status&quot;: 400,
+  &quot;developerMessage&quot;: &quot;Você deve informar o query param xpto&quot;,
+  &quot;clientMessage&quot;: &quot;Parâmetro obrigatório xpto ausente&quot;,
+  &quot;errors&quot;: [
+    { &quot;field&quot;: &quot;xpto&quot;, &quot;message&quot;: &quot;não pode ser nulo&quot; }
+  ]
+}
+</code></pre>
+<p><code>developerMessage</code> é destinada à análise técnica; <code>clientMessage</code> é adequada para exibição direta ao usuário final.</p>
+
+  </body>
+</html>

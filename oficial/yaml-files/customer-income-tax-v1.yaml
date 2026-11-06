@@ -1,0 +1,519 @@
+openapi: 3.1.1
+info:
+  title: Informe de Rendimentos - Imposto de Renda
+  version: 1.24.0
+  description: >-
+    API de Imposto de Renda para envio do relatório de IR ao cliente por e-mail
+    ou retornando a URL referente ao relatório gerado.
+paths:
+  /customer-income-tax/report:
+    post:
+      tags:
+        - Informe de Rendimentos - Imposto de Renda
+      summary: Envia relatório de imposto de renda por e-mail
+      description: >-
+        Envia relatório de imposto de renda por e-mail, contendo valores pagos e
+        saldo em aberto do cliente no ano informado (REST)
+      operationId: emailCustomerIncomeTaxReport
+      requestBody:
+        description: Dados para envio do relatório de imposto de renda por e-mail
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CustomerIncomeTaxBody'
+            example:
+              companyId: 1
+              customerId: 123
+              year: 2024
+              enterpriseId: 1
+              receivableBillId: 10
+              subject: Relatório de Imposto de Renda
+              message: Segue em anexo seu relatório de IR.
+              paymentTerms:
+                - PM
+                - AT
+              documentsIn:
+                - CT
+                - NF
+              receiptTypeNotIn:
+                - ADIANTAMENTO
+              showConsolidatingCompanyDataInHeader: true
+        required: true
+      responses:
+        '200':
+          description: Relatório enviado
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-original-file: customer-income-tax-v1.yaml
+      x-audience:
+        - public
+  /customer-income-tax/report/pdf:
+    get:
+      x-original-file: customer-income-tax-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Informe de Rendimentos - Imposto de Renda
+      summary: Gera link para download do PDF referente ao IR do cliente.
+      description: >-
+        Gera o link para o download do PDF referente ao Imposto de Renda do
+        cliente. O link expira em 5 minutos. (REST)
+      operationId: customerIncomeTaxReportUrl
+      parameters:
+        - $ref: '#/components/parameters/CustomerIdQueryRequired'
+        - $ref: '#/components/parameters/CompanyId'
+        - name: year
+          in: query
+          description: >-
+            Ano base para geração do imposto de renda. O padrão é: <i>ano atual
+            - 1</i>
+          schema:
+            type: integer
+            format: int32
+            example: 2024
+        - name: enterpriseId
+          in: query
+          description: >-
+            Código do empreendimento (centro de custo), o mesmo exibido no
+            Sienge, para filtrar os títulos do relatório. Considera o centro de
+            custo da apropriação financeira do título: um título rateado entre
+            centros de custo aparece no relatório de cada um deles, com valor
+            integral. Se o código informado não existir ou não tiver títulos no
+            ano, retorna 404. O padrão são todos os empreendimentos.
+          schema:
+            type: integer
+            format: int32
+            example: 1
+        - name: receivableBillId
+          in: query
+          description: >-
+            Id do título a receber para filtrar o relatório. O padrão são todos
+            os títulos.
+          schema:
+            description: Identificador do título a receber
+            example: 10
+            format: int32
+            type: integer
+        - name: subject
+          in: query
+          description: >-
+            Assunto do e-mail para envio do Informe de Rendimentos (IR). O
+            padrão é: Relatório de Imposto de Renda
+          schema:
+            type: string
+          example: Relatório de Imposto de Renda
+        - name: message
+          in: query
+          description: >-
+            Mensagem do corpo do e-mail para envio do Informe de Rendimentos
+            (IR). O padrão é uma string vazia.
+          schema:
+            type: string
+          example: Exemplo de corpo de email
+        - name: paymentTerms
+          in: query
+          description: >-
+            Condições de pagamento que devem ser consideradas para envio do
+            relatório. O padrão são todas as condições do contrato. Exemplo de
+            utilização - [PM, AT].
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+            example:
+              - PM
+              - AT
+        - name: documentsIn
+          in: query
+          description: >-
+            Tipos de documentos que devem ser considerados para envio do
+            relatório. O padrão são todos os documentos. Exemplo de utilização -
+            [CT, NF].
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+            example:
+              - CT
+              - NF
+        - name: receiptTypeNotIn
+          in: query
+          description: >-
+            Tipos de baixa que não devem ser consideradas para envio do
+            relatório. O padrão são todos os tipos de baixa. Exemplo de
+            utilização - [RECEBIMENTO, ADIANTAMENTO, BENS, BONIFICACAO, OUTROS].
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+            example:
+              - ADIANTAMENTO
+        - name: showConsolidatingCompanyDataInHeader
+          in: query
+          description: >-
+            Informa se no cabeçalho do relatório devem constar os dados da
+            empresa consolidadora (SPE) ao emití-lo para empresa SCP. Exemplo de
+            utilização - [true,false].
+          style: form
+          explode: false
+          schema:
+            type: boolean
+            items:
+              type: boolean
+            example: true
+      responses:
+        '200':
+          description: Relatório em PDF gerado
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+components:
+  schemas:
+    CustomerIncomeTaxBody:
+      required:
+        - companyId
+        - customerId
+      type: object
+      description: Parâmetros para envio do relatório de Imposto de Renda por e-mail
+      properties:
+        customerId:
+          type: integer
+          format: int32
+          example: 123
+        companyId:
+          type: integer
+          description: ID da empresa para requisição do envio
+          format: int32
+          example: 2
+        year:
+          type: integer
+          description: 'Ano base do imposto de renda. O padrão é: <i>ano atual - 1</i>'
+          format: int32
+          example: 2024
+        enterpriseId:
+          type: integer
+          description: >-
+            Código do empreendimento (centro de custo), o mesmo exibido no
+            Sienge, para filtrar os títulos do relatório. Considera o centro de
+            custo da apropriação financeira do título: um título rateado entre
+            centros de custo aparece no relatório de cada um deles, com valor
+            integral. Se o código informado não existir ou não tiver títulos no
+            ano, retorna 404. O padrão são todos os empreendimentos.
+          format: int32
+          example: 1
+        receivableBillId:
+          description: Identificador do título a receber
+          example: 10
+          format: int32
+          type: integer
+        subject:
+          type: string
+          description: >-
+            Assunto do e-mail para envio do Imposto de Renda. O padrão é:
+            Relatório de Imposto de Renda
+          example: Relatório de Imposto de Renda
+        message:
+          type: string
+          description: >-
+            Mensagem do corpo do e-mail para envio do Imposto de Renda. O padrão
+            é uma string vazia.
+          example: Exemplo de corpo de email
+        paymentTerms:
+          type: array
+          description: >-
+            Condições de pagamento que devem ser consideradas para envio do
+            relatório. O padrão são todas as condições do contrato. Exemplo de
+            utilização - (Exemplo: AT, PM).
+          items:
+            type: string
+            enum:
+              - PM
+              - PP
+              - PR
+              - RC
+              - AT
+              - ME
+              - RP
+          example:
+            - PM
+            - AT
+        documentsIn:
+          type: array
+          description: >-
+            Tipos de documentos que devem ser considerados para envio do
+            relatório. O padrão são todos os documentos. Exemplo de utilização -
+            (Exemplo: CT, NF).
+          items:
+            type: string
+          example:
+            - CT
+            - NF
+        receiptTypeNotIn:
+          type: array
+          description: >-
+            Tipos de baixa que não devem ser consideradas para envio do
+            relatório. O padrão são todos os tipos de baixa. Exemplo de
+            utilização - (Exemplo: RECEBIMENTO, ADIANTAMENTO, BENS, BONIFICACAO,
+            OUTROS).
+          items:
+            type: string
+            enum:
+              - RECEBIMENTO
+              - ADIANTAMENTO
+              - BENS
+              - BONIFICACAO
+              - OUTROS
+          example:
+            - ADIANTAMENTO
+            - OUTROS
+        showConsolidatingCompanyDataInHeader:
+          type: boolean
+          description: >-
+            Informa se no cabeçalho do relatório devem constar os dados da
+            empresa consolidadora (SPE) ao emit-lo para empresa SCP. Exemplo de
+            utilização - [true,false].
+          items:
+            type: boolean
+          example: true
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '204':
+      description: Não há dados para gerar o relatório com os parâmetros informados
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    CustomerIdQueryRequired:
+      description: Código do cliente (obrigatório)
+      in: query
+      name: customerId
+      required: true
+      schema:
+        example: 1001
+        type: integer
+    CompanyId:
+      description: Código da empresa (opcional)
+      in: query
+      name: companyId
+      schema:
+        example: 101
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

@@ -1,0 +1,1023 @@
+openapi: 3.1.1
+info:
+  title: Bulk-data Contratos de Vendas
+  version: 1.24.0
+  description: Bulk-data de Contratos de Vendas.
+paths:
+  /sales:
+    get:
+      x-original-file: bulk-data-sales-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Bulk-data Contratos de Vendas
+      summary: Consulta os dados dos contratos de vendas.
+      operationId: getSales
+      parameters:
+        - name: enterpriseId
+          in: query
+          description: Código do empreendimento a ser consultado.
+          required: true
+          schema:
+            type: integer
+            example: 456
+        - name: createdAfter
+          in: query
+          description: >-
+            Período do contrato inicial (Formato ISO 8601 yyyy-MM-dd | Exemplo:
+            2020-11-24).
+          required: true
+          schema:
+            type: string
+            format: date
+            example: '2020-11-24'
+        - name: createdBefore
+          in: query
+          description: >-
+            Período do contrato final (Formato ISO 8601 yyyy-MM-dd | Exemplo:
+            2020-11-24).
+          required: true
+          schema:
+            type: string
+            format: date
+            example: '2020-12-31'
+        - name: situation
+          in: query
+          description: Situação do contrato(PROPOSAL, SOLD or CANCELED).
+          required: true
+          schema:
+            type: string
+            example: SOLD
+        - name: valueGroupingDescription
+          in: query
+          description: >-
+            Valor do agrupamento. Para filtrar por mais de um valor de
+            agrupamento, informe os valores separados por vírgula. Exemplo ->
+            Q1,L2
+          schema:
+            type: string
+            example: Q1,L2
+      responses:
+        '200':
+          description: Resultado da pesquisa retornado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SalesGetResponseDocument'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Realiza leitura dos contratos de vendas. (BULK)
+components:
+  schemas:
+    SalesGetResponseDocument:
+      description: Documento de resposta contendo a lista de contratos de vendas.
+      required:
+        - data
+      type: object
+      properties:
+        data:
+          type: array
+          description: Lista de contratos de vendas retornados como resultado da pesquisa.
+          items:
+            $ref: '#/components/schemas/SalesContractBulkDocument'
+          example:
+            - id: 123
+              enterpriseId: 456
+              receivableBillId: 789
+              refundBillId: 101
+              proRataIndexer: 1
+              number: CV1234
+              situation: Emitido
+              externalId: EXT-001
+              note: Contrato emitido via canal digital.
+              cancellationReason: Cliente mudou de ideia
+              interestType: Simples
+              lateInterestCalculationType: Mensal
+              financialInstitutionNumber: '001'
+              discountType: Nenhum
+              correctionType: IGPM
+              anualCorrectionType: Anual
+              associativeCredit: Não
+              discountPercentage: 0
+              value: 150000
+              totalSellingValue: 155000
+              interestPercentage: 1.5
+              fineRate: 2
+              dailyLateInterestValue: 10
+              creationDate: '2022-01-01'
+              contractDate: '2022-01-05'
+              issueDate: '2022-01-10'
+              cancellationDate: '2022-01-15'
+              financialInstitutionDate: '2022-01-15'
+              customers:
+                - id: 1
+                  main: true
+                  spouse: false
+                  participationPercentage: 100
+                  personType: Física
+                  cpf: 123.456.789-00
+                  name: João da Silva
+                  email: joao@email.com
+                  birthDate: '1980-05-10'
+                  marriageDate: '2000-01-01'
+                  civilStatus: Casado
+                  fatherName: José da Silva
+                  motherName: Maria da Silva
+                  sex: Masculino
+                  nationality: Brasileiro
+                  numberIdentityCard: MG-12.345.678
+                  profession: Engenheiro
+                  spouseData:
+                    cpf: 123.456.789-00
+                    name: Maria Oliveira
+                    email: maria.oliveira@email.com
+                    sex: Feminino
+                    civilStatus: Casada
+                    birthDate: '1990-12-25'
+                    numberIdentityCard: MG-12.345.678
+                  phones:
+                    - type: Celular
+                      number: (11) 91234-5678
+                      main: true
+                      note: WhatsApp
+                      idd: '+55'
+                  addresses:
+                    - type: Residencial
+                      street: Rua das Flores
+                      number: '123'
+                      complement: Casa 1
+                      district: Centro
+                      city: São Paulo
+                      state: SP
+                      zipCode: 01001-000
+                      country: Brasil
+              units:
+                - id: 101
+                  main: true
+                  participationPercentage: 100
+                  name: Unidade 101 - Torre A
+                  propertyType: Apartamento
+                  note: Unidade com vista para o mar
+              paymentConditions:
+                - conditionTypeId: PM
+                  conditionTypeName: Parcelas Mensais
+                  bearerId: 2
+                  bearerName: Banco Central
+                  installmentsNumber: 12
+                  totalValue: 100000
+              brokers:
+                - id: 10
+                  name: Carlos Correia
+                  main: true
+      example:
+        data:
+          - id: 123
+            enterpriseId: 456
+            receivableBillId: 789
+            refundBillId: 101
+            proRataIndexer: 1
+            number: CV1234
+            situation: Emitido
+            externalId: EXT-001
+            note: Contrato emitido via canal digital.
+            cancellationReason: Cliente mudou de ideia
+            interestType: Simples
+            lateInterestCalculationType: Mensal
+            financialInstitutionNumber: '001'
+            discountType: Nenhum
+            correctionType: IGPM
+            anualCorrectionType: Anual
+            associativeCredit: Não
+            discountPercentage: 0
+            value: 150000
+            totalSellingValue: 155000
+            interestPercentage: 1.5
+            fineRate: 2
+            dailyLateInterestValue: 10
+            creationDate: '2022-01-01'
+            contractDate: '2022-01-05'
+            issueDate: '2022-01-10'
+            cancellationDate: '2022-01-15'
+            financialInstitutionDate: '2022-01-15'
+            customers:
+              - id: 1
+                main: true
+                spouse: false
+                participationPercentage: 100
+                personType: Física
+                cpf: 123.456.789-00
+                name: João da Silva
+                email: joao@email.com
+                birthDate: '1980-05-10'
+                marriageDate: '2000-01-01'
+                civilStatus: Casado
+                fatherName: José da Silva
+                motherName: Maria da Silva
+                sex: Masculino
+                nationality: Brasileiro
+                numberIdentityCard: MG-12.345.678
+                profession: Engenheiro
+                spouseData:
+                  cpf: 123.456.789-00
+                  name: Maria Oliveira
+                  email: maria.oliveira@email.com
+                  sex: Feminino
+                  civilStatus: Casada
+                  birthDate: '1990-12-25'
+                  numberIdentityCard: MG-12.345.678
+                phones:
+                  - type: Celular
+                    number: (11) 91234-5678
+                    main: true
+                    note: WhatsApp
+                    idd: '+55'
+                addresses:
+                  - type: Residencial
+                    street: Rua das Flores
+                    number: '123'
+                    complement: Casa 1
+                    district: Centro
+                    city: São Paulo
+                    state: SP
+                    zipCode: 01001-000
+                    country: Brasil
+            units:
+              - id: 101
+                main: true
+                participationPercentage: 100
+                name: Unidade 101 - Torre A
+                propertyType: Apartamento
+                note: Unidade com vista para o mar
+            paymentConditions:
+              - conditionTypeId: PM
+                conditionTypeName: Parcelas Mensais
+                bearerId: 2
+                bearerName: Banco Central
+                installmentsNumber: 12
+                totalValue: 100000
+            brokers:
+              - id: 10
+                name: Carlos Correia
+                main: true
+    SalesContractBulkDocument:
+      description: Representa um contrato de vendas retornado pela API.
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Código do contrato de vendas retornado.
+          format: int32
+          example: 123
+        enterpriseId:
+          type: integer
+          description: Código do empreendimento do contrato.
+          format: int32
+          example: 456
+        receivableBillId:
+          type: integer
+          description: Número do título a receber.
+          format: int32
+          example: 789
+        refundBillId:
+          type: integer
+          description: Número do título de devolução (caso contrato seja cancelado).
+          format: int32
+          example: 101
+        proRataIndexer:
+          type: integer
+          description: >-
+            Código do indexador de pró-rata. Usado apenas para acréscimo de mora
+            mensal.
+          format: int32
+          example: 1
+        number:
+          allOf:
+            - description: Número do contrato.
+              example: '1234'
+              type: string
+            - type: string
+              example: CV1234
+        situation:
+          type: string
+          description: >-
+            Situação do contrato. (Solicitado, Autorizado, Emitido ou
+            Cancelado).
+          example: Emitido
+        externalId:
+          type: string
+          description: Identificador externo.
+          example: EXT-001
+        note:
+          type: string
+          description: Observação do contrato.
+          example: Contrato emitido via canal digital.
+        cancellationReason:
+          type: string
+          description: Descrição do motivo de cancelamento.
+          example: Cliente mudou de ideia
+        interestType:
+          type: string
+          description: Tipo de juros para acréscimos de mora.
+          example: Simples
+        lateInterestCalculationType:
+          type: string
+          description: Tipo de cálculo de acréscimos de mora.
+          example: Mensal
+        financialInstitutionNumber:
+          type: string
+          description: Número da instituição financeira.
+          example: '001'
+        discountType:
+          type: string
+          description: Tipo de desconto do contrato.
+          example: Nenhum
+        correctionType:
+          type: string
+          description: Tipo de correção.
+          example: IGPM
+        anualCorrectionType:
+          type: string
+          description: Tipo de correção anual.
+          example: Anual
+        associativeCredit:
+          type: string
+          description: Indica se tem crédito associativo.
+          example: Não
+        discountPercentage:
+          type: number
+          description: Percentual de desconto do contrato.
+          example: 0
+        value:
+          type: number
+          description: Valor do contrato.
+          example: 150000
+        commissionPercentage:
+          type: number
+          description: Percentual de comissão do corretor.
+          example: 3
+        commissionValue:
+          type: number
+          description: Valor da comissão do corretor.
+          example: 10500
+        totalSellingValue:
+          type: number
+          description: Valor total de venda.
+          example: 155000
+        interestPercentage:
+          type: number
+          description: >-
+            Percentual de juros ao mês para acréscimos de mora. Usado apenas
+            para acréscimo de mora mensal.
+          format: double
+          example: 1.5
+        fineRate:
+          type: number
+          description: >-
+            Percentual de multa para acréscimo de mora. Usado apenas para
+            acréscimo de mora mensal.
+          format: double
+          example: 2
+        dailyLateInterestValue:
+          type: number
+          description: Valor de mora diário em reais.
+          format: double
+          example: 10
+        creationDate:
+          type: string
+          description: >-
+            Data da criação do contrato. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-25.
+          example: '2022-01-01'
+        contractDate:
+          type: string
+          description: Data do contrato.
+          example: '2022-01-05'
+        issueDate:
+          type: string
+          description: >-
+            Data de emissão do contrato. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-25.
+          example: '2022-01-10'
+        cancellationDate:
+          type: string
+          description: >-
+            Data de cancelamento do contrato. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-25.
+          example: '2022-01-15'
+        financialInstitutionDate:
+          type: string
+          description: >-
+            Data da instituição financeira. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-25.
+          example: '2022-01-15'
+        customers:
+          type: array
+          description: Clientes.
+          items:
+            $ref: '#/components/schemas/CustomersBulkDocument'
+        units:
+          type: array
+          description: Unidades
+          items:
+            $ref: '#/components/schemas/UnitsBulkDocument'
+        paymentConditions:
+          allOf:
+            - $ref: '#/components/schemas/PaymentConditionsDescription'
+            - type: array
+              items:
+                $ref: '#/components/schemas/PaymentConditionsBulkDocument'
+        brokers:
+          type: array
+          description: Corretores
+          items:
+            $ref: '#/components/schemas/BrokersBulkDocument'
+    CustomersBulkDocument:
+      type: object
+      description: Clientes do contrato.
+      properties:
+        id:
+          type: integer
+          description: Id do cliente do contrato.
+          format: int32
+          example: 1
+        main:
+          type: boolean
+          description: True se o cliente for principal.
+          example: true
+        spouse:
+          type: boolean
+          description: True se o cliente for cônjuge.
+          example: false
+        participationPercentage:
+          type: number
+          description: Percentual de participação do cliente.
+          example: 100
+        personType:
+          type: string
+          description: Tipo de pessoa (física ou jurídica).
+          example: Física
+        cpf:
+          type: string
+          description: CPF para pessoa física.
+          example: 123.456.789-00
+        name:
+          type: string
+          description: Nome.
+          example: João da Silva
+        email:
+          type: string
+          description: E-mail.
+          example: joao@email.com
+        birthDate:
+          type: string
+          description: >-
+            Data de nascimento para pessoa física. Formato YYYY-MM-DD. Exemplo
+            -> 1990-12-25.
+          example: '1980-05-10'
+        marriageDate:
+          type: string
+          description: >-
+            Data de casamento para pessoa física. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-25.
+          example: '2000-01-01'
+        civilStatus:
+          type: string
+          description: Estado civil para pessoa física.
+          example: Casado
+        fatherName:
+          type: string
+          description: Nome do pai para pessoa física.
+          example: José da Silva
+        motherName:
+          type: string
+          description: Nome da mãe para pessoa física.
+          example: Maria da Silva
+        sex:
+          type: string
+          description: >-
+            Sexo para pessoa física. Podendo ser Masculino/Feminino/Anônimo
+            (dependendo da LGPD).
+          example: Masculino
+        cnpj:
+          type: string
+          description: CNPJ para pessoa jurídica.
+          example: 12.345.678/0001-99
+        nationality:
+          type: string
+          description: Nacionalidade para pessoa física.
+          example: Brasileiro
+        numberIdentityCard:
+          type: string
+          description: Número da carteira de identidade (RG) para pessoa física.
+          example: MG-12.345.678
+        profession:
+          type: string
+          description: Profissão para pessoa física.
+          example: Engenheiro
+        contactName:
+          type: string
+          description: Nome do contato para pessoa jurídica.
+          example: Carlos Souza
+        fantasyName:
+          type: string
+          description: Nome fantasia para pessoa jurídica.
+          example: Empresa Exemplo Ltda
+        spouseData:
+          $ref: '#/components/schemas/CustomerSpouseBulkDocument'
+        phones:
+          type: array
+          description: Telefones do cliente
+          items:
+            $ref: '#/components/schemas/CustomerPhoneBulkDocument'
+        addresses:
+          type: array
+          description: Endereços do cliente
+          items:
+            $ref: '#/components/schemas/CustomerAddressBulkDocument'
+    UnitsBulkDocument:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Id da unidade retornada.
+          format: int32
+          example: 101
+        main:
+          type: boolean
+          description: True se a unidade for principal.
+          example: true
+        participationPercentage:
+          type: number
+          description: Percentual de participação da unidade.
+          example: 100
+        name:
+          type: string
+          description: Nome da unidade.
+          example: Unidade 101 - Torre A
+        propertyType:
+          type: string
+          description: Tipo de imóvel.
+          example: Apartamento
+        note:
+          type: string
+          description: Observação
+          example: Unidade com vista para o mar
+        commercialStock:
+          type: string
+          description: >-
+            Estoque comercial (D = Disponível, V = Vendida, L = Locada, C =
+            Reservada, R = Reserva Técnica, E = Permuta, M = Mutuo, P =
+            Proposta, T = Transferido, G = Vendido/Terceiros).
+          example: V
+        legalRegistrationNumber:
+          type: string
+          description: Matrícula.
+          example: '12345'
+        deliveryDate:
+          type: string
+          description: Data de entrega. Formato YYYY-MM-DD. Exemplo -> 1990-12-25.
+          example: '2024-12-31'
+        privateArea:
+          allOf:
+            - type: number
+              description: Área privativa.
+              format: double
+            - type: number
+              example: 85.5
+        commonArea:
+          type: number
+          description: Área comum.
+          example: 15.2
+        terrainArea:
+          type: number
+          description: Área do terreno.
+          example: 200
+        idealFraction:
+          type: number
+          description: Fração ideal.
+          example: 0.025
+        idealFractionSquareMeter:
+          type: number
+          description: Fração ideal em m².
+          example: 5
+        indexedQuantity:
+          type: number
+          description: Quantidade indexada.
+          example: 1
+        childUnits:
+          type: array
+          description: Unidades Filhas
+          items:
+            $ref: '#/components/schemas/ChildUnitsBulkDocument'
+        groupings:
+          type: array
+          description: Agrupamentos.
+          items:
+            type: object
+            properties:
+              groupingDescription:
+                type: string
+                description: Descrição do agrupador.
+                example: Torre Norte
+              valueGroupingDescription:
+                type: string
+                description: Descrição do valor do agrupamento.
+                example: Apartamento
+      description: Unidades do contrao de venda
+    PaymentConditionsDescription:
+      description: Condições de pagamento
+    PaymentConditionsBulkDocument:
+      type: object
+      properties:
+        conditionTypeId:
+          type: string
+          description: Código do tipo de condição de pagamento.
+          example: VISTA
+        conditionTypeName:
+          type: string
+          description: Nome do tipo de condição de pagamento.
+          example: À Vista
+        bearerId:
+          type: integer
+          description: Código do portador.
+          example: 1
+        bearerName:
+          type: string
+          description: Nome do portador.
+          example: Banco do Brasil
+        installmentsNumber:
+          type: integer
+          description: Quantidade de parcelas.
+          format: int32
+          example: 12
+        totalValue:
+          type: number
+          description: Valor total da Condição.
+          format: double
+          example: 350000
+        firstPayment:
+          type: string
+          description: >-
+            Data do primeiro vencimento.  Formato YYYY-MM-DD. Exemplo ->
+            1990-12-25.
+          example: '2024-02-15'
+      description: Condição de pagamento do contrato de venda.
+    BrokersBulkDocument:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Código do corretor.
+          example: 123
+        creci:
+          type: string
+          description: CRECI do corretor.
+          example: CRECI/SP 12345
+        name:
+          type: string
+          description: Nome do corretor.
+          example: João Silva
+        main:
+          type: boolean
+          description: True se o corretor for o principal.
+          example: true
+      description: Corretores do contrato de venda.
+    CustomerSpouseBulkDocument:
+      type: object
+      properties:
+        cpf:
+          type: string
+          description: CPF do cônjuge.
+          example: 123.456.789-00
+        name:
+          type: string
+          description: Nome do cônjuge.
+          example: Maria Oliveira
+        email:
+          type: string
+          description: E-mail do cônjuge.
+          example: maria.oliveira@email.com
+        sex:
+          type: string
+          description: >-
+            Sexo do cônjuge. Podendo ser Masculino/Feminino/Anônimo (dependendo
+            da LGPD).
+          example: Feminino
+        civilStatus:
+          type: string
+          description: Descrição estado civil do cônjuge.
+          example: Casada
+        birthDate:
+          type: string
+          description: >-
+            Data de nascimento do cônjuge. Formato YYYY-MM-DD. Exemplo ->
+            1990-12-25.
+          example: '1990-12-25'
+        numberIdentityCard:
+          type: string
+          description: Número da carteira de identidade (RG) do cônjuge.
+          example: MG-12.345.678
+      description: Cônjuge para pessoa física.
+    CustomerPhoneBulkDocument:
+      description: Telefone do cliente.
+      type: object
+      properties:
+        type:
+          type: string
+          description: Tipo de telefone.
+          example: Celular
+        number:
+          type: string
+          description: Número de telefone, com o DDD.
+          example: (11) 91234-5678
+        main:
+          type: boolean
+          description: True quando o telefone for principal.
+          example: true
+        note:
+          type: string
+          description: Observação do telefone.
+          example: WhatsApp
+        idd:
+          type: string
+          description: DDI do Telefone.
+          example: '+55'
+    CustomerAddressBulkDocument:
+      type: object
+      description: Endereço do cliente.
+      properties:
+        type:
+          type: string
+          description: Tipo do endereço.
+          example: Residencial
+        streetName:
+          type: string
+          description: Logradouro do endereço.
+          example: Rua das Flores
+        number:
+          type: string
+          description: Número do endereço.
+          example: '123'
+        complement:
+          type: string
+          description: Complemento do endereço.
+          example: Casa 1
+        neighborhood:
+          type: string
+          description: Bairro do endereço.
+          example: Centro
+        cityId:
+          type: integer
+          description: Identificador do munícipio do endereço.
+          example: 3550308
+        city:
+          type: string
+          description: Nome do munícipio do endereço.
+          example: São Paulo
+        state:
+          type: string
+          description: Nome do estado do endereço.
+          example: SP
+        zipCode:
+          type: string
+          description: Código de endereçamento postal (CEP) do endereço.
+          example: 01001-000
+        mail:
+          type: boolean
+          description: Identifica se é o endereço de correspondencia do cliente.
+          example: true
+    ChildUnitsBulkDocument:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Descrição da unidade filha.
+          example: Garagem 01
+        order:
+          type: string
+          description: Numeração.
+          example: '1'
+        privateArea:
+          type: number
+          description: Área privativa unidade filha.
+          example: 12
+        commonArea:
+          type: number
+          description: Área comum unidade filha.
+          example: 0
+        idealFraction:
+          type: number
+          description: Fração ideal unidade filha.
+          example: 0.005
+        idealFractionSquareMeter:
+          type: number
+          description: Fração ideal em m² unidade filha.
+          example: 1
+        locationName:
+          type: string
+          description: Localização unidade filha.
+          example: Subsolo
+        note:
+          type: string
+          description: Observação unidade filha.
+          example: Vaga coberta
+      description: Unidades filhas
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/bulk-data/v1

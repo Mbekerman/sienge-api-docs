@@ -1,0 +1,454 @@
+openapi: 3.1.1
+info:
+  title: Saldo de Contas Correntes
+  version: 1.24.0
+  description: API REST para Saldo de contas.
+paths:
+  /accounts-balances:
+    get:
+      x-original-file: accounts-balances-v1.yaml
+      x-section: Saldo de conta
+      x-audience:
+        - public
+      tags:
+        - Saldo de conta
+      summary: Retorna a lista de saldos das contas.
+      operationId: listBalances
+      parameters:
+        - name: balanceDate
+          in: query
+          description: >-
+            Data do saldo das contas (Formato ISO 8601 yyyy-MM-dd | Exemplo:
+            2018-01-01)
+          required: true
+          schema:
+            type: string
+            format: date
+        - $ref: '#/components/parameters/AccountNumber'
+        - $ref: '#/components/parameters/AccountStatusQuery'
+        - $ref: '#/components/parameters/CompanyIdQuery'
+        - $ref: '#/components/parameters/CompanyGroupId'
+        - name: showLastBalanceIfNotExistBalance
+          in: query
+          description: >
+            Flag para mostrar saldo de data anterior a data informada, útil para
+            quando a conta não possuir saldo na data informada
+              * `S` - Mostrar saldo da data anterior a data informada
+          schema:
+            type: string
+            maxLength: 1
+            enum:
+              - S
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+      responses:
+        '200':
+          description: Retorna a lista de saldos das contas do Sienge
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetResponseAccountBalance'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: >-
+        Retorna a lista de saldos das contas do Sienge, na data informada nos
+        parâmetros. (REST)
+components:
+  schemas:
+    GetResponseAccountBalance:
+      type: object
+      description: Retorna saldo das contas
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de saldos retornados como resultado da pesquisa
+          items:
+            $ref: '#/components/schemas/AccountBalance'
+          example:
+            - amount: 999.99
+              reconciledAmount: 999.99
+              balanceDate: '2018-01-01'
+              accountNumber: CAIXA
+              accountStatus: ENABLED
+              companyId: 1000
+              links:
+                - href: string
+                  rel: string
+      example:
+        resultSetMetadata:
+          count: 1
+          offset: 0
+          limit: 1
+        results:
+          - amount: 999.99
+            reconciledAmount: 999.99
+            balanceDate: '2018-01-01'
+            accountNumber: CAIXA
+            accountStatus: ENABLED
+            companyId: 1000
+            links:
+              - href: string
+                rel: string
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    AccountBalance:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Valor do saldo da conta
+          format: double
+          example: 999.99
+        reconciledAmount:
+          type: number
+          description: Valor do saldo da conta conciliado
+          format: double
+          example: 999.99
+        balanceDate:
+          type: string
+          description: >-
+            Data do saldo da conta (Formato ISO 8601 yyyy-MM-dd | Exemplo:
+            2018-01-01)
+          format: date
+          example: '2018-01-01'
+        accountNumber:
+          type: string
+          description: Número da conta a qual o saldo está vinculado
+          example: CAIXA
+        accountStatus:
+          type: string
+          description: |-
+            Os status de uma conta corrente são:  
+            * `ENABLED` - Ativa 
+             * `DISABLED` - Inativa
+          example: ENABLED
+        companyId:
+          description: Código da empresa
+          example: 123
+          format: int32
+          type: integer
+        links:
+          $ref: '#/components/schemas/Links'
+      description: Saldo de conta
+    Links:
+      description: Links para acessar outros recursos
+      example:
+        - href: https://../v1/purchase-..
+          rel: Recurso
+      items:
+        $ref: '#/components/schemas/Link'
+      type: array
+    Link:
+      description: Representa um link para outro recurso.
+      properties:
+        href:
+          description: URL do recurso associado
+          example: https://../v1/purchase-..
+          type: string
+        rel:
+          description: Nome da recurso associado
+          example: Recurso
+          type: string
+      type: object
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    AccountNumber:
+      description: Número da conta cadastrada no Sienge
+      in: query
+      name: accountNumber
+      schema:
+        type: string
+    AccountStatusQuery:
+      description: >-
+        Os status de uma conta corrente são: "ENABLED" - Ativa, "DISABLED" -
+        Inativa. Caso não seja passado nenhum status por padrão os valores
+        devolvidos serão as contas ativas ("ENABLED"). Pode-se ainda passar
+        "ALL" para trazer as contas "Ativas" e "Inativas".
+      in: query
+      name: accountStatus
+      required: false
+      schema:
+        enum:
+          - ENABLED
+          - DISABLED
+          - ALL
+        example: ENABLED
+        type: string
+    CompanyIdQuery:
+      description: Código da empresa (opcional)
+      in: query
+      name: companyId
+      required: false
+      schema:
+        example: 1
+        type: integer
+    CompanyGroupId:
+      description: Código do grupo de empresas cadastrado no Sienge
+      in: query
+      name: companyGroupId
+      schema:
+        format: int32
+        type: integer
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

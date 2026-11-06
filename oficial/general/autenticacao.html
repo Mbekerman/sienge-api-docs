@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Autenticação · Documentação de APIs</title>
+    <link href="../fonts.css" rel="stylesheet" />
+    <link href="../general-page.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>Autenticação</h1>
+    <p>As APIs do Sienge Plataforma utilizam <strong><a href="https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Headers/Authorization">Basic Authentication</a></strong> — um padrão amplamente utilizado em APIs HTTP. As credenciais são as mesmas cadastradas no <strong>Painel de Integrações da Plataforma</strong>.</p>
+<p>Se você não tem acesso ao Painel de Integrações, entre em contato com o Administrador da sua conta Sienge Plataforma.</p>
+<h4>Como montar o header de autenticação</h4>
+<p>A autenticação é enviada no header <code>Authorization</code> de cada requisição. O valor deve ser construído da seguinte forma:</p>
+<ol>
+<li>Combine o usuário e a senha separados por dois pontos: <code>usuario-api:senha</code></li>
+<li>Codifique o resultado em <strong>Base64</strong>: <code>dXN1YXJpby1hcGk6c2VuaGE=</code></li>
+<li>Informe no header com o prefixo <code>Basic</code>:</li>
+</ol>
+<pre><code>Authorization: Basic dXN1YXJpby1hcGk6c2VuaGE=
+</code></pre>
+<p>Para gerar o valor Base64 no terminal:</p>
+<pre><code class="language-bash">echo -n &#39;usuario-api:senha&#39; | base64
+</code></pre>
+
+  </body>
+</html>

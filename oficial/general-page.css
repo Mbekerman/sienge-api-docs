@@ -1,0 +1,242 @@
+/* Estilo das páginas gerais (info.description) — paleta/tipografia da identidade visual Sienge (Sora + vermelho). */
+
+:root {
+  --red: #d9000b;
+  --dark: #181a29;
+  --light: #f7f7f7;
+  --white: #ffffff;
+  --line: #e3e3e6;
+  --gray-text: #5b5d6e;
+}
+
+html {
+  box-sizing: border-box;
+  overflow: -moz-scrollbars-vertical;
+  overflow-y: scroll;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  max-width: 1460px;
+  margin: 0 auto;
+  padding: 40px 32px 64px;
+  background: var(--light);
+  color: var(--dark);
+  font-family: "Sora", sans-serif;
+  font-weight: 300;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-size: 34px;
+  font-weight: 200;
+  letter-spacing: -0.01em;
+  margin: 0 0 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+h2,
+h3 {
+  font-size: 20px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+  margin-top: 40px;
+}
+
+h4,
+h5,
+h6 {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-top: 32px;
+}
+
+h4::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 2px;
+  margin-right: 8px;
+  background: var(--red);
+  vertical-align: middle;
+}
+
+p {
+  font-size: 15.5px;
+  margin: 0 0 16px;
+}
+
+/* Sora só cobre pesos 200–600; fixa negrito em 600 para não cair no fallback sans-serif. */
+strong,
+b {
+  font-weight: 600;
+}
+
+a {
+  color: var(--red);
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+ul,
+ol {
+  padding-left: 22px;
+  margin: 0 0 16px;
+}
+
+li {
+  font-size: 15.5px;
+  margin: 4px 0;
+}
+
+li::marker {
+  color: var(--gray-text);
+}
+
+blockquote {
+  border-left: 2px solid var(--red);
+  color: var(--gray-text);
+  margin: 2rem 0;
+  padding-left: 2rem;
+}
+
+blockquote p {
+  margin: 0 0 8px;
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+code,
+pre {
+  font-family: "Source Code Pro", monospace;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+code {
+  padding: 2px 6px;
+  font-size: 0.92em;
+}
+
+pre {
+  position: relative;
+  padding: 14px 18px;
+  overflow-x: auto;
+}
+
+pre code {
+  border: none;
+  padding: 0;
+}
+
+/* Etiqueta com a linguagem do bloco (marked só adiciona a classe language-*, sem highlight). */
+pre:has(code.language-json)::after,
+pre:has(code.language-bash)::after {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-family: "Sora", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gray-text);
+}
+
+pre:has(code.language-json)::after {
+  content: "JSON";
+}
+
+pre:has(code.language-bash)::after {
+  content: "BASH";
+}
+
+/* Wrapper de tabela (injetado via hook do marked) para rolagem horizontal em telas estreitas. */
+.table-wrap {
+  margin: 16px 0 28px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+table th,
+table td {
+  border-bottom: 1px solid var(--line);
+  padding: 12px 16px;
+  text-align: center;
+}
+
+table tr:last-child td {
+  border-bottom: none;
+}
+
+table th {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gray-text);
+  background: #fbfbfc;
+}
+
+.note-banner {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--red);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 14px;
+  color: var(--gray-text);
+}
+
+.note-banner a {
+  color: var(--red);
+}
+
+@media (max-width: 720px) {
+  body {
+    padding: 28px 20px 48px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  table th,
+  table td {
+    padding: 10px 12px;
+  }
+}

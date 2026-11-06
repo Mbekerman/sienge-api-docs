@@ -1,0 +1,768 @@
+openapi: 3.1.1
+info:
+  title: Documentos
+  version: 1.24.0
+  description: API de documentos.
+paths:
+  /document-identifications:
+    get:
+      tags:
+        - Documentos
+      summary: Busca documentos paginados
+      description: >-
+        Retorna uma lista paginada de documentos. O filtro name realiza busca
+        por correspondência parcial e, quando active não é informado, são
+        retornados documentos ativos e inativos. (REST)
+      operationId: getAllDocumentIdentifications
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Offset'
+        - name: name
+          in: query
+          description: Nome ou parte do nome do documento.
+          required: false
+          schema:
+            type: string
+            maxLength: 40
+          example: Nota
+        - name: active
+          in: query
+          description: Filtra documentos pelo status de atividade.
+          required: false
+          schema:
+            type: boolean
+          example: true
+      responses:
+        '200':
+          description: Documentos encontrados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageOfDocumentIdentifications'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      x-audience:
+        - public
+  /document-identifications/{documentIdentificationId}:
+    get:
+      x-original-file: document-identification-v1.yaml
+      x-audience:
+        - public
+      tags:
+        - Documentos
+      summary: Busca o documento no Sienge
+      operationId: getDocumentIdentification
+      parameters:
+        - name: documentIdentificationId
+          in: path
+          description: Código do documento a ser apresentado
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Documento encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentIdentification'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '415':
+          $ref: '#/components/responses/415'
+        '422':
+          $ref: '#/components/responses/422'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+        '503':
+          $ref: '#/components/responses/503'
+      description: Busca o documento no Sienge. (REST)
+components:
+  schemas:
+    PageOfDocumentIdentifications:
+      type: object
+      description: Envelope de paginação da lista de documentos.
+      required:
+        - resultSetMetadata
+        - results
+        - links
+      properties:
+        resultSetMetadata:
+          $ref: '#/components/schemas/ResultSetMetadata'
+        results:
+          type: array
+          description: Lista de documentos retornada como resultado da pesquisa.
+          maxItems: 200
+          items:
+            $ref: '#/components/schemas/DocumentIdentificationListItem'
+          example:
+            - documentIdentificationId: NF
+              name: Nota Fiscal
+              active: true
+        links:
+          $ref: '#/components/schemas/Links'
+      example:
+        resultSetMetadata:
+          count: 42
+          offset: 0
+          limit: 100
+        results:
+          - documentIdentificationId: NF
+            name: Nota Fiscal
+            active: true
+        links:
+          - rel: self
+            href: >-
+              https://suporte.sienge.com.br/sienge/api/v1/document-identifications
+    DocumentIdentification:
+      type: object
+      description: Documento
+      allOf:
+        - $ref: '#/components/schemas/DocumentIdentificationCommonProperties'
+      properties:
+        id:
+          type: string
+          description: Código do documento.
+          example: NF
+      example:
+        id: NF
+        name: Nota Fiscal
+        forecast: false
+        returnDocument: false
+        securityDeposit: false
+        exchange: false
+        accountable: true
+        apportionTaxes: false
+        internalDocument: false
+        simpleShipment: false
+        advancePayment: false
+        constructionInterest: false
+        allowPayment: true
+        allowPayableDeletion: false
+        confidentialForEmployees: false
+        noConstructionAppropriationPayable: false
+        allowPayableSettlementAsAdvanceOnly: false
+        requireLinkedAdvance: false
+        requireAttachmentOnPayableBill: false
+        blockDueDate: false
+        restrictDueDateToPeriod: false
+        generateReceivableCounterpart: false
+        restrictedAccess: false
+        blockDuplicateNumberForSameCreditor: false
+        considerLeadingZeros: false
+        numbersOnly: false
+        requireAcknowledgementOnPayableBill: false
+        requireSingleConstructionAppropriation: false
+        blockDueDateChangeWhenAccountingBlockActive: false
+        requireUnitOnPayable: false
+        allowReceipt: true
+        allowReceivableDeletion: false
+        blockDuplicateNumberByCompany: false
+        requireUnitOnReceivableBill: false
+        receivableSettlementAsAdvance: false
+        projectTaxesOnPayable: false
+        accountReceivableInstallmentProvision: false
+        accountingMethod: ACCORDING_TO_BILL
+        accountingHistoryDescription: Lançamento referente à nota fiscal
+        accountWithoutDeferredRevenue: false
+        taxAccountingRegime: AS_ANNUAL_SETUP
+        taxDocument: true
+        pisCofinsTaxable: true
+        requireElectronicInvoiceKeyOnPayable: true
+        requireElectronicInvoiceKeyOnReceivable: true
+        manualTaxGuide: false
+        taxDocumentCode: '55'
+        taxDocumentModelCode: '55'
+        exportPisCofinsSped: true
+        active: true
+    ResultSetMetadata:
+      description: Descrição dos dados de paginação
+      example:
+        count: 200
+        limit: 100
+        offset: 0
+      properties:
+        count:
+          description: >-
+            Total de resultados disponíveis na base de dados como resultado da
+            pesquisa efetuada
+          example: 2000
+          format: int64
+          maximum: 99999
+          minimum: 0
+          type: integer
+        limit:
+          default: 100
+          description: >-
+            Quantidade máxima de resultados da pesquisa a serem retornados.
+            Valor default são 100 e o valor máximo permitdo são 200.
+          example: 100
+          format: int32
+          maximum: 200
+          minimum: 1
+          type: integer
+        offset:
+          default: 0
+          description: >-
+            Deslocamento entre o começo da lista e um dado elemento. Valor
+            default são 0.
+          example: 0
+          format: int32
+          maximum: 999999
+          minimum: 0
+          type: integer
+      required:
+        - count
+        - offset
+        - limit
+      type: object
+    DocumentIdentificationListItem:
+      type: object
+      description: Documento retornado em uma lista paginada.
+      allOf:
+        - $ref: '#/components/schemas/DocumentIdentificationCommonProperties'
+      properties:
+        documentIdentificationId:
+          description: Código do documento
+          example: NF | AV
+          type: string
+      example:
+        documentIdentificationId: NF
+        name: Nota Fiscal
+        forecast: false
+        returnDocument: false
+        securityDeposit: false
+        exchange: false
+        accountable: true
+        apportionTaxes: false
+        internalDocument: false
+        simpleShipment: false
+        advancePayment: false
+        constructionInterest: false
+        allowPayment: true
+        allowPayableDeletion: false
+        confidentialForEmployees: false
+        noConstructionAppropriationPayable: false
+        allowPayableSettlementAsAdvanceOnly: false
+        requireLinkedAdvance: false
+        requireAttachmentOnPayableBill: false
+        blockDueDate: false
+        restrictDueDateToPeriod: false
+        generateReceivableCounterpart: false
+        restrictedAccess: false
+        blockDuplicateNumberForSameCreditor: false
+        considerLeadingZeros: false
+        numbersOnly: false
+        requireAcknowledgementOnPayableBill: false
+        requireSingleConstructionAppropriation: false
+        blockDueDateChangeWhenAccountingBlockActive: false
+        requireUnitOnPayable: false
+        allowReceipt: true
+        allowReceivableDeletion: false
+        blockDuplicateNumberByCompany: false
+        requireUnitOnReceivableBill: false
+        receivableSettlementAsAdvance: false
+        projectTaxesOnPayable: false
+        accountReceivableInstallmentProvision: false
+        accountingMethod: ACCORDING_TO_BILL
+        accountingHistoryDescription: Lançamento referente à nota fiscal
+        accountWithoutDeferredRevenue: false
+        taxAccountingRegime: AS_ANNUAL_SETUP
+        taxDocument: true
+        pisCofinsTaxable: true
+        requireElectronicInvoiceKeyOnPayable: true
+        requireElectronicInvoiceKeyOnReceivable: true
+        manualTaxGuide: false
+        taxDocumentCode: '55'
+        taxDocumentModelCode: '55'
+        exportPisCofinsSped: true
+        active: true
+    Links:
+      description: Links para acessar outros recursos
+      example:
+        - href: https://../v1/purchase-..
+          rel: Recurso
+      items:
+        $ref: '#/components/schemas/Link'
+      type: array
+    DocumentIdentificationCommonProperties:
+      type: object
+      description: Propriedades comuns do documento.
+      properties:
+        name:
+          description: Nome do documento
+          example: Nota Fiscal
+          type: string
+        forecast:
+          type: boolean
+          description: Indica se o documento é de previsão.
+          example: false
+        returnDocument:
+          type: boolean
+          description: Indica se o documento é de devolução.
+          example: false
+        securityDeposit:
+          type: boolean
+          description: Indica se o documento é de caução.
+          example: false
+        exchange:
+          type: boolean
+          description: Indica se o documento é de permuta.
+          example: false
+        accountable:
+          type: boolean
+          description: Indica se o documento pode ser contabilizado.
+          example: true
+        apportionTaxes:
+          type: boolean
+          description: Indica se os impostos devem ser rateados.
+          example: false
+        internalDocument:
+          type: boolean
+          description: Indica se o documento é interno.
+          example: false
+        simpleShipment:
+          type: boolean
+          description: Indica se o documento é de simples remessa.
+          example: false
+        advancePayment:
+          type: boolean
+          description: Indica se o documento representa um adiantamento.
+          example: false
+        constructionInterest:
+          type: boolean
+          description: Indica se o documento representa juros de obra.
+          example: false
+        allowPayment:
+          type: boolean
+          description: Indica se o documento permite pagamento.
+          example: true
+        allowPayableDeletion:
+          type: boolean
+          description: Indica se permite excluir títulos do contas a pagar.
+          example: false
+        confidentialForEmployees:
+          type: boolean
+          description: Indica se o documento é confidencial para funcionários.
+          example: false
+        noConstructionAppropriationPayable:
+          type: boolean
+          description: >-
+            Indica se o documento não permite apropriação de obra no contas a
+            pagar.
+          example: false
+        allowPayableSettlementAsAdvanceOnly:
+          type: boolean
+          description: >-
+            Indica se a baixa no contas a pagar deve ocorrer somente como
+            adiantamento.
+          example: false
+        requireLinkedAdvance:
+          type: boolean
+          description: >-
+            Indica se o adiantamento deve estar vinculado a um pedido ou
+            contrato.
+          example: false
+        requireAttachmentOnPayableBill:
+          type: boolean
+          description: >-
+            Indica se o título a pagar deve possuir anexo quando não houver
+            vínculo com NFS-e.
+          example: false
+        blockDueDate:
+          type: boolean
+          description: Indica se a data de vencimento deve ser bloqueada.
+          example: false
+        restrictDueDateToPeriod:
+          type: boolean
+          description: >-
+            Indica se a data de vencimento deve estar dentro do período
+            permitido.
+          example: false
+        generateReceivableCounterpart:
+          type: boolean
+          description: Indica se deve ser gerada uma contrapartida no contas a receber.
+          example: false
+        restrictedAccess:
+          type: boolean
+          description: Indica se o acesso ao documento é restrito.
+          example: false
+        blockDuplicateNumberForSameCreditor:
+          type: boolean
+          description: Indica se deve bloquear numeração repetida para o mesmo credor.
+          example: false
+        considerLeadingZeros:
+          type: boolean
+          description: >-
+            Indica se os zeros à esquerda devem ser considerados no bloqueio de
+            numeração repetida.
+          example: false
+        numbersOnly:
+          type: boolean
+          description: Indica se o número do documento deve conter somente números.
+          example: false
+        requireAcknowledgementOnPayableBill:
+          type: boolean
+          description: Indica se é necessário dar ciência no título a pagar.
+          example: false
+        requireSingleConstructionAppropriation:
+          type: boolean
+          description: >-
+            Indica se deve ser selecionada somente uma apropriação de obra por
+            pedido e contrato.
+          example: false
+        blockDueDateChangeWhenAccountingBlockActive:
+          type: boolean
+          description: >-
+            Indica se a alteração de vencimento deve ser bloqueada quando o
+            bloqueio contábil estiver ativo.
+          example: false
+        requireUnitOnPayable:
+          type: boolean
+          description: Indica se a unidade deve ser informada no contas a pagar.
+          example: false
+        allowReceipt:
+          type: boolean
+          description: Indica se o documento permite recebimento.
+          example: true
+        allowReceivableDeletion:
+          type: boolean
+          description: Indica se permite excluir títulos do contas a receber.
+          example: false
+        blockDuplicateNumberByCompany:
+          type: boolean
+          description: Indica se deve bloquear numeração repetida por empresa.
+          example: false
+        requireUnitOnReceivableBill:
+          type: boolean
+          description: Indica se a unidade deve ser informada no título a receber.
+          example: false
+        receivableSettlementAsAdvance:
+          type: boolean
+          description: >-
+            Indica se as baixas do arquivo retorno devem ser do tipo
+            adiantamento.
+          example: false
+        projectTaxesOnPayable:
+          type: boolean
+          description: Indica se os impostos devem ser projetados no contas a pagar.
+          example: false
+        accountReceivableInstallmentProvision:
+          type: boolean
+          description: Indica se deve ser contabilizada provisão por parcela.
+          example: false
+        accountingMethod:
+          type: string
+          description: Forma de contabilização do documento.
+          enum:
+            - ACCORDING_TO_BILL
+            - SETTLEMENT_ONLY
+            - SETTLEMENT_AND_BILL
+          example: ACCORDING_TO_BILL
+        accountingHistoryDescription:
+          type: string
+          description: Histórico da integração contábil.
+          maxLength: 100
+          example: Lançamento referente à nota fiscal
+        accountWithoutDeferredRevenue:
+          type: boolean
+          description: >-
+            Indica se o lançamento contábil deve ser gerado sem utilizar receita
+            diferida.
+          example: false
+        taxAccountingRegime:
+          type: string
+          description: Regime contábil utilizado para apuração de tributos.
+          enum:
+            - AS_ANNUAL_SETUP
+            - CASH_BASIS
+            - ACCRUAL_BASIS
+          example: AS_ANNUAL_SETUP
+        taxDocument:
+          type: boolean
+          description: Indica se o documento é fiscal.
+          example: true
+        pisCofinsTaxable:
+          type: boolean
+          description: Indica se há incidência de PIS/COFINS.
+          example: true
+        requireElectronicInvoiceKeyOnPayable:
+          type: boolean
+          description: >-
+            Indica se a chave de acesso do documento fiscal eletrônico é
+            obrigatória nas informações fiscais de entrada.
+          example: true
+        requireElectronicInvoiceKeyOnReceivable:
+          type: boolean
+          description: >-
+            Indica se a chave de acesso do documento fiscal eletrônico é
+            obrigatória nas informações fiscais de saída.
+          example: true
+        manualTaxGuide:
+          type: boolean
+          description: Indica se o documento é uma guia de imposto calculada manualmente.
+          example: false
+        taxDocumentCode:
+          type: string
+          description: Código do documento para exportação fiscal.
+          maxLength: 4
+          example: '55'
+        taxDocumentModelCode:
+          type: string
+          description: Código do modelo fiscal do documento.
+          maxLength: 2
+          example: '55'
+        exportPisCofinsSped:
+          type: boolean
+          description: >-
+            Indica se as informações de PIS/COFINS devem ser exportadas para a
+            EFD.
+          example: true
+        active:
+          type: boolean
+          description: Indica se o documento está ativo.
+          example: true
+    Link:
+      description: Representa um link para outro recurso.
+      properties:
+        href:
+          description: URL do recurso associado
+          example: https://../v1/purchase-..
+          type: string
+        rel:
+          description: Nome da recurso associado
+          example: Recurso
+          type: string
+      type: object
+    ErrorMessage:
+      description: Descrição dos erros no processamento da requisição
+      properties:
+        clientMessage:
+          description: Mensagem de resposta para o usuário
+          example: Você deve informar o query param xpto
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        developerMessage:
+          description: Mensagem de resposta para análise do desenvolvedor
+          example: Parâmetro obrigatório xpto ausente
+          maxLength: 1000
+          pattern: ^.{1,1000}$
+          type: string
+        errors:
+          description: Lista de erros
+          example:
+            - field: xpto
+              message: campo xpto ausente
+          items:
+            example:
+              field: xpto
+              message: campo xpto ausente
+            properties:
+              field:
+                description: Campo inválido
+                example: name
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+              message:
+                description: Razão pela qual o campo foi considerado inválido
+                example: O campo name não está presente
+                maxLength: 1000
+                pattern: ^.{1,1000}$
+                type: string
+            type: object
+          maxItems: 100
+          type: array
+        status:
+          description: Status Http
+          example: 400
+          format: int32
+          maximum: 599
+          minimum: 100
+          type: integer
+      required:
+        - status
+        - developerMessage
+        - clientMessage
+      type: object
+  responses:
+    '400':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: A requisição contém dados inválidos ou incompletos.
+                developerMessage: Parâmetro obrigatório ausente
+                status: 400
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema na requisição
+    '401':
+      description: Problema na autenticação
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 401
+                developerMessage: Erro na autenticação
+                clientMessage: >-
+                  Ocorreu um erro na autenticação. Verifique suas credenciais,
+                  chave ou token de acesso.
+    '403':
+      description: Problema na autorização
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 403
+                developerMessage: Ocorreu um erro na autorização
+                clientMessage: >-
+                  Você tentou realizar uma operação para a qual não tem
+                  autorização.
+    '404':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: O recurso que tentou acessar não existe.
+                developerMessage: Recurso não encontrado
+                status: 404
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Recurso não encontrado
+    '415':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar um conteúdo cujo tipo não é suportado pela
+                  operação.
+                developerMessage: Content-Type não suportado.
+                status: 415
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Tipo de conteúdo não suportado.
+    '422':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Você tentou enviar dados que, embora sejam de um tipo
+                  suportado, possuem algum problema em sua estrutura.
+                developerMessage: Unprocessable entity.
+                status: 422
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Problema nos dados enviados
+    '429':
+      description: Consumo abusivo
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            default:
+              value:
+                status: 429
+                developerMessage: Violação do Rate Limit
+                clientMessage: >-
+                  Você fez mais requisições do que o permitido. Espere um pouco
+                  e tente novamente.
+    '500':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: Ocorreu um erro no servidor.
+                developerMessage: Erro Interno
+                status: 500
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Erro interno no servidor
+    '503':
+      content:
+        application/json:
+          examples:
+            default:
+              value:
+                clientMessage: >-
+                  Nossos serviços estão temporariamente indisponíveis. Tente
+                  novamente em alguns minutos.
+                developerMessage: Servidor temporariamente indisponível.
+                status: 503
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+      description: Servidor temporariamente indisponível
+  parameters:
+    Limit:
+      description: Quantidade máxima de resultados a serem retornados na página.
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 100
+        example: 100
+        format: int32
+        maximum: 200
+        minimum: 1
+        type: integer
+    Offset:
+      description: Deslocamento a partir do começo da lista.
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        example: 600
+        format: int32
+        maximum: 2147483647
+        minimum: 0
+        type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+tags: []
+security:
+  - basicAuth: []
+servers:
+  - url: https://api.sienge.com.br/{subdominio-do-cliente}/public/api/v1

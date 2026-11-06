@@ -1,0 +1,116 @@
+/* Ajustes leves de tipografia, fundo e raio de borda por cima do swagger-ui.css, sem alterar layout ou cores semânticas. */
+
+:root {
+  --red: #d9000b;
+  --dark: #181a29;
+  --light: #f7f7f7;
+}
+
+html {
+  box-sizing: border-box;
+  overflow: -moz-scrollbars-vertical;
+  overflow-y: scroll;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  background: var(--light);
+  font-family: "Open Sans", sans-serif;
+}
+
+/* Override pontual de fonte (Open Sans/Source Code Pro, self-hosted) nos pontos mais visíveis do swagger-ui.css. */
+.swagger-ui,
+.swagger-ui select,
+.swagger-ui input,
+.swagger-ui textarea,
+.swagger-ui button,
+.swagger-ui .info .title,
+.swagger-ui .info .title small,
+.swagger-ui .opblock-tag,
+.swagger-ui .opblock-tag small,
+.swagger-ui .opblock .opblock-summary-method {
+  font-family: "Open Sans", sans-serif;
+}
+
+.swagger-ui code,
+.swagger-ui .code,
+.swagger-ui pre,
+.swagger-ui .microlight,
+.swagger-ui .opblock-body pre.microlight,
+.swagger-ui .opblock .opblock-summary-path,
+.swagger-ui .opblock .opblock-summary-operation-id,
+.swagger-ui .opblock .opblock-summary-path__deprecated {
+  font-family: "Source Code Pro", monospace;
+}
+
+/* Cantos um pouco mais arredondados (4px -> 8px), sem mudar layout/posicionamento. */
+.swagger-ui .opblock,
+.swagger-ui .microlight {
+  border-radius: 8px;
+}
+
+/* Barra de Servers/Authorize com o mesmo cinza do fundo da página, em vez do branco padrão. */
+.swagger-ui .scheme-container {
+  background: var(--light);
+}
+
+.download-yaml {
+  position: absolute;
+  top: 20px;
+  /* Acompanha o max-width: 1460px do .swagger-ui .wrapper — em telas largas, alinha com a borda direita do conteúdo em vez de ficar colado na borda da janela. */
+  right: max(16px, calc((100vw - 1460px) / 2 + 20px));
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: 6px 8px;
+  color: var(--dark);
+  text-decoration: none;
+  background: transparent;
+  border: 2px solid var(--dark);
+  border-radius: 6px;
+  transition: all 0.15s;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.download-yaml:hover {
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+}
+
+.download-yaml-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background-color: currentColor;
+  -webkit-mask: url("./../images/download-icon.svg") no-repeat center / contain;
+  mask: url("./../images/download-icon.svg") no-repeat center / contain;
+}
+
+.download-yaml-label {
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    max-width 0.2s,
+    opacity 0.15s 0.05s;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.download-yaml:hover .download-yaml-label {
+  max-width: 200px;
+  opacity: 1;
+}
